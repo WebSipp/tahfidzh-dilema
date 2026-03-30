@@ -1,0 +1,1816 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>Tahfidzh Dilema</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#0d9488;--teal-d:#0f766e;--teal-l:rgba(13,148,136,.15);--teal-ll:rgba(13,148,136,.07);
+  --gold:#d97706;--gold-d:#92400e;--gold-l:rgba(217,119,6,.15);--gold-ll:rgba(217,119,6,.06);
+  --green:#16a34a;--green-l:rgba(22,163,74,.14);
+  --red:#ef4444;--red-l:rgba(239,68,68,.14);
+  --bg:#080e1a;--bg2:#0f1623;--bg3:#161f30;
+  --border:rgba(255,255,255,.06);--border2:rgba(255,255,255,.12);
+  --text:#e2e8f0;--text2:#8899aa;--text3:#4a5568;--white:#f8fafc;
+  --r:14px;--r2:10px;--r3:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 100% 60% at 0% 0%,rgba(13,148,136,.09) 0%,transparent 55%),
+             radial-gradient(ellipse 80% 50% at 100% 100%,rgba(217,119,6,.06) 0%,transparent 55%);}
+.page{display:none;min-height:100vh;position:relative;z-index:1;}
+.page.active{display:block;}
+#pgLogin.active{display:flex;}
+
+/* LOGIN */
+#pgLogin{align-items:center;justify-content:center;padding:20px;
+  background:linear-gradient(150deg,#04080f 0%,#081520 40%,#061a18 100%);}
+.login-geo{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.login-card{position:relative;z-index:1;width:100%;max-width:380px;
+  background:rgba(15,22,35,.97);border:1px solid rgba(13,148,136,.2);border-radius:24px;
+  padding:36px 28px 30px;box-shadow:0 0 0 1px rgba(13,148,136,.08),0 24px 60px rgba(0,0,0,.6);}
+.bismillah{font-family:'Amiri',serif;font-size:1.7rem;color:var(--gold);text-align:center;
+  margin-bottom:20px;text-shadow:0 0 30px rgba(217,119,6,.35);}
+.login-title{text-align:center;font-size:1.25rem;font-weight:800;
+  background:linear-gradient(90deg,#d97706,#0d9488);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.5px;}
+.login-sub{text-align:center;font-size:.8rem;color:var(--text2);margin:6px 0 22px;}
+
+/* NAVBAR */
+.navbar{position:sticky;top:0;z-index:100;background:rgba(8,14,26,.92);
+  backdrop-filter:blur(20px);border-bottom:1px solid var(--border2);
+  padding:12px 18px;display:flex;align-items:center;justify-content:space-between;}
+.nav-brand{display:flex;align-items:center;gap:10px;}
+.nav-brand-name{font-size:.95rem;font-weight:900;
+  background:linear-gradient(90deg,#d97706,#0d9488);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.3px;}
+.nav-brand-sub{font-size:.68rem;font-weight:600;color:var(--text2);margin-top:1px;}
+.nav-center{font-weight:800;font-size:.88rem;background:linear-gradient(90deg,#d97706,#0d9488);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.btn-back{display:flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;
+  color:var(--text2);font-size:.82rem;font-weight:600;font-family:'Outfit',sans-serif;padding:6px 0;}
+.btn-back:hover{color:var(--teal);}
+.avatar-btn{width:36px;height:36px;border-radius:50%;background:var(--bg3);
+  border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;overflow:hidden;color:var(--teal);font-size:.75rem;font-weight:800;}
+.avatar-btn img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+
+/* MENU */
+.menu-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.5);}
+.menu-box{display:none;position:fixed;top:60px;right:14px;z-index:201;
+  background:var(--bg3);border:1px solid var(--border2);border-radius:14px;
+  min-width:210px;box-shadow:0 8px 32px rgba(0,0,0,.5);overflow:hidden;}
+.menu-item{width:100%;text-align:left;padding:11px 16px;background:none;border:none;
+  cursor:pointer;font-family:'Outfit',sans-serif;font-size:.83rem;color:var(--text);display:block;}
+.menu-item:hover{background:var(--teal-l);color:var(--teal);}
+.menu-item.danger{color:var(--red);}
+.menu-item.admin-item{color:var(--gold);}
+.menu-item.admin-item:hover{background:var(--gold-l);}
+.menu-divider{border-top:1px solid var(--border);}
+
+/* WRAP */
+.wrap{max-width:640px;margin:0 auto;padding:16px 14px 40px;position:relative;z-index:1;}
+
+/* FORMS */
+.fg{margin-bottom:14px;}
+.fg label{display:block;font-size:.75rem;font-weight:600;color:var(--text2);
+  margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;}
+input,select,textarea{width:100%;border-radius:var(--r2);border:1px solid var(--border2);
+  background:var(--bg3);color:var(--text);font-size:.9rem;padding:11px 14px;
+  font-family:'Outfit',sans-serif;transition:border-color .2s,box-shadow .2s;}
+input::placeholder,textarea::placeholder{color:var(--text3);}
+input:focus,select:focus,textarea:focus{border-color:var(--teal);
+  box-shadow:0 0 0 3px var(--teal-l);outline:none;}
+select option{background:var(--bg3);}
+textarea{resize:vertical;}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:none;
+  cursor:pointer;font-family:'Outfit',sans-serif;font-weight:700;border-radius:var(--r2);
+  transition:opacity .15s,transform .1s;}
+.btn:hover{opacity:.88;}.btn:active{transform:scale(.97);}
+.btn-full{width:100%;padding:13px 18px;font-size:.9rem;}
+.btn-teal{background:linear-gradient(135deg,var(--teal-d),var(--teal));color:#fff;
+  box-shadow:0 4px 18px rgba(13,148,136,.3);}
+.btn-gold{background:linear-gradient(135deg,var(--gold-d),var(--gold));color:#fff;
+  box-shadow:0 4px 18px rgba(217,119,6,.25);}
+.btn-red{background:var(--red-l);color:var(--red);border:1px solid rgba(239,68,68,.25);}
+.btn-ghost{background:var(--bg3);color:var(--text2);border:1px solid var(--border2);
+  font-size:.82rem;padding:8px 14px;border-radius:var(--r3);}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;
+  border-radius:20px;font-size:.68rem;font-weight:700;white-space:nowrap;}
+.chip-teal{background:var(--teal-l);color:var(--teal);}
+.chip-gold{background:var(--gold-l);color:var(--gold);}
+.chip-green{background:var(--green-l);color:var(--green);}
+.chip-red{background:var(--red-l);color:var(--red);}
+.chip-gray{background:rgba(255,255,255,.08);color:var(--text2);}
+
+/* CARD */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);
+  margin-bottom:14px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.3);}
+.card-header{background:var(--bg3);border-bottom:1px solid var(--border);
+  padding:12px 16px;display:flex;align-items:center;justify-content:space-between;
+  font-weight:700;font-size:.82rem;color:var(--white);}
+.ch-l{display:flex;align-items:center;gap:8px;}
+
+/* PROGRESS */
+.prog{height:8px;border-radius:10px;background:rgba(255,255,255,.06);overflow:hidden;}
+.prog-fill{height:100%;border-radius:10px;
+  background:linear-gradient(90deg,var(--teal-d),var(--teal),#2dd4bf);
+  transition:width .8s cubic-bezier(.4,0,.2,1);}
+.prog-fill.gold{background:linear-gradient(90deg,var(--gold-d),var(--gold),#fbbf24);}
+.prog-sm{height:5px;}
+
+/* STAT ROW */
+.srow{display:flex;justify-content:space-between;align-items:center;
+  padding:9px 0;font-size:.82rem;color:var(--text2);}
+.srow+.srow{border-top:1px solid var(--border);}
+.sval{font-weight:800;color:var(--teal);font-size:.88rem;}
+
+/* ATTENDANCE */
+.att-grid{display:flex;gap:20px;flex-wrap:wrap;padding:20px 16px;justify-content:center;}
+.att-item{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1;min-width:80px;}
+.att-av-wrap{position:relative;width:50px;height:50px;flex-shrink:0;}
+.att-av-wrap img,.att-av-fallback{width:50px;height:50px;border-radius:50%;object-fit:cover;}
+.att-av-fallback{display:flex;align-items:center;justify-content:center;
+  font-size:.9rem;font-weight:800;}
+.att-ring{position:absolute;inset:-3px;border-radius:50%;border:2.5px solid transparent;pointer-events:none;}
+.att-ring.done{border-color:var(--teal);box-shadow:0 0 0 2px var(--teal-l);}
+.att-ring.miss{border-color:var(--red);opacity:.7;}
+.att-badge{position:absolute;bottom:0;right:0;width:18px;height:18px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:.55rem;
+  border:2px solid var(--bg2);font-weight:800;}
+.att-badge.done{background:var(--teal);color:#fff;}
+.att-badge.miss{background:var(--red);color:#fff;}
+.att-name{font-size:.65rem;font-weight:700;color:var(--text2);text-align:center;}
+
+/* TEAM STRIP */
+.team-strip{display:flex;gap:12px;padding:14px 16px;justify-content:center;}
+.ts-card{flex:1;max-width:240px;background:var(--bg3);border:1px solid var(--border);
+  border-radius:var(--r3);padding:14px 10px;text-align:center;}
+.ts-av{width:48px;height:48px;border-radius:50%;overflow:hidden;margin:0 auto 8px;}
+.ts-av img{width:100%;height:100%;object-fit:cover;}
+.ts-name{font-size:.65rem;font-weight:700;color:var(--text2);margin-bottom:4px;}
+.ts-pages{font-size:1rem;font-weight:900;color:var(--teal);line-height:1;}
+.ts-sub{font-size:.6rem;color:var(--text3);margin-top:2px;}
+
+/* COUNTDOWN */
+.cd-wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:14px 16px;}
+.cd-box{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r3);
+  padding:10px 6px;text-align:center;}
+.cd-num{font-size:1.6rem;font-weight:900;color:var(--gold);line-height:1;}
+.cd-lbl{font-size:.6rem;font-weight:600;color:var(--text2);text-transform:uppercase;
+  letter-spacing:.5px;margin-top:3px;}
+
+/* CALENDAR */
+.cal-wrap{padding:14px 16px;}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.cal-title{font-weight:700;font-size:.9rem;color:var(--white);}
+.cal-btn{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);
+  width:30px;height:30px;border-radius:8px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:.85rem;}
+.cal-btn:hover{background:var(--teal-l);color:var(--teal);}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.cal-dow{text-align:center;font-size:.6rem;font-weight:700;color:var(--text3);padding-bottom:4px;}
+.cal-day{aspect-ratio:1;border-radius:7px;display:flex;align-items:center;justify-content:center;
+  font-size:.72rem;font-weight:600;}
+.cal-day.setor{background:var(--teal);color:#fff;}
+.cal-day.miss{background:var(--red-l);color:var(--red);}
+.cal-day.future{color:var(--text3);background:rgba(255,255,255,.02);}
+.cal-day.today{box-shadow:0 0 0 2px var(--gold);}
+.cal-legend{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;}
+.cal-legend-item{display:flex;align-items:center;gap:5px;font-size:.67rem;color:var(--text2);}
+.cal-legend-dot{width:10px;height:10px;border-radius:3px;}
+
+/* CHART */
+.chart-wrap{padding:14px 16px 4px;display:flex;align-items:flex-end;gap:5px;height:120px;}
+.chart-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px;}
+.chart-bar{width:100%;border-radius:4px 4px 0 0;min-height:3px;
+  background:linear-gradient(180deg,var(--teal),var(--teal-d));}
+.chart-bar.ok{background:linear-gradient(180deg,#2dd4bf,var(--teal-d));}
+.chart-bar.low{background:linear-gradient(180deg,var(--red),#7f1d1d);opacity:.7;}
+.chart-val{font-size:.6rem;font-weight:700;color:var(--teal);}
+.chart-lbl{font-size:.58rem;color:var(--text3);}
+.chart-footer{display:flex;justify-content:space-between;padding:4px 16px 10px;}
+.chart-footer span{font-size:.65rem;color:var(--text3);}
+
+/* JUZ GRID */
+.juz-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;padding:14px;}
+.juz-cell{border-radius:7px;padding:6px 3px;text-align:center;
+  border:1px solid var(--border);background:var(--bg3);position:relative;overflow:hidden;}
+.juz-cell.full{background:var(--teal-l);border-color:rgba(13,148,136,.3);}
+.juz-cell.part{background:var(--gold-ll);border-color:rgba(217,119,6,.2);}
+.juz-cell.aktif{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold);}
+.juz-n{font-size:.58rem;font-weight:700;color:var(--text3);}
+.juz-p{font-size:.65rem;font-weight:800;margin-top:1px;color:var(--text3);}
+.juz-cell.full .juz-p{color:var(--teal);}
+.juz-cell.part .juz-p{color:var(--gold);}
+.juz-bot{position:absolute;bottom:0;left:0;height:3px;
+  background:linear-gradient(90deg,var(--teal-d),var(--teal));}
+.juz-cell.part .juz-bot{background:linear-gradient(90deg,var(--gold-d),var(--gold));}
+
+/* BADGES */
+.badge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:14px;}
+.badge-item{border-radius:var(--r3);padding:12px 8px;text-align:center;
+  border:1px solid var(--border);background:var(--bg3);opacity:.3;}
+.badge-item.on{opacity:1;border-color:rgba(217,119,6,.35);background:var(--gold-ll);}
+.badge-icon{font-size:1.5rem;display:block;margin-bottom:5px;}
+.badge-name{font-size:.65rem;font-weight:700;color:var(--white);margin-bottom:2px;}
+.badge-desc{font-size:.58rem;color:var(--text2);line-height:1.3;}
+
+/* SETORAN ITEM */
+.setor-item{padding:12px 16px;border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;gap:10px;}
+.setor-item:last-child{border-bottom:none;}
+.setor-juz{font-weight:700;font-size:.88rem;color:var(--teal);}
+.setor-hal{font-size:.74rem;color:var(--text2);margin-top:2px;}
+.setor-tgl{font-size:.7rem;color:var(--text2);text-align:right;}
+.setor-pages{font-size:.75rem;font-weight:800;color:var(--gold);margin-top:2px;text-align:right;}
+
+/* WARNING/OK */
+.warning-box{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);
+  border-radius:var(--r2);padding:12px 14px;display:flex;gap:10px;
+  align-items:flex-start;margin-bottom:14px;}
+.ok-box{background:rgba(13,148,136,.1);border:1px solid rgba(13,148,136,.2);
+  border-radius:var(--r2);padding:12px 14px;display:flex;gap:10px;
+  align-items:center;margin-bottom:14px;}
+.info-box{background:var(--teal-l);border:1px solid rgba(13,148,136,.2);
+  border-radius:var(--r3);padding:10px 13px;font-size:.78rem;color:var(--teal);
+  margin-bottom:14px;line-height:1.5;}
+.warn-box{background:var(--gold-l);border:1px solid rgba(217,119,6,.3);
+  border-radius:var(--r3);padding:10px 13px;font-size:.78rem;color:var(--gold);
+  margin-bottom:14px;line-height:1.5;}
+.count-info{border-radius:var(--r3);padding:8px 12px;font-size:.79rem;
+  font-weight:700;margin-bottom:14px;display:none;}
+
+/* JUZ LOCK MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);
+  z-index:300;align-items:flex-end;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal-box{background:var(--bg2);border-radius:22px 22px 0 0;border-top:1px solid var(--border2);
+  padding:24px 20px 36px;width:100%;max-width:520px;max-height:88vh;overflow-y:auto;}
+.modal-title{font-weight:800;font-size:1rem;margin-bottom:10px;color:var(--white);}
+
+/* WIKI */
+.wiki-hero{background:linear-gradient(135deg,rgba(13,148,136,.12) 0%,rgba(217,119,6,.07) 100%);
+  border:1px solid rgba(13,148,136,.15);border-radius:var(--r);
+  padding:20px 18px;margin-bottom:14px;text-align:center;}
+.profile-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:14px;}
+.profile-card{background:var(--bg3);border:1px solid var(--border);
+  border-radius:var(--r3);padding:14px 10px;text-align:center;}
+.profile-card.ketua{border-color:rgba(217,119,6,.3);background:var(--gold-ll);}
+.profile-photo{width:52px;height:52px;border-radius:50%;overflow:hidden;margin:0 auto 8px;}
+.profile-photo img{width:100%;height:100%;object-fit:cover;}
+.wiki-list{list-style:none;padding:0;}
+.wiki-list li{padding:8px 0;border-bottom:1px solid var(--border);
+  font-size:.83rem;color:var(--text);line-height:1.5;display:flex;gap:8px;}
+.wiki-list li:last-child{border-bottom:none;}
+.wiki-list li::before{content:'•';color:var(--teal);font-weight:900;flex-shrink:0;}
+.wiki-list li.red::before{color:var(--red);}
+.program-card{background:var(--bg3);border:1px solid var(--border);
+  border-radius:var(--r3);padding:14px;margin-bottom:8px;}
+.sec-lbl{font-size:.67rem;font-weight:700;color:var(--text2);text-transform:uppercase;
+  letter-spacing:1px;margin:16px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+
+/* ADMIN */
+.admin-member-row{display:flex;align-items:center;gap:10px;padding:10px 16px;
+  border-bottom:1px solid var(--border);}
+.admin-member-row:last-child{border-bottom:none;}
+
+/* TOAST */
+.toast-wrap{position:fixed;top:70px;left:50%;transform:translateX(-50%);
+  z-index:9999;pointer-events:none;}
+.toast-msg{background:var(--bg3);color:var(--text);border:1px solid var(--border2);
+  padding:9px 20px;border-radius:30px;font-size:.82rem;font-weight:600;
+  box-shadow:0 4px 24px rgba(0,0,0,.5);animation:fadeio 2.8s ease forwards;white-space:nowrap;}
+@keyframes fadeio{0%{opacity:0;transform:translateY(-8px)}12%{opacity:1;transform:translateY(0)}75%{opacity:1}100%{opacity:0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes rotCW{to{transform:rotate(360deg)}}
+@keyframes rotCCW{to{transform:rotate(-360deg)}}
+
+#loading{display:none;position:fixed;inset:0;z-index:9998;background:rgba(8,14,26,.85);
+  flex-direction:column;align-items:center;justify-content:center;gap:12px;}
+.spin{width:42px;height:42px;border-radius:50%;border:3px solid var(--teal-l);
+  border-top-color:var(--teal);animation:spin .7s linear infinite;}
+
+.empty{text-align:center;padding:28px 16px;color:var(--text2);font-size:.82rem;}
+.empty-icon{font-size:2rem;display:block;margin-bottom:8px;opacity:.2;}
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="spin"></div>
+  <span style="font-size:.82rem;font-weight:600;color:var(--teal);">Memuat data...</span>
+</div>
+<div class="toast-wrap" id="toastWrap" style="display:none;">
+  <div class="toast-msg" id="toastMsg"></div>
+</div>
+
+<!-- ═══════ LOGIN ═══════ -->
+<div id="pgLogin" class="page active">
+  <div class="login-geo">
+    <svg viewBox="0 0 800 700" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="400,30 520,97 520,230 400,297 280,230 280,97" fill="none" stroke="rgba(13,148,136,0.15)" stroke-width="1.5"/>
+      <polygon points="400,80 490,132 490,236 400,288 310,236 310,132" fill="none" stroke="rgba(217,119,6,0.1)" stroke-width="1"/>
+      <polygon points="150,150 185,210 255,210 205,255 225,325 150,285 75,325 95,255 45,210 115,210" fill="none" stroke="rgba(13,148,136,0.08)" stroke-width="1"/>
+      <polygon points="650,400 685,460 755,460 705,505 725,575 650,535 575,575 595,505 545,460 615,460" fill="none" stroke="rgba(217,119,6,0.09)" stroke-width="1"/>
+      <line x1="400" y1="30" x2="400" y2="297" stroke="rgba(13,148,136,0.05)" stroke-width="0.5"/>
+      <line x1="280" y1="97" x2="520" y2="230" stroke="rgba(13,148,136,0.05)" stroke-width="0.5"/>
+      <line x1="520" y1="97" x2="280" y2="230" stroke="rgba(13,148,136,0.05)" stroke-width="0.5"/>
+      <circle cx="400" cy="163" r="3" fill="rgba(217,119,6,0.5)"/>
+      <circle cx="150" cy="237" r="2" fill="rgba(13,148,136,0.4)"/>
+      <circle cx="650" cy="487" r="2" fill="rgba(217,119,6,0.4)"/>
+    </svg>
+  </div>
+  <div class="login-card">
+    <div class="bismillah">﷽</div>
+    <!-- Logo animasi -->
+    <div style="width:76px;height:76px;margin:0 auto 16px;position:relative;">
+      <svg width="76" height="76" viewBox="0 0 76 76" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="38,4 70,21 70,55 38,72 6,55 6,21" fill="none" stroke="#d97706" stroke-width="1.2" opacity="0.5">
+          <animateTransform attributeName="transform" type="rotate" values="0 38 38;360 38 38" dur="20s" repeatCount="indefinite"/>
+        </polygon>
+        <polygon points="38,10 64,24.5 64,51.5 38,66 12,51.5 12,24.5" fill="rgba(13,148,136,0.15)" stroke="#0d9488" stroke-width="1" opacity="0.7">
+          <animateTransform attributeName="transform" type="rotate" values="360 38 38;0 38 38" dur="15s" repeatCount="indefinite"/>
+        </polygon>
+        <text x="38" y="46" text-anchor="middle" font-family="Amiri,serif" font-size="28" fill="#d97706">📖</text>
+      </svg>
+    </div>
+    <div class="login-title">Tahfidzh Dilema</div>
+    <p class="login-sub">Muroja'ah Bersama · Juz 1–30</p>
+    <div class="fg"><label>Anggota</label>
+      <select id="loginUser"></select>
+    </div>
+    <div class="fg"><label>Password</label>
+      <input type="password" id="loginPass" placeholder="••••••••">
+    </div>
+    <button class="btn btn-teal btn-full" id="loginBtn" onclick="doLogin()">Masuk</button>
+    <div id="loginErr" style="display:none;text-align:center;margin-top:10px;font-size:.79rem;color:var(--red);"></div>
+  </div>
+</div>
+
+<!-- ═══════ DASHBOARD UTAMA ═══════ -->
+<div id="pgUtama" class="page">
+  <nav class="navbar">
+    <div class="nav-brand">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" style="flex-shrink:0;">
+        <polygon points="14,2 26,8 26,20 14,26 2,20 2,8" fill="none" stroke="#d97706" stroke-width="1.2" opacity="0.5"/>
+        <polygon points="14,5 22,9.5 22,18.5 14,23 6,18.5 6,9.5" fill="none" stroke="#0d9488" stroke-width="0.8" opacity="0.6"/>
+        <text x="14" y="18" text-anchor="middle" font-family="Amiri,serif" font-size="11" fill="#d97706" opacity="0.9">ط</text>
+      </svg>
+      <div>
+        <div class="nav-brand-name">Tahfidzh Dilema</div>
+        <div class="nav-brand-sub">Muroja'ah Bersama</div>
+      </div>
+    </div>
+    <button class="avatar-btn" onclick="openMenu()">
+      <img id="navPhoto" src="" alt="" style="display:none;">
+      <span id="navInitial">?</span>
+    </button>
+  </nav>
+  <div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+  <div class="menu-box" id="menuBox">
+    <div class="menu-item" style="font-weight:700;color:var(--text2);cursor:default;" id="menuLabel"></div>
+    <div class="menu-divider"></div>
+    <button class="menu-item" onclick="navTo('pgInput')">✍️ Input Setoran</button>
+    <button class="menu-item" onclick="navTo('pgPribadi')">👤 Dashboard Pribadi</button>
+    <button class="menu-item" onclick="navTo('pgWiki')">📚 Wiki Kelompok</button>
+    <div id="adminMenuItems" style="display:none;">
+      <div class="menu-divider"></div>
+      <button class="menu-item admin-item" onclick="navTo('pgAdmin')">⚙️ Panel Admin</button>
+    </div>
+    <div class="menu-divider"></div>
+    <button class="menu-item danger" onclick="doLogout()">Keluar</button>
+  </div>
+
+  <div class="wrap">
+    <!-- Progres Tim -->
+    <div style="background:linear-gradient(135deg,rgba(13,148,136,.13) 0%,rgba(217,119,6,.07) 100%);border:1px solid rgba(13,148,136,.2);border-radius:var(--r);padding:18px;margin-bottom:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <div>
+          <div style="font-size:.7rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;">Progres Tim</div>
+          <div id="uTeamPct" style="font-size:2rem;font-weight:900;color:var(--white);line-height:1.1;margin-top:2px;">0%</div>
+        </div>
+        <div style="text-align:right;">
+          <div id="uTeamPages" style="font-size:1.1rem;font-weight:800;color:var(--teal);">0 / 0 hal</div>
+          <div style="font-size:.72rem;color:var(--text2);margin-top:2px;">menuju khatam bersama</div>
+        </div>
+      </div>
+      <div class="prog"><div class="prog-fill" id="uTeamBar" style="width:0%"></div></div>
+      <div style="font-size:.72rem;color:var(--text2);margin-top:8px;" id="uTeamSisa"></div>
+    </div>
+    <!-- Countdown -->
+    <div class="card">
+      <div class="card-header">
+        <div class="ch-l">⏳ Countdown Target Khatam</div>
+        <span style="font-size:.7rem;color:var(--text2);">1 Maret 2027</span>
+      </div>
+      <div class="cd-wrap">
+        <div class="cd-box"><div class="cd-num" id="cdD">—</div><div class="cd-lbl">Hari</div></div>
+        <div class="cd-box"><div class="cd-num" id="cdH">—</div><div class="cd-lbl">Jam</div></div>
+        <div class="cd-box"><div class="cd-num" id="cdM">—</div><div class="cd-lbl">Menit</div></div>
+        <div class="cd-box"><div class="cd-num" id="cdS">—</div><div class="cd-lbl">Detik</div></div>
+      </div>
+    </div>
+    <!-- Attendance -->
+    <div class="card">
+      <div class="card-header">
+        <div class="ch-l">📋 Setoran Hari Ini</div>
+        <span class="chip chip-gray" id="uAttChip">0/0</span>
+      </div>
+      <div class="att-grid" id="uAttGrid"></div>
+    </div>
+    <!-- Streak -->
+    <div class="card">
+      <div class="card-header"><div class="ch-l">🔥 Streak Tim</div></div>
+      <div id="uStreakList"></div>
+    </div>
+    <!-- Leaderboard -->
+    <div class="card">
+      <div class="card-header">
+        <div class="ch-l">🏆 Leaderboard</div>
+        <span style="font-size:.7rem;color:var(--text2);">setara halaman</span>
+      </div>
+      <canvas id="lbCanvas" style="width:100%;display:block;"></canvas>
+      <div id="lbList" style="padding:4px 12px 12px;"></div>
+    </div>
+    <!-- Team strip -->
+    <div class="card">
+      <div class="card-header"><div class="ch-l">📊 Ringkasan Tim</div></div>
+      <div class="team-strip" id="uTeamStrip"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;">
+      <button class="btn btn-teal btn-full" onclick="navTo('pgInput')">✍️ Input Setoran</button>
+      <button class="btn btn-gold btn-full" onclick="navTo('pgPribadi')">👤 Progres Saya</button>
+    </div>
+    <button class="btn btn-ghost btn-full" onclick="navTo('pgWiki')" style="margin-top:10px;">📚 Wiki Kelompok</button>
+  </div>
+</div>
+
+<!-- ═══════ DASHBOARD PRIBADI ═══════ -->
+<div id="pgPribadi" class="page">
+  <nav class="navbar">
+    <button class="btn-back" onclick="navTo('pgUtama')">← Kembali</button>
+    <div class="nav-center">Tahfidzh Dilema</div>
+    <div style="width:60px;"></div>
+  </nav>
+  <div class="wrap">
+    <div id="pWarningBox"></div>
+    <div style="background:linear-gradient(135deg,rgba(13,148,136,.12) 0%,rgba(217,119,6,.06) 100%);border:1px solid rgba(13,148,136,.2);border-radius:var(--r);padding:18px;margin-bottom:14px;">
+      <div id="pUserName" style="font-size:1.2rem;font-weight:900;color:var(--white);margin-bottom:12px;"></div>
+      <!-- Juz aktif info -->
+      <div id="pJuzAktifInfo" style="margin-bottom:12px;"></div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;text-align:center;">
+        <div><div id="pTotalHal" style="font-size:1.7rem;font-weight:900;color:var(--teal);line-height:1;">0</div>
+          <div style="font-size:.65rem;color:var(--text2);margin-top:3px;">Total (setara hal)</div></div>
+        <div><div id="pStreak" style="font-size:1.7rem;font-weight:900;color:var(--gold);line-height:1;">0</div>
+          <div style="font-size:.65rem;color:var(--text2);margin-top:3px;">Streak 🔥</div></div>
+        <div><div id="pJuzDone" style="font-size:1.7rem;font-weight:900;color:var(--green);line-height:1;">0</div>
+          <div style="font-size:.65rem;color:var(--text2);margin-top:3px;">Juz Selesai</div></div>
+      </div>
+      <div class="prog prog-sm" style="margin-top:14px;"><div class="prog-fill" id="pProgBar" style="width:0%"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:.72rem;color:var(--text2);margin-top:6px;">
+        <span>Progres keseluruhan</span>
+        <span id="pPct" style="font-weight:700;color:var(--teal);">0%</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="ch-l">🎯 Estimasi Khatam</div></div>
+      <div style="padding:12px 16px;">
+        <div class="srow"><span>Kecepatan rata-rata</span><span class="sval" id="pSpeed">—</span></div>
+        <div class="srow"><span>Sisa halaman</span><span class="sval" id="pSisa">—</span></div>
+        <div class="srow"><span>Estimasi selesai</span><span class="sval" id="pEst">—</span></div>
+        <div class="srow"><span>Streak terpanjang</span><span class="sval" id="pStreakMax">—</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="ch-l">📅 Kalender Setoran</div></div>
+      <div class="cal-wrap">
+        <div class="cal-nav">
+          <button class="cal-btn" onclick="calMove(-1)">‹</button>
+          <div class="cal-title" id="calTitle">—</div>
+          <button class="cal-btn" onclick="calMove(1)">›</button>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+        <div class="cal-legend">
+          <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--teal);"></div>Setor</div>
+          <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--red-l);border:1px solid var(--red);"></div>Miss</div>
+          <div class="cal-legend-item"><div class="cal-legend-dot" style="background:transparent;border:1.5px solid var(--gold);border-radius:3px;"></div>Hari ini</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="ch-l">📈 Grafik 8 Minggu</div>
+        <span class="chip chip-teal">target 14/minggu</span>
+      </div>
+      <div class="chart-wrap" id="pChart"></div>
+      <div class="chart-footer"><span>← 8 minggu lalu</span><span>Minggu ini →</span></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="ch-l">📿 Progres per Juz</div>
+        <span class="chip chip-teal" id="pJuzChip">0/30</span>
+      </div>
+      <div class="juz-grid" id="pJuzGrid"></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="ch-l">🎖️ Achievement</div>
+        <span class="chip chip-gold" id="pBadgeChip">0</span>
+      </div>
+      <div class="badge-grid" id="pBadgeGrid"></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="ch-l">🗂️ Riwayat Setoran</div>
+        <span class="chip chip-teal" id="pRiwayatChip">0</span>
+      </div>
+      <div id="pRiwayatList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ INPUT SETORAN ═══════ -->
+<div id="pgInput" class="page">
+  <nav class="navbar">
+    <button class="btn-back" onclick="navTo('pgUtama')">← Kembali</button>
+    <div class="nav-center">Tahfidzh Dilema</div>
+    <div style="width:60px;"></div>
+  </nav>
+  <div class="wrap">
+    <div class="card">
+      <div class="card-header">
+        <div class="ch-l">✍️ Input Setoran</div>
+        <span class="chip chip-teal" id="inUserChip">—</span>
+      </div>
+      <div style="padding:18px 16px;">
+        <!-- Juz aktif info -->
+        <div id="inJuzAktifInfo"></div>
+        <!-- Pilih juz (hanya tampil kalau belum ada juz aktif) -->
+        <div id="inPilihJuzWrap">
+          <div class="warn-box">⚠️ <strong>Perhatian:</strong> Setelah memilih juz, kamu <strong>tidak bisa pindah ke juz lain</strong> sampai semua halaman di juz tersebut selesai (1–20 hal). Pilih dengan yakin!</div>
+          <div class="fg"><label>Pilih Juz yang Akan Dihafal</label>
+            <select id="inJuzPilih" onchange="onJuzPilihChange()"></select>
+          </div>
+          <div id="inJuzPilihInfo" style="margin-bottom:14px;"></div>
+          <button class="btn btn-gold btn-full" onclick="konfirmasiPilihJuz()">🔒 Pilih & Kunci Juz Ini</button>
+        </div>
+        <!-- Form setoran (tampil kalau sudah ada juz aktif) -->
+        <div id="inFormSetoran" style="display:none;">
+          <div class="info-box" id="inJuzActiveInfo"></div>
+          <!-- Juz 1-29: halaman -->
+          <div id="inHalWrap">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+              <div class="fg"><label>Halaman Mulai</label><input type="number" id="inHalMulai" placeholder="1" min="1" max="20" oninput="updateCount()"></div>
+              <div class="fg"><label>Halaman Selesai</label><input type="number" id="inHalSelesai" placeholder="2" min="1" max="20" oninput="updateCount()"></div>
+            </div>
+          </div>
+          <!-- Juz 30: surat -->
+          <div id="inSuratWrap" style="display:none;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+              <div class="fg"><label>Surat Mulai</label><select id="inSuratMulai" onchange="updateCount()"></select></div>
+              <div class="fg"><label>Surat Selesai</label><select id="inSuratSelesai" onchange="updateCount()"></select></div>
+            </div>
+            <div class="info-box" style="margin-top:-4px;">Minimal 3 surat per setoran. 3 surat = 1 halaman di leaderboard.</div>
+          </div>
+          <div class="count-info" id="countInfo"></div>
+          <div class="fg"><label>Tanggal</label><input type="date" id="inTanggal"></div>
+          <div class="fg"><label>Catatan (opsional)</label><textarea id="inCatatan" rows="2" placeholder="Catatan hari ini..."></textarea></div>
+          <button class="btn btn-teal btn-full" id="simpanBtn" onclick="simpanSetoran()">✅ Simpan Setoran</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ WIKI ═══════ -->
+<div id="pgWiki" class="page">
+  <nav class="navbar">
+    <button class="btn-back" onclick="navTo('pgUtama')">← Kembali</button>
+    <div class="nav-center">Tahfidzh Dilema</div>
+    <div style="width:60px;"></div>
+  </nav>
+  <div class="wrap">
+    <div class="wiki-hero">
+      <div style="font-family:'Amiri',serif;font-size:1.4rem;color:var(--gold);margin-bottom:8px;">﷽</div>
+      <div style="font-family:'Amiri',serif;font-size:1.6rem;color:var(--gold);margin-bottom:4px;">Tahfidzh Dilema</div>
+      <div style="font-size:.8rem;color:var(--text2);line-height:1.5;">Muroja'ah Bersama · Juz 1 sampai Juz 30<br>
+        <span style="color:var(--teal);font-weight:600;" id="wikiMemberCount">2 Anggota · Ketua: Ridho</span></div>
+    </div>
+    <div class="sec-lbl" style="margin-top:0;">Anggota</div>
+    <div class="profile-grid" id="wikiProfiles"></div>
+    <div class="sec-lbl">Visi & Misi</div>
+    <div class="card"><div style="padding:14px 16px;">
+      <div style="font-size:.8rem;font-weight:700;color:var(--teal);margin-bottom:6px;">🌟 Visi</div>
+      <p style="font-size:.83rem;color:var(--text);line-height:1.6;margin-bottom:12px;">Menyelesaikan muroja'ah 30 juz bersama secara konsisten sebagai bentuk menjaga hafalan Al-Qur'an dan meningkatkan kedisiplinan ibadah.</p>
+      <div style="font-size:.8rem;font-weight:700;color:var(--teal);margin-bottom:6px;">🎯 Misi</div>
+      <ul class="wiki-list">
+        <li>Menjaga konsistensi muroja'ah harian setiap anggota</li>
+        <li>Saling menyemangati dan mengingatkan dalam kebaikan</li>
+        <li>Menciptakan lingkungan yang nyaman, suportif, dan penuh adab</li>
+        <li>Meningkatkan kualitas hafalan, bukan hanya kuantitas</li>
+      </ul>
+    </div></div>
+    <div class="sec-lbl">Aturan & Etika</div>
+    <div class="card"><div style="padding:14px 16px;">
+      <div style="font-size:.8rem;font-weight:700;color:var(--gold);margin-bottom:8px;">📌 Aturan</div>
+      <ul class="wiki-list" style="margin-bottom:14px;">
+        <li>Wajib setor minimal 1 halaman per hari (Juz 30: minimal 3 surat/hari)</li>
+        <li>Setoran dilakukan maksimal pukul 21.00 WIB</li>
+        <li>Jika tidak setor, wajib izin di grup</li>
+        <li>Juz dikunci — tidak bisa pindah juz sebelum semua halaman selesai</li>
+        <li class="red">Miss 3 hari berturut-turut → teguran ketua + wajib ganti setoran tertinggal</li>
+        <li class="red">Jika terus berulang → akan dievaluasi keikutsertaannya</li>
+      </ul>
+      <div style="font-size:.8rem;font-weight:700;color:var(--teal);margin-bottom:8px;">🤝 Etika</div>
+      <ul class="wiki-list">
+        <li>Menggunakan bahasa yang sopan dan baik</li>
+        <li>Tidak spam / chat di luar kepentingan kelompok</li>
+        <li>Saling menghargai dan tidak menjatuhkan</li>
+        <li>Mengingatkan dengan cara yang baik, tidak kasar</li>
+        <li>Menjaga niat karena Allah ﷻ</li>
+      </ul>
+    </div></div>
+    <div class="sec-lbl">Program</div>
+    <div class="program-card"><span style="font-size:1.3rem;display:block;margin-bottom:6px;">📖</span>
+      <div style="font-weight:700;font-size:.88rem;color:var(--white);margin-bottom:4px;">Setoran Harian</div>
+      <div style="font-size:.76rem;color:var(--text2);line-height:1.5;">Min. 1 hal/hari (ideal 2). Juz 30: min. 3 surat/hari. Batas pukul 21.00 WIB.</div></div>
+    <div class="program-card"><span style="font-size:1.3rem;display:block;margin-bottom:6px;">👥</span>
+      <div style="font-weight:700;font-size:.88rem;color:var(--white);margin-bottom:4px;">Muroja'ah Bareng (Mingguan)</div>
+      <div style="font-size:.76rem;color:var(--text2);line-height:1.5;">Setiap Sabtu atau Ahad. Online/offline. Fokus: mengulang hafalan bersama.</div></div>
+    <div class="program-card"><span style="font-size:1.3rem;display:block;margin-bottom:6px;">🎙️</span>
+      <div style="font-weight:700;font-size:.88rem;color:var(--white);margin-bottom:4px;">Sima'an Bulanan</div>
+      <div style="font-size:.76rem;color:var(--text2);line-height:1.5;">Setiap akhir bulan. Saling menyimak hafalan secara bergantian.</div></div>
+    <div class="sec-lbl">Target Khatam</div>
+    <div class="card"><div style="padding:14px 16px;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:8px;">🏁</div>
+      <div style="font-size:1rem;font-weight:800;color:var(--white);margin-bottom:4px;">1 Maret 2027</div>
+      <div style="font-size:.78rem;color:var(--text2);line-height:1.5;">Total: 600 hal/orang · Target 2 hal/hari</div>
+      <div class="prog" style="margin-top:14px;"><div class="prog-fill gold" id="wikiBar" style="width:0%"></div></div>
+      <div style="font-size:.72rem;color:var(--text2);margin-top:6px;" id="wikiPct">0% selesai</div>
+    </div></div>
+  </div>
+</div>
+
+<!-- ═══════ ADMIN ═══════ -->
+<div id="pgAdmin" class="page">
+  <nav class="navbar">
+    <button class="btn-back" onclick="navTo('pgUtama')">← Kembali</button>
+    <div class="nav-center" style="-webkit-text-fill-color:var(--gold);background:none;">⚙️ Panel Admin</div>
+    <div style="width:60px;"></div>
+  </nav>
+  <div class="wrap">
+    <!-- Member management -->
+    <div class="card">
+      <div class="card-header">
+        <div class="ch-l">👥 Kelola Member</div>
+        <span class="chip chip-gold" id="adminMemberCount">0</span>
+      </div>
+      <div id="adminMemberList"></div>
+      <div style="padding:14px 16px;border-top:1px solid var(--border);">
+        <div style="font-size:.8rem;font-weight:700;color:var(--text2);margin-bottom:10px;">Tambah Member Baru</div>
+        <div class="info-box" style="font-size:.73rem;">Setelah tambah member di sini, tambahkan juga ke <code>USER_AUTH</code> di Code.gs lalu deploy ulang agar bisa login.</div>
+        <div class="fg"><label>Nama</label><input type="text" id="adminNewName" placeholder="Nama anggota baru"></div>
+        <button class="btn btn-gold btn-full" onclick="adminAddMember()">➕ Tambah Member</button>
+      </div>
+    </div>
+    <!-- Reset juz -->
+    <div class="card">
+      <div class="card-header"><div class="ch-l">🔓 Reset Juz Aktif</div></div>
+      <div style="padding:14px 16px;">
+        <div class="warn-box" style="font-size:.75rem;">Gunakan hanya jika ada anggota yang salah pilih juz atau perlu reset. Setoran yang sudah ada tidak terhapus.</div>
+        <div class="fg"><label>Pilih Anggota</label><select id="adminResetTarget"></select></div>
+        <button class="btn btn-red btn-full" onclick="adminResetJuz()">🔓 Reset Juz Aktif</button>
+      </div>
+    </div>
+    <!-- Semua setoran -->
+    <div class="card">
+      <div class="card-header">
+        <div class="ch-l">📋 Semua Setoran</div>
+        <span class="chip chip-teal" id="adminSetoranCount">0</span>
+      </div>
+      <div id="adminSetoranList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Konfirmasi Pilih Juz -->
+<div class="modal-overlay" id="modalJuz">
+  <div class="modal-box">
+    <div class="modal-title">🔒 Konfirmasi Pilihan Juz</div>
+    <div id="modalJuzBody" style="font-size:.84rem;color:var(--text2);line-height:1.6;margin-bottom:16px;"></div>
+    <div style="background:var(--red-l);border:1px solid rgba(239,68,68,.25);border-radius:var(--r3);padding:10px 12px;font-size:.78rem;color:var(--red);margin-bottom:16px;">
+      ⚠️ Setelah mengkonfirmasi, kamu <strong>tidak bisa mengganti juz</strong> sampai semua halaman/surat di juz ini selesai disetorkan. Pastikan pilihanmu benar!
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-gold" style="flex:1;padding:12px;" onclick="eksekusiPilihJuz()">✅ Ya, Saya Yakin</button>
+      <button class="btn btn-ghost" style="flex:1;padding:12px;" onclick="closeModal()">Batal</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════
+// CONFIG
+// ════════════════════════════════════════════════
+const GAS_URL     = 'https://script.google.com/macros/s/AKfycbxpY5hFhaAMZwiH7hmArij6efVEXSOSxo9mrVHThzNLmHXpOIV2FJbROQbUpLb02t1_XQ/exec';
+const TARGET_DATE = '2027-03-01';
+
+// Member list — update ini kalau nambah member (sync dengan USER_AUTH di GAS)
+// PENTING: jangan hapus member lama, cukup tambah di bawah
+const MEMBERS_CONFIG = {
+  Ridho: { role:'admin',  photo:'https://drive.google.com/thumbnail?id=1GlLmkOBYxp0K8icOkU1dmnWq97JsSZiD&sz=w200', color:{bg:'#92400e',fg:'#fef3c7'} },
+  Maula: { role:'anggota',photo:'https://drive.google.com/thumbnail?id=1dotoNAcbv62eErcPoKtsHQAfSBaYGY9I&sz=w200', color:{bg:'#0f766e',fg:'#ccfbf1'} },
+  // Tambah member baru di sini:
+  // Rafli:       { role:'anggota', photo:'...url...', color:{bg:'#1e40af',fg:'#dbeafe'} },
+  // Abdurrahman: { role:'anggota', photo:'...url...', color:{bg:'#6d28d9',fg:'#ede9fe'} },
+  // Dzaki:       { role:'anggota', photo:'...url...', color:{bg:'#065f46',fg:'#d1fae5'} },
+};
+
+const JUZ_HAL     = 20;
+const TOTAL_JUZ   = 30;
+const HAL_PER_ORG = 600; // 30 juz × 20 hal
+
+// Surat-surat Juz 30 (37 surat: An-Naba s/d An-Nas)
+const SURAT_JUZ30 = [
+  'An-Naba\'','An-Nazi\'at','Abasa','At-Takwir','Al-Infitar','Al-Mutaffifin',
+  'Al-Insyiqaq','Al-Buruj','At-Tariq','Al-A\'la','Al-Ghasyiyah','Al-Fajr',
+  'Al-Balad','Asy-Syams','Al-Lail','Ad-Duha','Asy-Syarh','At-Tin',
+  'Al-\'Alaq','Al-Qadr','Al-Bayyinah','Az-Zalzalah','Al-\'Adiyat','Al-Qari\'ah',
+  'At-Takasur','Al-\'Asr','Al-Humazah','Al-Fil','Quraisy','Al-Ma\'un',
+  'Al-Kausar','Al-Kafirun','An-Nasr','Al-Masad','Al-Ikhlas','Al-Falaq','An-Nas'
+];
+const TOTAL_SURAT30 = SURAT_JUZ30.length; // 37
+
+// Rasio: 3 surat = 1 halaman untuk leaderboard
+const SURAT_PER_HAL = 3;
+
+const BADGES = [
+  {id:'first', icon:'🌱',name:'Langkah Pertama',desc:'Setoran pertama',        fn:(s,st,jd)=>s.length>=1},
+  {id:'hal14', icon:'📅',name:'1 Minggu Penuh', desc:'14 hal dalam seminggu',  fn:(s)=>maxWeekly(s)>=14},
+  {id:'juz1',  icon:'📖',name:'Juz 1 Selesai',  desc:'Tuntaskan juz 1',        fn:(s,st,jd)=>jd>=1},
+  {id:'juz5',  icon:'📚',name:'5 Juz',          desc:'Tuntaskan 5 juz',        fn:(s,st,jd)=>jd>=5},
+  {id:'juz10', icon:'🏅',name:'10 Juz',         desc:'Tuntaskan 10 juz',       fn:(s,st,jd)=>jd>=10},
+  {id:'juz15', icon:'⭐',name:'15 Juz (Nisfu)', desc:"Setengah Al-Qur'an",     fn:(s,st,jd)=>jd>=15},
+  {id:'juz30', icon:'🏆',name:'Khatam!',        desc:'30 juz selesai',         fn:(s,st,jd)=>jd>=30},
+  {id:'str7',  icon:'🔥',name:'7 Hari Streak',  desc:'7 hari berturut-turut',  fn:(s,st)=>st>=7},
+  {id:'str30', icon:'💎',name:'30 Hari Streak', desc:'30 hari berturut-turut', fn:(s,st)=>st>=30},
+];
+
+// ════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════
+let currentUser = null;
+let currentRole = null;
+let cache       = [];       // array setoran
+let juzAktifMap = {};       // { user: {juz, tgl} }
+let calY = null, calM = null;
+let cdInterval = null;
+let lbAnimId = null, lbT = 0, lbStar = 0, lbPx = null;
+let pendingJuz = null;      // juz yang akan dikonfirmasi
+
+// ════════════════════════════════════════════════
+// UTILS
+// ════════════════════════════════════════════════
+const todayStr = () => new Date().toISOString().split('T')[0];
+const todayD   = () => { const d=new Date(); d.setHours(0,0,0,0); return d; };
+const members  = () => Object.keys(MEMBERS_CONFIG);
+
+function fmtTgl(t) {
+  if(!t) return '—';
+  const [y,m,d] = t.split('-').map(Number);
+  return new Date(y,m-1,d).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
+}
+
+function toast(msg) {
+  const w=document.getElementById('toastWrap'), el=document.getElementById('toastMsg');
+  el.textContent=msg; w.style.display='block';
+  el.style.animation='none'; void el.offsetWidth;
+  el.style.animation='fadeio 2.8s ease forwards';
+  setTimeout(()=>w.style.display='none', 2900);
+}
+
+function loading(v) { document.getElementById('loading').style.display=v?'flex':'none'; }
+
+function photoEl(name, size=38) {
+  const cfg  = MEMBERS_CONFIG[name]||{color:{bg:'#334155',fg:'#94a3b8'}};
+  const bg   = cfg.color.bg;
+  const fg   = cfg.color.fg;
+  const fs   = Math.round(size*.35);
+  const init = name.slice(0,2).toUpperCase();
+  return '<div data-photo="'+name+'" data-sz="'+size+'"'
+       + ' style="width:'+size+'px;height:'+size+'px;border-radius:50%;overflow:hidden;flex-shrink:0;'
+       + 'background:'+bg+';color:'+fg+';display:flex;align-items:center;'
+       + 'justify-content:center;font-size:'+fs+'px;font-weight:800;">'
+       + init+'</div>';
+}
+
+function loadPhotos() {
+  document.querySelectorAll('[data-photo]').forEach(function(el) {
+    var name = el.getAttribute('data-photo');
+    var cfg  = MEMBERS_CONFIG[name];
+    if(!cfg || !cfg.photo) return;
+    var img  = new Image();
+    img.onload = function() {
+      img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;';
+      el.innerHTML = '';
+      el.appendChild(img);
+    };
+    img.src = cfg.photo;
+  });
+}
+
+// ════════════════════════════════════════════════
+// HAFALAN CALCULATIONS
+// ════════════════════════════════════════════════
+function getMySetoran(user) {
+  return cache.filter(s=>s.user===user);
+}
+
+// Hitung "halaman setara" untuk leaderboard
+// Juz 1-29: (halSelesai - halMulai + 1) halaman
+// Juz 30: floor((suratSelesai - suratMulai + 1) / 3) halaman
+function halamanSetara(s) {
+  const raw = s.halSelesai - s.halMulai + 1;
+  if(s.juz === 30) return Math.floor(raw / SURAT_PER_HAL);
+  return raw;
+}
+
+// Total "halaman setara" untuk leaderboard
+function totalSetara(setoran) {
+  return setoran.reduce((t,s)=>t+halamanSetara(s), 0);
+}
+
+// Juz map untuk progress tracking
+// Juz 1-29: track halaman unik (1-20)
+// Juz 30: track surat unik (1-37)
+function buildJuzMap(setoran) {
+  const m = {};
+  for(let j=1;j<=TOTAL_JUZ;j++) m[j]=new Set();
+  setoran.forEach(s=>{
+    const j=s.juz;
+    if(j>=1&&j<=TOTAL_JUZ) {
+      const maxH = j===30 ? TOTAL_SURAT30 : JUZ_HAL;
+      for(let h=s.halMulai;h<=s.halSelesai;h++) if(h>=1&&h<=maxH) m[j].add(h);
+    }
+  });
+  return m;
+}
+
+function totalHalFromMap(map) {
+  let t=0;
+  for(let j=1;j<=TOTAL_JUZ;j++) {
+    if(j===30) t += Math.floor(map[j].size/SURAT_PER_HAL);
+    else t += map[j].size;
+  }
+  return t;
+}
+
+function juzDoneCount(map) {
+  let done=0;
+  for(let j=1;j<=TOTAL_JUZ;j++) {
+    const needed = j===30 ? TOTAL_SURAT30 : JUZ_HAL;
+    if(map[j].size>=needed) done++;
+  }
+  return done;
+}
+
+function juzPct(map, juz) {
+  const needed = juz===30 ? TOTAL_SURAT30 : JUZ_HAL;
+  return Math.round((map[juz].size/needed)*100);
+}
+
+function streak(setoran) {
+  if(!setoran.length) return {cur:0,max:0};
+  const dates=[...new Set(setoran.map(s=>s.tanggal))].sort();
+  let tmp=1,mx=1;
+  for(let i=1;i<dates.length;i++){
+    const diff=(new Date(dates[i])-new Date(dates[i-1]))/86400000;
+    diff===1?(tmp++,tmp>mx&&(mx=tmp)):(tmp=1);
+  }
+  const last=new Date(dates[dates.length-1]);
+  const diff=(todayD()-last)/86400000;
+  const cur=diff<=1?tmp:0;
+  return {cur,max:Math.max(mx,cur)};
+}
+
+function maxWeekly(setoran) {
+  const w={};
+  setoran.forEach(s=>{
+    const d=new Date(s.tanggal);const day=d.getDay();
+    const mon=new Date(d);mon.setDate(d.getDate()-(day===0?6:day-1));
+    const k=mon.toISOString().split('T')[0];
+    w[k]=(w[k]||0)+halamanSetara(s);
+  });
+  return Math.max(0,...Object.values(w));
+}
+
+function weeklyData(setoran,n=8) {
+  const res=[];
+  const now=todayD();
+  for(let w=n-1;w>=0;w--){
+    const mon=new Date(now);const dow=now.getDay();
+    mon.setDate(now.getDate()-(dow===0?6:dow-1)-w*7);
+    const sun=new Date(mon);sun.setDate(mon.getDate()+6);
+    const total=setoran.filter(s=>{const d=new Date(s.tanggal);return d>=mon&&d<=sun;})
+      .reduce((a,s)=>a+halamanSetara(s),0);
+    res.push({label:w===0?'Ini':`-${w}`,total});
+  }
+  return res;
+}
+
+// Juz aktif user: juz yang sedang dikerjakan (belum selesai)
+function getJuzAktifUser(user) {
+  const ja = juzAktifMap[user];
+  if(!ja||ja.juz===null||ja.juz===undefined) return null;
+  return ja.juz;
+}
+
+// Cek apakah juz sudah selesai semua halamannya
+function isJuzSelesai(map, juz) {
+  if(!juz) return false;
+  const needed = juz===30 ? TOTAL_SURAT30 : JUZ_HAL;
+  return map[juz].size >= needed;
+}
+
+// ════════════════════════════════════════════════
+// API
+// ════════════════════════════════════════════════
+async function gasCall(action, data={}) {
+  const res = await fetch(GAS_URL, {
+    method:'POST',
+    body: JSON.stringify({action,...data})
+  });
+  return res.json();
+}
+
+async function fetchAll() {
+  loading(true);
+  try {
+    const d = await gasCall('getAll');
+    if(!d.ok) throw new Error(d.error||'GAS error');
+    cache = (d.setoran||[]).map(s=>({
+      id:         String(s.id||'').trim(),
+      user:       String(s.user||'').trim(),
+      tanggal:    String(s.tanggal||'').trim(),
+      catatan:    String(s.catatan||'').trim(),
+      juz:        Number(s.juz)||0,
+      halMulai:   Number(s.halMulai)||0,
+      halSelesai: Number(s.halSelesai)||0,
+      tipe:       String(s.tipe||'hal').trim(),
+    }));
+    juzAktifMap = d.juzAktifMap || {};
+  } catch(e) {
+    toast('⚠️ Gagal ambil data: '+e.message);
+  }
+  loading(false);
+}
+
+// ════════════════════════════════════════════════
+// AUTH
+// ════════════════════════════════════════════════
+function populateLoginSelect() {
+  const sel=document.getElementById('loginUser');
+  sel.innerHTML='';
+  members().forEach(u=>{
+    const o=document.createElement('option');
+    o.value=u; o.textContent=u;
+    sel.appendChild(o);
+  });
+}
+
+async function doLogin() {
+  const u=document.getElementById('loginUser').value;
+  const p=document.getElementById('loginPass').value;
+  if(!p){showErr('Masukkan password.');return;}
+  const btn=document.getElementById('loginBtn');
+  btn.textContent='Memeriksa...';btn.disabled=true;
+  document.getElementById('loginErr').style.display='none';
+  try {
+    const res=await gasCall('login',{user:u,password:p});
+    if(res.ok){
+      currentUser=u; currentRole=res.role;
+      document.getElementById('loginPass').value='';
+      setNavAvatar(u);
+      document.getElementById('menuLabel').textContent=u+' · '+(currentRole==='admin'?'Admin':'Anggota');
+      document.getElementById('inUserChip').textContent=u;
+      document.getElementById('inTanggal').value=todayStr();
+      // Tampilkan menu admin
+      document.getElementById('adminMenuItems').style.display=currentRole==='admin'?'block':'none';
+      populateAdminResetSelect();
+      await fetchAll();
+      switchPage('pgUtama');
+      renderUtama();
+    } else {
+      showErr('❌ '+(res.error||'Password salah!'));
+    }
+  } catch(e) {
+    showErr('⚠️ Tidak bisa terhubung ke server.');
+  } finally {
+    btn.textContent='Masuk';btn.disabled=false;
+  }
+}
+
+function showErr(msg){const el=document.getElementById('loginErr');el.textContent=msg;el.style.display='block';}
+
+function doLogout(){
+  currentUser=null;currentRole=null;cache=[];juzAktifMap={};
+  if(cdInterval)clearInterval(cdInterval);
+  if(lbAnimId)cancelAnimationFrame(lbAnimId);
+  closeMenu();switchPage('pgLogin');
+}
+
+function setNavAvatar(u){
+  const cfg=MEMBERS_CONFIG[u]||{};
+  const img=document.getElementById('navPhoto');
+  const init=document.getElementById('navInitial');
+  if(cfg.photo){
+    img.src=cfg.photo;img.style.display='block';init.style.display='none';
+    img.onerror=()=>{img.style.display='none';init.style.display='';init.textContent=u.slice(0,2).toUpperCase();};
+  } else {
+    img.style.display='none';init.style.display='';init.textContent=u.slice(0,2).toUpperCase();
+  }
+}
+
+// ════════════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════════════
+function switchPage(id){
+  if(id!=='pgLogin'&&!currentUser){switchPage('pgLogin');return;}
+  if(id==='pgAdmin'&&currentRole!=='admin'){toast('⛔ Hanya admin.');return;}
+  if(id!=='pgUtama'&&lbAnimId){cancelAnimationFrame(lbAnimId);lbAnimId=null;}
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+  closeMenu();
+}
+
+async function navTo(id){
+  switchPage(id);
+  await fetchAll();
+  if(id==='pgUtama')   renderUtama();
+  if(id==='pgPribadi') renderPribadi();
+  if(id==='pgWiki')    renderWiki();
+  if(id==='pgInput')   renderInput();
+  if(id==='pgAdmin')   renderAdmin();
+}
+
+function openMenu(){document.getElementById('menuBox').style.display='block';document.getElementById('menuOverlay').style.display='block';}
+function closeMenu(){document.getElementById('menuBox').style.display='none';document.getElementById('menuOverlay').style.display='none';}
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(){document.querySelectorAll('.modal-overlay').forEach(m=>m.classList.remove('open'));}
+
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(m=>{
+  m.addEventListener('click',e=>{if(e.target===m)closeModal();});
+});
+
+// ════════════════════════════════════════════════
+// RENDER: UTAMA
+// ════════════════════════════════════════════════
+function renderUtama(){
+  const ms=members();
+  const teamMax=ms.length*HAL_PER_ORG;
+  const teamTotal=ms.reduce((t,u)=>t+totalSetara(getMySetoran(u)),0);
+  const teamPct=teamMax>0?Math.round(teamTotal/teamMax*100):0;
+  document.getElementById('uTeamPct').textContent=teamPct+'%';
+  document.getElementById('uTeamPages').textContent=teamTotal+' / '+teamMax+' hal';
+  document.getElementById('uTeamBar').style.width=teamPct+'%';
+  document.getElementById('uTeamSisa').textContent='Sisa '+(teamMax-teamTotal)+' halaman menuju khatam bersama';
+
+  // Countdown
+  if(cdInterval)clearInterval(cdInterval);
+  const tick=()=>{
+    const diff=new Date(TARGET_DATE+'T23:59:59')-new Date();
+    if(diff<=0){['cdD','cdH','cdM','cdS'].forEach(i=>document.getElementById(i).textContent='0');return;}
+    document.getElementById('cdD').textContent=String(Math.floor(diff/86400000)).padStart(2,'0');
+    document.getElementById('cdH').textContent=String(Math.floor((diff%86400000)/3600000)).padStart(2,'0');
+    document.getElementById('cdM').textContent=String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
+    document.getElementById('cdS').textContent=String(Math.floor((diff%60000)/1000)).padStart(2,'0');
+  };
+  tick();cdInterval=setInterval(tick,1000);
+
+  // Attendance
+  const tStr=todayStr();
+  const doneToday=new Set(cache.filter(s=>s.tanggal===tStr).map(s=>s.user));
+  let doneCount=0;
+  document.getElementById('uAttGrid').innerHTML=ms.map(u=>{
+    const done=doneToday.has(u);if(done)doneCount++;
+    const cfg=MEMBERS_CONFIG[u]||{color:{bg:'#334155',fg:'#94a3b8'}};
+    return `<div class="att-item" style="min-width:120px;max-width:200px;">
+      <div class="att-av-wrap">
+        ${photoEl(u,52)}
+        <div class="att-ring ${done?'done':'miss'}"></div>
+        <div class="att-badge ${done?'done':'miss'}">${done?'✓':'✗'}</div>
+      </div>
+      <div class="att-name" style="font-size:.75rem;margin-top:2px;">${u}</div>
+      <div style="font-size:.65rem;color:${done?'var(--teal)':'var(--red)'};">${done?'Sudah setor':'Belum setor'}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('uAttChip').textContent=doneCount+'/'+ms.length+' setor';
+  document.getElementById('uAttChip').className='chip '+(doneCount===ms.length?'chip-green':doneCount>0?'chip-gold':'chip-gray');
+
+  // Streak
+  document.getElementById('uStreakList').innerHTML=ms
+    .map(u=>{const s=getMySetoran(u);const {cur,max}=streak(s);return{u,cur,max};})
+    .sort((a,b)=>b.cur-a.cur)
+    .map(({u,cur,max},i)=>{
+      const cfg=MEMBERS_CONFIG[u]||{color:{bg:'#334155',fg:'#94a3b8'}};
+      const isMe=u===currentUser;
+      return `<div style="display:flex;justify-content:space-between;align-items:center;
+        padding:12px 16px;border-bottom:1px solid var(--border);
+        ${isMe?'background:var(--teal-ll);':''}">
+        <div style="display:flex;align-items:center;gap:10px;">
+          ${photoEl(u,32)}
+          <div>
+            <div style="font-size:.85rem;font-weight:700;color:var(--white);">${u}${isMe?' 👤':''}</div>
+            <div style="font-size:.7rem;color:var(--text2);">Juz aktif: ${getJuzAktifUser(u)!==null?'Juz '+(getJuzAktifUser(u)||'—'):'Belum pilih'}</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="chip ${cur>0?'chip-gold':'chip-gray'}">${cur>0?'🔥 '+cur+' hari':'—'}</span>
+          <span style="font-size:.68rem;color:var(--text3);">max ${max}</span>
+        </div>
+      </div>`;
+    }).join('');
+
+  renderLeaderboard();
+
+  // Team strip
+  document.getElementById('uTeamStrip').innerHTML=ms.map(u=>{
+    const s=getMySetoran(u);const t=totalSetara(s);
+    const jm=buildJuzMap(s);const jd=juzDoneCount(jm);const {cur}=streak(s);
+    return `<div class="ts-card">
+      <div class="ts-av">${photoEl(u,40)}</div>
+      <div class="ts-name">${u.length>8?u.slice(0,7)+'…':u}</div>
+      <div class="ts-pages">${t}</div>
+      <div class="ts-sub">hal · ${jd} juz${cur>0?' · 🔥'+cur:''}</div>
+    </div>`;
+  }).join('');
+  setTimeout(loadPhotos, 50);
+}
+
+// ── LEADERBOARD CANVAS ─────────────────────────────────────────
+function renderLeaderboard(){
+  const ms=members();
+  const ranks=ms.map(u=>{
+    const s=getMySetoran(u);const t=totalSetara(s);
+    const {cur}=streak(s);const jm=buildJuzMap(s);const jd=juzDoneCount(jm);
+    return{u,t,cur,jd};
+  }).sort((a,b)=>b.t-a.t);
+  const mx=ranks[0]?.t||1;
+  const medals=['🥇','🥈','🥉','4','5'];
+
+  // List
+  document.getElementById('lbList').innerHTML=ranks.map((r,i)=>{
+    const pct=Math.round(r.t/mx*100);
+    const isMe=r.u===currentUser;
+    return `<div style="display:flex;align-items:center;gap:8px;padding:8px 4px;
+      border-bottom:1px solid var(--border);${isMe?'background:rgba(13,148,136,.07);border-radius:8px;padding:8px 8px;':''}">
+      <span style="font-size:13px;width:22px;text-align:center;flex-shrink:0;">${medals[i]}</span>
+      <span style="font-size:12px;font-weight:700;color:var(--white);min-width:90px;">${r.u}${isMe?' 👤':''}</span>
+      <div style="flex:1;height:5px;background:rgba(255,255,255,.07);border-radius:10px;overflow:hidden;">
+        <div style="height:100%;border-radius:10px;width:${pct}%;
+          background:${i===0?'linear-gradient(90deg,#92400e,#fbbf24)':'linear-gradient(90deg,#0f766e,#0d9488)'};
+          transition:width 1.2s ease;"></div>
+      </div>
+      <span style="font-size:11px;font-weight:800;color:var(--teal);white-space:nowrap;">${r.t} hal</span>
+      ${r.cur>0?`<span style="font-size:10px;color:var(--gold);font-weight:700;">🔥${r.cur}</span>`:''}
+    </div>`;
+  }).join('');
+
+  // Canvas
+  const canvas=document.getElementById('lbCanvas');
+  if(!canvas)return;
+  if(lbAnimId){cancelAnimationFrame(lbAnimId);lbAnimId=null;}
+  const W=canvas.parentElement.offsetWidth||360,H=260;
+  const DPR=Math.min(window.devicePixelRatio||1,2);
+  canvas.width=W*DPR;canvas.height=H*DPR;canvas.style.height=H+'px';
+  const ctx=canvas.getContext('2d');ctx.scale(DPR,DPR);
+  if(!lbPx)lbPx=Array.from({length:18},()=>({x:Math.random()*W,y:Math.random()*H*.7,r:.4+Math.random()*1,a:.1+Math.random()*.35,s:.15+Math.random()*.2}));
+  const GND=H-22,CX=W/2,MHW=Math.min(22,W*.06),MTOP=20,MH=GND-MTOP,CLH=MH-22;
+  const OFS=[0,-Math.min(42,W*.11),Math.min(42,W*.11),-Math.min(68,W*.18),Math.min(68,W*.18)];
+  const imgs={};
+  ranks.forEach(r=>{const cfg=MEMBERS_CONFIG[r.u];if(cfg?.photo){const i=new Image();i.src=cfg.photo;imgs[r.u]=i;}});
+
+  function getY(p){return GND-14-p*CLH;}
+
+  function drawBg(){
+    ctx.clearRect(0,0,W,H);
+    const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#030710');g.addColorStop(1,'#091320');
+    ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+    lbPx.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(180,210,255,${p.a})`;ctx.fill();p.y-=p.s;if(p.y<0){p.y=H*.75;p.x=Math.random()*W;}});
+  }
+
+  function drawMinaret(){
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(CX-MHW,GND);ctx.lineTo(CX-MHW*.22,MTOP+16);ctx.lineTo(CX,MTOP+10);
+    ctx.lineTo(CX+MHW*.22,MTOP+16);ctx.lineTo(CX+MHW,GND);ctx.closePath();
+    const mg=ctx.createLinearGradient(CX-MHW,0,CX+MHW,0);
+    mg.addColorStop(0,'rgba(10,76,70,.95)');mg.addColorStop(.5,'rgba(15,118,110,1)');mg.addColorStop(1,'rgba(6,50,46,.95)');
+    ctx.fillStyle=mg;ctx.fill();
+    ctx.strokeStyle='rgba(45,212,191,.25)';ctx.lineWidth=.8;ctx.stroke();
+    ctx.strokeStyle='rgba(13,148,136,.12)';ctx.lineWidth=.5;
+    for(let y=MTOP+14;y<GND;y+=16){const f=(y-MTOP)/MH,hw=MHW*(.3+.7*f);ctx.beginPath();ctx.moveTo(CX-hw,y);ctx.lineTo(CX+hw,y);ctx.stroke();}
+    ctx.beginPath();ctx.arc(CX,MTOP+10,7,0,Math.PI*2);
+    const dg=ctx.createRadialGradient(CX,MTOP+8,1,CX,MTOP+10,7);dg.addColorStop(0,'#2dd4bf');dg.addColorStop(1,'#0f766e');ctx.fillStyle=dg;ctx.fill();
+    ctx.save();ctx.translate(CX,MTOP+10);ctx.beginPath();
+    for(let k=0;k<5;k++){const a=(k*4*Math.PI/5)-Math.PI/2+lbStar,b=a+2*Math.PI/5;if(k===0)ctx.moveTo(Math.cos(a)*5.5,Math.sin(a)*5.5);else ctx.lineTo(Math.cos(a)*5.5,Math.sin(a)*5.5);ctx.lineTo(Math.cos(b)*2.2,Math.sin(b)*2.2);}
+    ctx.closePath();ctx.fillStyle='#fbbf24';ctx.fill();ctx.restore();ctx.restore();
+  }
+
+  function drawGround(){
+    ctx.fillStyle='rgba(13,148,136,.08)';ctx.fillRect(0,GND,W,H-GND);
+    ctx.strokeStyle='rgba(13,148,136,.2)';ctx.lineWidth=.8;ctx.beginPath();ctx.moveTo(0,GND);ctx.lineTo(W,GND);ctx.stroke();
+  }
+
+  function drawCrown(cx,cy){
+    const pulse=Math.sin(lbT*.055)*2,y=cy-21+pulse;
+    ctx.save();
+    for(let r=16;r>0;r-=4){ctx.beginPath();ctx.arc(cx,y+8,r,0,Math.PI*2);ctx.fillStyle=`rgba(251,191,36,${.018*(16-r)/16})`;ctx.fill();}
+    ctx.beginPath();
+    ctx.moveTo(cx-9,y+8);ctx.lineTo(cx-9,y+13);ctx.lineTo(cx+9,y+13);ctx.lineTo(cx+9,y+8);
+    ctx.lineTo(cx+6,y+3);ctx.lineTo(cx+2.5,y+8);ctx.lineTo(cx,y+1);ctx.lineTo(cx-2.5,y+8);ctx.lineTo(cx-6,y+3);
+    ctx.closePath();ctx.fillStyle='rgba(217,119,6,.2)';ctx.fill();ctx.strokeStyle='#fbbf24';ctx.lineWidth=1.4;ctx.stroke();
+    [{x:cx-4,c:'#f87171'},{x:cx,c:'#fbbf24'},{x:cx+4,c:'#f87171'}].forEach(g=>{ctx.beginPath();ctx.arc(g.x,y+10,1.6,0,Math.PI*2);ctx.fillStyle=g.c;ctx.fill();});
+    for(let s=0;s<4;s++){const sa=(s/4)*Math.PI*2+lbT*.038,sr=13+Math.sin(lbT*.07+s)*2.5;ctx.beginPath();ctx.arc(cx+Math.cos(sa)*sr,y+7+Math.sin(sa)*sr*.35,1,0,Math.PI*2);ctx.fillStyle=`rgba(251,191,36,${.3+Math.sin(lbT*.09+s)*.25})`;ctx.fill();}
+    ctx.restore();
+  }
+
+  function drawClimber(rank,r){
+    const pct=mx>0?r.t/mx:0;
+    const bx=CX+OFS[rank],by=getY(pct)+(rank===0?Math.sin(lbT*.06)*2.5:Math.sin(lbT*.04+rank*1.2)*1.3);
+    const RAD=Math.min(13,W*.035);
+    const cfg=MEMBERS_CONFIG[r.u]||{color:{bg:'#334155',fg:'#94a3b8'}};
+    ctx.save();ctx.strokeStyle='rgba(13,148,136,.18)';ctx.lineWidth=.6;ctx.setLineDash([3,4]);
+    ctx.beginPath();ctx.moveTo(bx,GND);ctx.lineTo(bx,by+RAD);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    ctx.save();ctx.beginPath();ctx.arc(bx,by,RAD,0,Math.PI*2);ctx.clip();
+    const img=imgs[r.u];
+    if(img&&img.complete&&img.naturalWidth>0){ctx.drawImage(img,bx-RAD,by-RAD,RAD*2,RAD*2);}
+    else{ctx.fillStyle=cfg.color.bg;ctx.fill();ctx.fillStyle=cfg.color.fg;ctx.font=`700 ${Math.round(RAD*.75)}px 'Outfit',sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(r.u.slice(0,2).toUpperCase(),bx,by);}
+    ctx.restore();
+    ctx.beginPath();ctx.arc(bx,by,RAD,0,Math.PI*2);
+    if(rank===0){ctx.strokeStyle='#fbbf24';ctx.lineWidth=2;ctx.stroke();}
+    else if(r.u===currentUser){ctx.strokeStyle='rgba(13,148,136,.8)';ctx.lineWidth=1.5;ctx.stroke();}
+    else{ctx.strokeStyle='rgba(255,255,255,.2)';ctx.lineWidth=1;ctx.stroke();}
+    if(rank===0)drawCrown(bx,by);
+  }
+
+  function frame(){lbT++;lbStar=lbT*.011;drawBg();drawGround();drawMinaret();ranks.forEach((r,i)=>drawClimber(i,r));lbAnimId=requestAnimationFrame(frame);}
+  frame();
+}
+
+// ════════════════════════════════════════════════
+// RENDER: PRIBADI
+// ════════════════════════════════════════════════
+function renderPribadi(){
+  const myS=getMySetoran(currentUser);
+  const jm=buildJuzMap(myS);
+  const tot=totalSetara(myS);
+  const jd=juzDoneCount(jm);
+  const {cur:st,max:stMax}=streak(myS);
+  const pct=Math.round(tot/HAL_PER_ORG*100);
+  const tStr=todayStr();
+  const stToday=myS.filter(s=>s.tanggal===tStr);
+
+  const cfg=MEMBERS_CONFIG[currentUser]||{};
+  document.getElementById('pUserName').innerHTML=`${currentUser} <span style="font-size:.75rem;font-weight:500;color:var(--text2);">${currentRole==='admin'?'· Admin':''}</span>`;
+
+  // Juz aktif info di header pribadi
+  const ja=getJuzAktifUser(currentUser);
+  const jaInfo=document.getElementById('pJuzAktifInfo');
+  if(ja){
+    const needed=ja===30?TOTAL_SURAT30:JUZ_HAL;
+    const done=jm[ja]?.size||0;
+    const jaPct=Math.round((done/needed)*100);
+    const isSelesai=done>=needed;
+    jaInfo.innerHTML=`
+      <div style="background:${isSelesai?'var(--green-l)':'var(--gold-ll)'};border:1px solid ${isSelesai?'rgba(22,163,74,.3)':'rgba(217,119,6,.3)'};border-radius:8px;padding:8px 12px;font-size:.76rem;">
+        <span style="font-weight:700;color:${isSelesai?'var(--green)':'var(--gold)'};">
+          ${isSelesai?'✅':'🔒'} Juz Aktif: Juz ${ja} ${ja===30?'(Surat)':'(Halaman)'}
+        </span>
+        <span style="color:var(--text2);margin-left:8px;">${done}/${needed} ${ja===30?'surat':'hal'} (${jaPct}%)</span>
+        ${isSelesai?'<span style="color:var(--green);font-weight:700;margin-left:6px;">Selesai! Bisa lanjut juz berikutnya 🎉</span>':''}
+      </div>`;
+  } else {
+    jaInfo.innerHTML=`<div style="background:var(--red-l);border:1px solid rgba(239,68,68,.25);border-radius:8px;padding:8px 12px;font-size:.76rem;color:var(--red);">⚠️ Belum memilih juz aktif. Buka <strong>Input Setoran</strong> untuk memilih juz.</div>`;
+  }
+
+  document.getElementById('pTotalHal').textContent=tot;
+  document.getElementById('pStreak').textContent=st;
+  document.getElementById('pJuzDone').textContent=jd;
+  document.getElementById('pProgBar').style.width=pct+'%';
+  document.getElementById('pPct').textContent=pct+'%';
+  document.getElementById('pJuzChip').textContent=jd+'/30';
+
+  // Warning
+  const wb=document.getElementById('pWarningBox');
+  if(stToday.length===0){
+    wb.innerHTML=`<div class="warning-box"><div style="font-size:1.3rem;flex-shrink:0;">⚠️</div><div><div style="font-size:.85rem;font-weight:700;color:var(--red);">Belum setor hari ini!</div><div style="font-size:.75rem;color:var(--text2);margin-top:2px;">Batas pukul 21.00 WIB. Yuk segera input!</div></div></div>`;
+  } else {
+    const p=stToday.reduce((a,s)=>a+halamanSetara(s),0);
+    wb.innerHTML=`<div class="ok-box"><div style="font-size:1.5rem;">✅</div><div style="font-size:.85rem;font-weight:700;color:var(--teal);">Sudah setor hari ini! +${p} hal setara</div></div>`;
+  }
+
+  // Estimasi
+  const uniqD=[...new Set(myS.map(s=>s.tanggal))].length||1;
+  const spd=tot>0?(tot/uniqD).toFixed(1):0;
+  const sisa=HAL_PER_ORG-tot;
+  const estD=spd>0?Math.ceil(sisa/spd):null;
+  const estTgl=estD?(()=>{const d=new Date();d.setDate(d.getDate()+estD);return d.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});})():'—';
+  document.getElementById('pSpeed').textContent=spd+' hal/hari';
+  document.getElementById('pSisa').textContent=sisa+' hal';
+  document.getElementById('pEst').textContent=estTgl;
+  document.getElementById('pStreakMax').textContent=stMax+' hari';
+
+  // Kalender
+  const now=new Date();
+  if(calY===null)calY=now.getFullYear();
+  if(calM===null)calM=now.getMonth();
+  renderKal(myS);
+
+  // Chart
+  const weeks=weeklyData(myS);const maxV=Math.max(...weeks.map(w=>w.total),14,1);
+  document.getElementById('pChart').innerHTML=weeks.map(w=>{
+    const h=Math.round((w.total/maxV)*80);
+    const cls=w.total===0?'low':w.total>=14?'ok':'';
+    return `<div class="chart-col">
+      <div class="chart-val">${w.total||''}</div>
+      <div class="chart-bar ${cls}" style="height:${Math.max(h,w.total>0?4:2)}px;"></div>
+      <div class="chart-lbl">${w.label}</div>
+    </div>`;
+  }).join('');
+
+  // Juz grid
+  let jh='';
+  for(let j=1;j<=TOTAL_JUZ;j++){
+    const p=juzPct(jm,j);
+    const needed=j===30?TOTAL_SURAT30:JUZ_HAL;
+    const done=jm[j].size;
+    const cls=done>=needed?'full':done>0?'part':'';
+    const isAktif=getJuzAktifUser(currentUser)===j;
+    jh+=`<div class="juz-cell ${cls} ${isAktif?'aktif':''}">
+      <div class="juz-n">${j===30?'30🌟':j}</div>
+      <div class="juz-p">${p>0?p+'%':'—'}</div>
+      ${done>0?`<div class="juz-bot" style="width:${p}%"></div>`:''}
+    </div>`;
+  }
+  document.getElementById('pJuzGrid').innerHTML=jh;
+
+  // Badges
+  let unlocked=0;
+  document.getElementById('pBadgeGrid').innerHTML=BADGES.map(b=>{
+    const ok=b.fn(myS,st,jd);if(ok)unlocked++;
+    return `<div class="badge-item ${ok?'on':''}">
+      <span class="badge-icon">${b.icon}</span>
+      <div class="badge-name">${b.name}</div>
+      <div class="badge-desc">${b.desc}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('pBadgeChip').textContent=unlocked+' unlocked';
+
+  // Riwayat
+  const sorted=myS.slice().sort((a,b)=>b.tanggal.localeCompare(a.tanggal));
+  document.getElementById('pRiwayatChip').textContent=sorted.length;
+  document.getElementById('pRiwayatList').innerHTML=sorted.length===0
+    ?'<div class="empty"><span class="empty-icon">📋</span>Belum ada setoran</div>'
+    :sorted.map(s=>{
+      const hal=s.juz===30?`Surat ke-${s.halMulai}–${s.halSelesai} (${SURAT_JUZ30[s.halMulai-1]||'?'} – ${SURAT_JUZ30[s.halSelesai-1]||'?'})`:`Hal ${s.halMulai}–${s.halSelesai}`;
+      const setara=halamanSetara(s);
+      return `<div class="setor-item">
+        <div>
+          <div class="setor-juz">Juz ${s.juz} — ${hal}</div>
+          <div class="setor-hal">${s.catatan||'—'}</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="setor-tgl">${fmtTgl(s.tanggal)}</div>
+          <div class="setor-pages">+${setara} hal</div>
+          <button onclick="hapusSetoran('${s.id}')"
+            style="margin-top:4px;background:var(--red-l);border:none;border-radius:6px;
+                   padding:3px 8px;font-size:.65rem;color:var(--red);cursor:pointer;">🗑</button>
+        </div>
+      </div>`;
+    }).join('');
+  setTimeout(loadPhotos, 50);
+}
+
+// ── KALENDER ──────────────────────────────────────────────────
+function renderKal(myS){
+  const setoranDates=new Set(myS.map(s=>s.tanggal));
+  const y=calY,m=calM;
+  const first=new Date(y,m,1).getDay();
+  const days=new Date(y,m+1,0).getDate();
+  const tStr=todayStr();
+  const MONTHS=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  document.getElementById('calTitle').textContent=MONTHS[m]+' '+y;
+  const DOW=['Sen','Sel','Rab','Kam','Jum','Sab','Min'];
+  let html=DOW.map(d=>`<div class="cal-dow">${d}</div>`).join('');
+  const off=first===0?6:first-1;
+  for(let i=0;i<off;i++)html+=`<div></div>`;
+  for(let d=1;d<=days;d++){
+    const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dd=new Date(y,m,d);dd.setHours(0,0,0,0);
+    const isFuture=dd>todayD();const isToday=ds===tStr;
+    let cls=isFuture?'future':setoranDates.has(ds)?'setor':'miss';
+    if(isToday)cls+=' today';
+    html+=`<div class="cal-day ${cls}">${d}</div>`;
+  }
+  document.getElementById('calGrid').innerHTML=html;
+}
+function calMove(dir){
+  calM+=dir;if(calM<0){calM=11;calY--;}if(calM>11){calM=0;calY++;}
+  renderKal(getMySetoran(currentUser));
+}
+
+// ════════════════════════════════════════════════
+// RENDER: INPUT
+// ════════════════════════════════════════════════
+function renderInput(){
+  const myS=getMySetoran(currentUser);
+  const jm=buildJuzMap(myS);
+  const ja=getJuzAktifUser(currentUser);
+
+  if(ja!==null && ja!==undefined){
+    // Cek apakah juz aktif sudah selesai
+    const needed=ja===30?TOTAL_SURAT30:JUZ_HAL;
+    const done=jm[ja]?.size||0;
+    const selesai=done>=needed;
+
+    if(selesai){
+      // Juz aktif selesai → bisa pilih juz baru
+      document.getElementById('inJuzAktifInfo').innerHTML=`
+        <div class="ok-box" style="margin-bottom:14px;">
+          <div style="font-size:1.3rem;">🎉</div>
+          <div>
+            <div style="font-size:.85rem;font-weight:700;color:var(--teal);">Juz ${ja} selesai! Pilih juz berikutnya.</div>
+            <div style="font-size:.74rem;color:var(--text2);margin-top:2px;">Semua halaman/surat sudah tersetorkan.</div>
+          </div>
+        </div>`;
+      document.getElementById('inPilihJuzWrap').style.display='block';
+      document.getElementById('inFormSetoran').style.display='none';
+      populatePilihJuz(jm, ja+1);
+    } else {
+      // Juz aktif belum selesai → tampilkan form setoran
+      const pct=Math.round((done/needed)*100);
+      document.getElementById('inJuzAktifInfo').innerHTML='';
+      document.getElementById('inPilihJuzWrap').style.display='none';
+      document.getElementById('inFormSetoran').style.display='block';
+
+      const isJuz30=ja===30;
+      document.getElementById('inHalWrap').style.display=isJuz30?'none':'block';
+      document.getElementById('inSuratWrap').style.display=isJuz30?'block':'none';
+
+      if(isJuz30){
+        populateSuratSelect(jm);
+        document.getElementById('inJuzActiveInfo').textContent=`🔒 Juz 30 Aktif — ${done}/${needed} surat (${pct}%). Minimal 3 surat per setoran.`;
+      } else {
+        // Hitung halaman yang belum disetor
+        const nextHal=getNextHal(jm,ja);
+        document.getElementById('inHalMulai').value=nextHal||'';
+        document.getElementById('inHalSelesai').value=nextHal?Math.min(nextHal+1,20):'';
+        document.getElementById('inJuzActiveInfo').textContent=`🔒 Juz ${ja} Aktif — ${done}/${needed} halaman (${pct}%). Lanjut dari halaman ${nextHal||1}.`;
+        updateCount();
+      }
+    }
+  } else {
+    // Belum pilih juz
+    document.getElementById('inJuzAktifInfo').innerHTML='';
+    document.getElementById('inPilihJuzWrap').style.display='block';
+    document.getElementById('inFormSetoran').style.display='none';
+    populatePilihJuz(jm, 1);
+  }
+}
+
+// Ambil halaman berikutnya yang belum disetor di juz tertentu
+function getNextHal(jm,juz){
+  for(let h=1;h<=JUZ_HAL;h++){
+    if(!jm[juz].has(h)) return h;
+  }
+  return null;
+}
+
+function populatePilihJuz(jm, defaultJuz=1){
+  const sel=document.getElementById('inJuzPilih');
+  sel.innerHTML='';
+  for(let j=1;j<=TOTAL_JUZ;j++){
+    const needed=j===30?TOTAL_SURAT30:JUZ_HAL;
+    const done=jm[j]?.size||0;
+    const selesai=done>=needed;
+    const o=document.createElement('option');
+    o.value=j;
+    o.textContent=j===30?`Juz 30 — Surat (${done}/${needed})`:`Juz ${j} — Halaman (${done}/${needed})`;
+    if(selesai) o.textContent+=' ✅';
+    if(j===defaultJuz) o.selected=true;
+    sel.appendChild(o);
+  }
+  onJuzPilihChange();
+}
+
+function onJuzPilihChange(){
+  const j=parseInt(document.getElementById('inJuzPilih').value);
+  const myS=getMySetoran(currentUser);
+  const jm=buildJuzMap(myS);
+  const needed=j===30?TOTAL_SURAT30:JUZ_HAL;
+  const done=jm[j]?.size||0;
+  const info=document.getElementById('inJuzPilihInfo');
+  if(done>=needed){
+    info.innerHTML=`<div style="background:var(--green-l);border:1px solid rgba(22,163,74,.3);border-radius:8px;padding:8px 12px;font-size:.75rem;color:var(--green);">✅ Juz ini sudah selesai semua. Pilih juz lain.</div>`;
+  } else if(j===30){
+    info.innerHTML=`<div class="info-box" style="font-size:.75rem;">📿 Juz 30 berisi <strong>37 surat</strong> (An-Naba' hingga An-Nas). Input per surat, minimal 3 surat/hari.</div>`;
+  } else {
+    const remaining=needed-done;
+    info.innerHTML=`<div class="info-box" style="font-size:.75rem;">📖 Juz ${j} — sisa <strong>${remaining} halaman</strong> lagi (dari ${needed} halaman total).</div>`;
+  }
+}
+
+function konfirmasiPilihJuz(){
+  const j=parseInt(document.getElementById('inJuzPilih').value);
+  const myS=getMySetoran(currentUser);
+  const jm=buildJuzMap(myS);
+  const needed=j===30?TOTAL_SURAT30:JUZ_HAL;
+  const done=jm[j]?.size||0;
+  if(done>=needed){toast('❌ Juz ini sudah selesai. Pilih juz lain.');return;}
+  pendingJuz=j;
+  const nama=j===30?`Juz 30 (Surat An-Naba' – An-Nas, ${TOTAL_SURAT30} surat)`:`Juz ${j} (Halaman 1–20)`;
+  document.getElementById('modalJuzBody').innerHTML=`
+    Kamu akan mengunci <strong style="color:var(--gold);">${nama}</strong> sebagai juz aktif kamu.<br><br>
+    Setelah ini, kamu hanya bisa menyetor halaman/surat dari <strong>Juz ${j}</strong> sampai semua ${j===30?TOTAL_SURAT30+' surat':JUZ_HAL+' halaman'} selesai.`;
+  openModal('modalJuz');
+}
+
+async function eksekusiPilihJuz(){
+  if(!pendingJuz){closeModal();return;}
+  closeModal();
+  loading(true);
+  try {
+    const res=await gasCall('setJuzAktif',{user:currentUser,juz:pendingJuz});
+    if(!res.ok)throw new Error(res.error||'Gagal set juz');
+    toast(`✅ Juz ${pendingJuz} dikunci sebagai juz aktif kamu!`);
+    await fetchAll();
+    renderInput();
+    renderPribadi();
+  } catch(e){
+    toast('⚠️ Gagal: '+e.message);
+  } finally {
+    loading(false);pendingJuz=null;
+  }
+}
+
+function populateSuratSelect(jm){
+  const done=jm[30]||new Set();
+  ['inSuratMulai','inSuratSelesai'].forEach((id,idx)=>{
+    const sel=document.getElementById(id);
+    sel.innerHTML='';
+    SURAT_JUZ30.forEach((nama,i)=>{
+      const o=document.createElement('option');
+      o.value=i+1;
+      o.textContent=`${i+1}. ${nama}${done.has(i+1)?' ✅':''}`;
+      if(idx===0 && i===0) o.selected=true;
+      if(idx===1 && i===2) o.selected=true; // default selesai surat ke-3
+      sel.appendChild(o);
+    });
+  });
+  updateCount();
+}
+
+function updateCount(){
+  const ja=getJuzAktifUser(currentUser);
+  const el=document.getElementById('countInfo');
+  if(ja===30){
+    const a=parseInt(document.getElementById('inSuratMulai').value);
+    const b=parseInt(document.getElementById('inSuratSelesai').value);
+    if(a&&b&&b>=a){
+      const n=b-a+1;
+      el.style.display='block';
+      el.style.background=n>=3?'var(--teal-l)':'var(--red-l)';
+      el.style.color=n>=3?'var(--teal)':'var(--red)';
+      el.textContent=n<3?`❌ ${n} surat — minimal 3 surat per setoran`:
+        n===3?`✅ 3 surat — setara 1 halaman di leaderboard`:
+        `🚀 ${n} surat — setara ${Math.floor(n/3)} halaman di leaderboard`;
+    } else el.style.display='none';
+  } else {
+    const a=parseInt(document.getElementById('inHalMulai').value);
+    const b=parseInt(document.getElementById('inHalSelesai').value);
+    if(a&&b&&b>=a){
+      const n=b-a+1;el.style.display='block';
+      el.style.background=n>=2?'var(--teal-l)':'var(--gold-l)';
+      el.style.color=n>=2?'var(--teal)':'var(--gold)';
+      el.textContent=n===1?'✅ 1 halaman — memenuhi minimal!':
+        n===2?'🎯 2 halaman — sesuai target harian!':
+        `🚀 ${n} halaman — melebihi target!`;
+    } else el.style.display='none';
+  }
+}
+
+async function simpanSetoran(){
+  const ja=getJuzAktifUser(currentUser);
+  if(ja===null||ja===undefined){toast('❌ Pilih juz aktif dulu.');return;}
+
+  let mulai,selesai,tipe;
+  if(ja===30){
+    mulai  =parseInt(document.getElementById('inSuratMulai').value);
+    selesai=parseInt(document.getElementById('inSuratSelesai').value);
+    tipe   ='surat';
+    if(!mulai||!selesai){toast('❌ Pilih surat mulai dan selesai.');return;}
+    if(selesai<mulai){toast('❌ Surat selesai >= mulai.');return;}
+    if((selesai-mulai+1)<3){toast('❌ Minimal 3 surat per setoran.');return;}
+  } else {
+    mulai  =parseInt(document.getElementById('inHalMulai').value);
+    selesai=parseInt(document.getElementById('inHalSelesai').value);
+    tipe   ='hal';
+    if(!mulai||!selesai){toast('❌ Isi halaman mulai dan selesai.');return;}
+    if(selesai<mulai){toast('❌ Halaman selesai >= mulai.');return;}
+    if(mulai<1||selesai>JUZ_HAL){toast('❌ Halaman harus 1–'+JUZ_HAL);return;}
+  }
+
+  const tgl=document.getElementById('inTanggal').value;
+  const catatan=document.getElementById('inCatatan').value.trim();
+  if(!tgl){toast('❌ Tanggal wajib diisi.');return;}
+
+  const btn=document.getElementById('simpanBtn');
+  btn.textContent='Menyimpan...';btn.disabled=true;
+
+  try {
+    const res=await gasCall('addSetoran',{
+      id:String(Date.now()),user:currentUser,
+      juz:ja,halMulai:mulai,halSelesai:selesai,
+      tanggal:tgl,catatan,tipe
+    });
+    if(!res.ok)throw new Error(res.error||'Gagal simpan');
+
+    // Reset form
+    document.getElementById('inHalMulai').value='';
+    document.getElementById('inHalSelesai').value='';
+    document.getElementById('inCatatan').value='';
+    document.getElementById('countInfo').style.display='none';
+    document.getElementById('inTanggal').value=todayStr();
+    toast('✅ Setoran tersimpan! Semangat! 💪');
+
+    // Fetch fresh → update semua dashboard
+    await fetchAll();
+    // Kembali ke utama dan render keduanya
+    switchPage('pgUtama');
+    renderUtama();
+    // Juga pre-render pribadi biar fresh waktu dibuka
+    // (tidak perlu switch, cukup render datanya)
+
+  } catch(e){
+    toast('⚠️ Gagal: '+e.message);
+  } finally {
+    btn.textContent='✅ Simpan Setoran';btn.disabled=false;
+  }
+}
+
+async function hapusSetoran(id){
+  if(!confirm('Hapus setoran ini?'))return;
+  toast('⏳ Menghapus...');
+  try {
+    const res=await gasCall('deleteSetoran',{id,user:currentUser});
+    if(!res.ok)throw new Error(res.error||'Gagal hapus');
+    toast('🗑️ Setoran dihapus');
+    await fetchAll();renderPribadi();
+  } catch(e){toast('⚠️ Gagal: '+e.message);}
+}
+
+// ════════════════════════════════════════════════
+// RENDER: WIKI
+// ════════════════════════════════════════════════
+function renderWiki(){
+  const ms=members();
+  document.getElementById('wikiMemberCount').textContent=ms.length+' Anggota · Admin: Ridho';
+  document.getElementById('wikiProfiles').innerHTML=ms.map(u=>{
+    const s=getMySetoran(u);const t=totalSetara(s);const jm=buildJuzMap(s);const jd=juzDoneCount(jm);
+    const cfg=MEMBERS_CONFIG[u]||{};const isAdmin=cfg.role==='admin';
+    return `<div class="profile-card ${isAdmin?'ketua':''}">
+      <div class="profile-photo">${photoEl(u,52)}</div>
+      <div class="profile-name">${u}</div>
+      <div class="profile-role">${isAdmin?'👑 Admin':'Anggota'}</div>
+      <div style="margin-top:6px;font-size:.68rem;color:var(--text2);">${t} hal · ${jd} juz</div>
+    </div>`;
+  }).join('');
+  const total=ms.reduce((t,u)=>t+totalSetara(getMySetoran(u)),0);
+  const max=ms.length*HAL_PER_ORG;
+  const pct=max>0?Math.round(total/max*100):0;
+  document.getElementById('wikiBar').style.width=pct+'%';
+  document.getElementById('wikiPct').textContent=pct+'% selesai dari '+(max)+' halaman total tim';
+  setTimeout(loadPhotos, 50);
+}
+
+// ════════════════════════════════════════════════
+// RENDER: ADMIN
+// ════════════════════════════════════════════════
+function renderAdmin(){
+  const ms=members();
+  document.getElementById('adminMemberCount').textContent=ms.length+' member';
+
+  document.getElementById('adminMemberList').innerHTML=ms.map(u=>{
+    const cfg=MEMBERS_CONFIG[u]||{};
+    const ja=getJuzAktifUser(u);
+    const myS=getMySetoran(u);const jm=buildJuzMap(myS);
+    const tot=totalSetara(myS);
+    const jaStr=ja?`Juz ${ja}${isJuzSelesai(jm,ja)?' ✅':' 🔒'}`:'Belum pilih';
+    return `<div class="admin-member-row">
+      <div style="width:32px;height:32px;border-radius:50%;overflow:hidden;flex-shrink:0;">${photoEl(u,32)}</div>
+      <div style="flex:1;">
+        <div style="font-size:.84rem;font-weight:700;color:var(--white);">${u}</div>
+        <div style="font-size:.71rem;color:var(--text2);">${cfg.role} · ${tot} hal · ${jaStr}</div>
+      </div>
+      ${u!==currentUser?`<button onclick="adminHapusMember('${u}')" style="background:var(--red-l);border:none;border-radius:6px;padding:4px 8px;font-size:.65rem;color:var(--red);cursor:pointer;">Hapus</button>`:''}
+    </div>`;
+  }).join('');
+
+  // Semua setoran
+  const allS=cache.slice().sort((a,b)=>b.tanggal.localeCompare(a.tanggal));
+  document.getElementById('adminSetoranCount').textContent=allS.length;
+  document.getElementById('adminSetoranList').innerHTML=allS.length===0
+    ?'<div class="empty"><span class="empty-icon">📋</span>Belum ada setoran</div>'
+    :allS.slice(0,50).map(s=>{
+      const hal=s.juz===30?`Surat ${s.halMulai}–${s.halSelesai}`:`Hal ${s.halMulai}–${s.halSelesai}`;
+      return `<div class="setor-item">
+        <div>
+          <div class="setor-juz">${s.user} — Juz ${s.juz} (${hal})</div>
+          <div class="setor-hal">${s.catatan||'—'}</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="setor-tgl">${fmtTgl(s.tanggal)}</div>
+          <button onclick="adminHapusSetoran('${s.id}')"
+            style="margin-top:4px;background:var(--red-l);border:none;border-radius:6px;
+                   padding:3px 8px;font-size:.65rem;color:var(--red);cursor:pointer;">🗑</button>
+        </div>
+      </div>`;
+    }).join('')+(allS.length>50?`<div class="empty" style="padding:10px;">...+${allS.length-50} setoran lainnya</div>`:'');
+}
+
+function populateAdminResetSelect(){
+  const sel=document.getElementById('adminResetTarget');
+  if(!sel)return;
+  sel.innerHTML='';
+  members().filter(u=>u!==currentUser).forEach(u=>{
+    const o=document.createElement('option');o.value=u;o.textContent=u;sel.appendChild(o);
+  });
+}
+
+async function adminResetJuz(){
+  const target=document.getElementById('adminResetTarget').value;
+  if(!target){toast('❌ Pilih anggota dulu.');return;}
+  if(!confirm(`Reset juz aktif ${target}? Setoran yang sudah ada tidak terhapus.`))return;
+  loading(true);
+  try {
+    const res=await gasCall('resetJuzAktif',{adminUser:currentUser,targetUser:target});
+    if(!res.ok)throw new Error(res.error||'Gagal reset');
+    toast(`✅ Juz aktif ${target} berhasil di-reset`);
+    await fetchAll();renderAdmin();
+  } catch(e){toast('⚠️ '+e.message);}
+  finally{loading(false);}
+}
+
+async function adminAddMember(){
+  const nama=document.getElementById('adminNewName').value.trim();
+  if(!nama){toast('❌ Masukkan nama member.');return;}
+  loading(true);
+  try {
+    const res=await gasCall('addMember',{adminUser:currentUser,newUser:nama,newPass:''});
+    if(!res.ok)throw new Error(res.error||'Gagal');
+    toast('✅ '+res.message);
+    document.getElementById('adminNewName').value='';
+    await fetchAll();renderAdmin();
+  } catch(e){toast('⚠️ '+e.message);}
+  finally{loading(false);}
+}
+
+async function adminHapusMember(user){
+  if(!confirm(`Hapus ${user} dari kelompok? Data setorannya tetap ada.`))return;
+  loading(true);
+  try {
+    const res=await gasCall('removeMember',{adminUser:currentUser,targetUser:user});
+    if(!res.ok)throw new Error(res.error||'Gagal');
+    toast(`✅ ${user} dihapus`);
+    await fetchAll();renderAdmin();
+  } catch(e){toast('⚠️ '+e.message);}
+  finally{loading(false);}
+}
+
+async function adminHapusSetoran(id){
+  if(!confirm('Hapus setoran ini?'))return;
+  toast('⏳ Menghapus...');
+  try {
+    const res=await gasCall('deleteSetoran',{id,user:currentUser});
+    if(!res.ok)throw new Error(res.error||'Gagal');
+    toast('🗑️ Dihapus');await fetchAll();renderAdmin();
+  } catch(e){toast('⚠️ '+e.message);}
+}
+
+// ════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════
+populateLoginSelect();
+document.getElementById('loginPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+</script>
+</body>
+</html>
