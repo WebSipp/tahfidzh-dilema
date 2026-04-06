@@ -29,6 +29,7 @@
   --text-gray:#a0a8c0;
   --text-dim:#5a6280;
   --card-hover:rgba(139,92,246,0.08);
+  --bottom-nav-h:64px;
 }
 body{
   font-family:'Space Grotesk',sans-serif;
@@ -37,40 +38,34 @@ body{
   overflow-x:hidden;
 }
 
+/* ===================== BACKGROUND ===================== */
 #starfield{
-  position:fixed;
-  inset:0;
-  z-index:0;
+  position:fixed;inset:0;z-index:0;
   background-image:url('https://websipp.github.io/tahfidzh-dilema/images/LB.jpeg');
-  background-size:cover;
-  background-position:center top;
-  background-attachment:fixed;
-  overflow:hidden;
-  pointer-events:none;
+  background-size:cover;background-position:center top;background-attachment:fixed;
+  overflow:hidden;pointer-events:none;
 }
 #starfield::after{
-  content:'';
-  position:absolute;
-  inset:0;
-  background:linear-gradient(
-    to bottom,
-    rgba(10,10,20,0.7) 0%,
-    rgba(10,10,20,0.55) 40%,
-    rgba(10,10,20,0.75) 100%
-  );
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to bottom,rgba(10,10,20,0.7) 0%,rgba(10,10,20,0.55) 40%,rgba(10,10,20,0.75) 100%);
 }
 
+/* ===================== KEYFRAMES ===================== */
 @keyframes fadeInUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes pageEnter{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
 @keyframes spin{to{transform:rotate(360deg);}}
 @keyframes pulseGlow{0%,100%{box-shadow:0 0 10px var(--primary-glow);}50%{box-shadow:0 0 25px var(--primary-glow),0 0 50px rgba(139,92,246,0.2);}}
 @keyframes shimmer{0%{transform:translateX(-100%);}100%{transform:translateX(100%);}}
-@keyframes toastFade{0%{opacity:0;transform:translateY(-8px);}12%{opacity:1;transform:translateY(0);}75%{opacity:1;}100%{opacity:0;}}
+@keyframes skeletonPulse{0%,100%{opacity:0.4;}50%{opacity:0.8;}}
+@keyframes toastFade{0%{opacity:0;transform:translateY(-8px) translateX(-50%);}12%{opacity:1;transform:translateY(0) translateX(-50%);}75%{opacity:1;transform:translateY(0) translateX(-50%);}100%{opacity:0;transform:translateY(-8px) translateX(-50%);}}
+@keyframes badgeUnlock{0%{transform:scale(0.5);opacity:0;}60%{transform:scale(1.15);}100%{transform:scale(1);opacity:1;}}
 
+/* ===================== PAGE SYSTEM ===================== */
 .page{display:none;min-height:100vh;position:relative;z-index:1;}
-.page.active{display:block;}
+.page.active{display:block;animation:pageEnter 0.28s cubic-bezier(0.4,0,0.2,1);}
 #pgLogin.active{display:flex;}
 
-/* LOGIN */
+/* ===================== LOGIN ===================== */
 #pgLogin{align-items:center;justify-content:center;padding:20px;}
 .login-card{width:100%;max-width:360px;background:rgba(15,15,26,0.95);border:1px solid var(--border-glow);border-radius:20px;padding:36px 28px;box-shadow:0 0 60px rgba(139,92,246,0.15);animation:fadeInUp 0.5s ease;}
 .login-logo{width:56px;height:56px;background:linear-gradient(135deg,var(--primary),#4f46e5);border-radius:16px;display:flex;align-items:center;justify-content:center;font-family:'Amiri',serif;font-size:1.6rem;color:white;margin:0 auto 20px;box-shadow:0 0 20px rgba(139,92,246,0.4);}
@@ -83,7 +78,7 @@ input,select,textarea{width:100%;border-radius:10px;border:1px solid var(--borde
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary);background:rgba(139,92,246,0.08);box-shadow:0 0 0 3px rgba(139,92,246,0.15);}
 select option{background:#0f0f24;color:#f1f5f9;}
 
-/* BUTTONS */
+/* ===================== BUTTONS ===================== */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;font-weight:600;border-radius:10px;transition:all 0.2s;font-size:0.85rem;padding:11px 20px;font-family:'Space Grotesk',sans-serif;}
 .btn:active{transform:scale(0.97);}
 .btn-full{width:100%;}
@@ -99,7 +94,7 @@ select option{background:#0f0f24;color:#f1f5f9;}
 .chip-accent{background:rgba(245,158,11,0.12);color:var(--accent);border-color:rgba(245,158,11,0.25);}
 .chip-green{background:rgba(16,185,129,0.12);color:#34d399;border-color:rgba(16,185,129,0.25);}
 
-/* NAVBAR */
+/* ===================== NAVBAR ===================== */
 .navbar{position:sticky;top:0;z-index:100;background:rgba(10,10,20,0.9);backdrop-filter:blur(20px);border-bottom:1px solid rgba(139,92,246,0.2);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
 .nav-brand{display:flex;align-items:center;gap:10px;}
 .nav-brand-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--primary),#4f46e5);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Amiri',serif;font-size:1rem;color:white;}
@@ -115,7 +110,36 @@ select option{background:#0f0f24;color:#f1f5f9;}
 .avatar-btn span{font-size:0.9rem;font-weight:600;}
 .avatar-btn:hover{border-color:var(--primary);}
 
-/* MENU */
+/* ===================== BOTTOM NAV ===================== */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  height:var(--bottom-nav-h);
+  background:rgba(10,10,20,0.96);
+  backdrop-filter:blur(24px);
+  border-top:1px solid rgba(139,92,246,0.2);
+  display:none;
+  align-items:center;
+  justify-content:space-around;
+  padding:0 8px;
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+.bottom-nav.visible{display:flex;}
+.bnav-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:6px 4px;cursor:pointer;border:none;background:none;
+  color:var(--text-dim);font-family:'Space Grotesk',sans-serif;
+  transition:color 0.18s;position:relative;
+}
+.bnav-item.active{color:var(--primary-light);}
+.bnav-item:hover{color:var(--text-gray);}
+.bnav-icon{font-size:1.15rem;line-height:1;}
+.bnav-label{font-size:0.58rem;font-weight:600;letter-spacing:0.3px;}
+.bnav-item.active::after{
+  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:24px;height:2px;border-radius:0 0 3px 3px;background:var(--primary-light);
+}
+
+/* ===================== MENU ===================== */
 .menu-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);}
 .menu-box{display:none;position:fixed;top:60px;right:12px;z-index:201;background:var(--bg-elevated);border:1px solid var(--border-glow);border-radius:14px;min-width:200px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.5);}
 .menu-item{width:100%;text-align:left;padding:11px 18px;background:none;border:none;cursor:pointer;font-size:0.83rem;color:var(--text-white);transition:background 0.15s;font-family:'Space Grotesk',sans-serif;}
@@ -123,21 +147,32 @@ select option{background:#0f0f24;color:#f1f5f9;}
 .menu-item.danger{color:var(--danger);}
 .menu-divider{height:1px;background:var(--border-subtle);margin:4px 0;}
 
-/* WRAP */
+/* ===================== WRAP ===================== */
 .wrap{max-width:640px;margin:0 auto;padding:14px;position:relative;z-index:1;}
+/* Extra bottom padding when bottom nav visible */
+.page-with-bnav .wrap{padding-bottom:calc(var(--bottom-nav-h) + 14px);}
 
-/* CARD */
+/* ===================== CARD ===================== */
 .card{background:var(--bg-card);backdrop-filter:blur(10px);border:1px solid var(--border-glow);border-radius:20px;margin-bottom:16px;overflow:hidden;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);box-shadow:0 4px 20px rgba(0,0,0,0.3);}
 .card:hover{border-color:var(--primary);transform:translateY(-2px);box-shadow:0 8px 30px rgba(139,92,246,0.15);}
 .card-header{padding:16px 20px;background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(0,0,0,0.1));border-bottom:1px solid var(--border-subtle);display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:0.85rem;letter-spacing:0.3px;}
 .card-content{padding:20px;}
 
-/* PROGRESS */
+/* ===================== SKELETON LOADING ===================== */
+.skeleton{background:rgba(255,255,255,0.07);border-radius:8px;animation:skeletonPulse 1.6s ease-in-out infinite;position:relative;overflow:hidden;}
+.skeleton::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.06) 50%,transparent 100%);animation:shimmer 1.6s ease-in-out infinite;}
+.skeleton-text{height:14px;margin-bottom:8px;}
+.skeleton-text.sm{height:10px;width:60%;}
+.skeleton-avatar{width:52px;height:52px;border-radius:50%;}
+.skeleton-bar{height:8px;border-radius:10px;}
+.skeleton-card{background:var(--bg-card);border:1px solid var(--border-glow);border-radius:20px;margin-bottom:16px;padding:20px;}
+
+/* ===================== PROGRESS ===================== */
 .progress{height:8px;border-radius:10px;background:rgba(255,255,255,0.08);overflow:hidden;}
 .progress-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--primary),var(--cyan));transition:width 0.8s cubic-bezier(0.4,0,0.2,1);position:relative;overflow:hidden;}
 .progress-fill::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);animation:shimmer 2s infinite;}
 
-/* SEASON BANNER */
+/* ===================== SEASON BANNER ===================== */
 .season-banner{background:linear-gradient(135deg,rgba(139,92,246,0.25),rgba(79,70,229,0.12));border:1.5px solid rgba(139,92,246,0.4);border-radius:20px;padding:18px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
 .season-label{font-size:0.62rem;color:var(--primary-light);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;}
 .season-name{font-family:'Rajdhani',sans-serif;font-size:1.3rem;font-weight:700;letter-spacing:0.5px;}
@@ -147,7 +182,7 @@ select option{background:#0f0f24;color:#f1f5f9;}
 .cd-num{font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:700;color:var(--accent-light);line-height:1;}
 .cd-lab{font-size:0.55rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px;}
 
-/* XP LEVEL CARD */
+/* ===================== LEVEL CARD ===================== */
 .level-card{background:linear-gradient(135deg,rgba(139,92,246,0.2),rgba(79,70,229,0.1));border:1.5px solid rgba(139,92,246,0.4);border-radius:20px;padding:18px;margin-bottom:16px;box-shadow:0 0 20px rgba(139,92,246,0.1);}
 .level-top{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
 .level-badge-icon{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,var(--primary),#4f46e5);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;border:2px solid rgba(139,92,246,0.5);box-shadow:0 0 20px rgba(139,92,246,0.3);}
@@ -157,45 +192,21 @@ select option{background:#0f0f24;color:#f1f5f9;}
 .level-xp-bar-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--cyan));border-radius:10px;transition:width 1s ease;}
 .level-xp-row{display:flex;justify-content:space-between;font-size:0.65rem;color:var(--text-dim);}
 
-/* BOSS SYSTEM */
-.boss-card{
-  background:var(--bg-card);
-  border:1px solid var(--border-glow);
-  border-radius:20px;
-  margin-bottom:14px;
-  overflow:hidden;
-  box-shadow:0 4px 20px rgba(0,0,0,0.3);
-}
-.boss-card-header{
-  padding:14px 18px;
-  display:flex;
-  align-items:center;
-  gap:14px;
-  border-bottom:1px solid var(--border-subtle);
-}
-.boss-emoji-big{
-  font-size:2.2rem;
-  flex-shrink:0;
-  line-height:1;
-}
+/* ===================== BOSS SYSTEM ===================== */
+.boss-card{background:var(--bg-card);border:1px solid var(--border-glow);border-radius:20px;margin-bottom:14px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.3);}
+.boss-card-header{padding:14px 18px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border-subtle);}
+.boss-emoji-big{font-size:2.2rem;flex-shrink:0;line-height:1;}
 .boss-header-info{flex:1;min-width:0;}
 .boss-card-tier{font-size:0.58rem;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;margin-bottom:3px;}
 .boss-card-name{font-family:'Rajdhani',sans-serif;font-size:1.05rem;font-weight:700;line-height:1.2;}
 .boss-card-desc{font-size:0.65rem;color:var(--text-gray);margin-top:3px;}
 .boss-members{padding:10px 18px 14px;}
-.boss-member-row{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:7px 0;
-  border-bottom:1px solid rgba(255,255,255,0.04);
-}
+.boss-member-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
 .boss-member-row:last-child{border-bottom:none;}
 .boss-member-av{width:32px;height:32px;border-radius:50%;overflow:hidden;flex-shrink:0;background:var(--bg-surface);}
 .boss-member-av img{width:100%;height:100%;object-fit:cover;}
 .boss-member-name{font-size:0.78rem;font-weight:600;flex:1;}
 .boss-member-status{font-size:0.72rem;min-width:20px;text-align:center;}
-
 .boss-card.all-cleared{border-color:rgba(16,185,129,0.4);}
 .boss-card.all-cleared .boss-card-header{background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(0,0,0,0.1));}
 .boss-card.all-cleared .boss-card-tier{color:#34d399;}
@@ -206,7 +217,7 @@ select option{background:#0f0f24;color:#f1f5f9;}
 .boss-card.locked .boss-card-tier{color:var(--text-dim);}
 .boss-card.locked{opacity:0.65;}
 
-/* ATTENDANCE */
+/* ===================== ATTENDANCE ===================== */
 .attendance-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:20px 12px;padding:20px;background:rgba(0,0,0,0.2);}
 .attendance-item{display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center;}
 .avatar-container{position:relative;width:64px;height:64px;}
@@ -223,8 +234,7 @@ select option{background:#0f0f24;color:#f1f5f9;}
 .attendance-xp.present{color:var(--primary-light);}
 .attendance-xp.absent{color:var(--danger);}
 
-/* LEADERBOARD */
-#rocketCanvas{width:100%;display:block;border-radius:0 0 12px 12px;}
+/* ===================== LEADERBOARD ===================== */
 .lb-row{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border-subtle);position:relative;transition:background 0.15s;}
 .lb-row:hover{background:var(--primary-bg);}
 .lb-row.me{background:rgba(139,92,246,0.08);}
@@ -245,7 +255,7 @@ select option{background:#0f0f24;color:#f1f5f9;}
 .lb-bar-wrap{width:54px;height:3px;background:rgba(255,255,255,0.05);border-radius:10px;overflow:hidden;margin-top:4px;margin-left:auto;}
 .lb-bar-fill{height:100%;border-radius:10px;}
 
-/* QUEST */
+/* ===================== QUEST ===================== */
 .quest-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border-subtle);transition:background 0.15s;}
 .quest-item:last-child{border-bottom:none;}
 .quest-item:hover{background:var(--primary-bg);}
@@ -258,7 +268,7 @@ select option{background:#0f0f24;color:#f1f5f9;}
 .quest-reward{text-align:right;flex-shrink:0;}
 .quest-xp-val{font-size:0.78rem;font-weight:700;color:var(--accent);}
 
-/* STREAK */
+/* ===================== STREAK ===================== */
 .streak-row{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-bottom:1px solid var(--border-subtle);transition:background 0.15s;}
 .streak-row:hover{background:var(--primary-bg);}
 .streak-row:last-child{border-bottom:none;}
@@ -270,7 +280,7 @@ select option{background:#0f0f24;color:#f1f5f9;}
 .streak-right{text-align:right;}
 .streak-fire{font-size:0.8rem;color:#f97316;font-weight:700;}
 
-/* TEAM GRID */
+/* ===================== TEAM GRID ===================== */
 .team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;padding:18px;background:rgba(0,0,0,0.15);}
 .team-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:16px;padding:16px 12px;text-align:center;transition:all 0.2s;}
 .team-card:hover{transform:translateY(-3px);border-color:var(--primary);background:rgba(139,92,246,0.05);}
@@ -282,12 +292,12 @@ select option{background:#0f0f24;color:#f1f5f9;}
 .team-prog{margin-top:8px;height:3px;background:rgba(255,255,255,0.06);border-radius:10px;overflow:hidden;}
 .team-prog-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--cyan));border-radius:10px;}
 
-/* STATS */
+/* ===================== STATS ===================== */
 .stat-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;font-size:0.82rem;color:var(--text-gray);border-bottom:1px solid var(--border-subtle);}
 .stat-row:last-child{border-bottom:none;}
 .stat-value{font-weight:700;color:var(--primary-light);}
 
-/* CALENDAR */
+/* ===================== CALENDAR ===================== */
 .calendar{padding:16px;}
 .calendar-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
 .calendar-title{font-weight:600;font-size:0.88rem;}
@@ -306,14 +316,14 @@ select option{background:#0f0f24;color:#f1f5f9;}
 .legend-dot.absent{background:var(--danger);opacity:0.6;}
 .legend-dot.today{border:1.5px solid var(--accent);background:transparent;}
 
-/* CHART */
+/* ===================== CHART ===================== */
 .chart-container{display:flex;align-items:flex-end;gap:6px;height:110px;padding:16px 16px 4px;}
 .chart-bar-wrapper{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
 .chart-bar{width:100%;background:linear-gradient(180deg,var(--primary),#4f46e5);border-radius:4px 4px 0 0;}
 .chart-label{font-size:0.52rem;color:var(--text-dim);}
 .chart-value{font-size:0.58rem;font-weight:600;color:var(--primary-light);}
 
-/* JUZ GRID */
+/* ===================== JUZ GRID ===================== */
 .juz-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;padding:16px;}
 .juz-cell{border-radius:8px;padding:8px 3px;text-align:center;background:var(--bg-surface);border:1px solid var(--border-subtle);position:relative;transition:all 0.2s;cursor:default;}
 .juz-cell.completed{background:rgba(139,92,246,0.15);border-color:rgba(139,92,246,0.4);}
@@ -323,15 +333,15 @@ select option{background:#0f0f24;color:#f1f5f9;}
 .juz-cell.completed .juz-progress{color:var(--primary-light);}
 .juz-progress-bar{position:absolute;bottom:0;left:0;height:2px;background:linear-gradient(90deg,var(--primary),var(--cyan));border-radius:2px;}
 
-/* BADGE GRID */
+/* ===================== BADGE GRID ===================== */
 .badge-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(95px,1fr));gap:10px;padding:16px;}
 .badge-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:12px;padding:12px;text-align:center;opacity:0.35;transition:all 0.2s;}
-.badge-card.unlocked{opacity:1;border-color:rgba(139,92,246,0.4);background:rgba(139,92,246,0.08);}
+.badge-card.unlocked{opacity:1;border-color:rgba(139,92,246,0.4);background:rgba(139,92,246,0.08);animation:badgeUnlock 0.4s cubic-bezier(0.4,0,0.2,1);}
 .badge-icon{font-size:1.3rem;display:block;margin-bottom:5px;}
 .badge-name{font-size:0.68rem;font-weight:600;margin-bottom:2px;}
 .badge-desc{font-size:0.55rem;color:var(--text-dim);}
 
-/* SETORAN */
+/* ===================== SETORAN ===================== */
 .setoran-item{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-bottom:1px solid var(--border-subtle);transition:background 0.15s;}
 .setoran-item:hover{background:var(--primary-bg);}
 .setoran-item:last-child{border-bottom:none;}
@@ -343,20 +353,24 @@ select option{background:#0f0f24;color:#f1f5f9;}
 .delete-btn{background:none;border:none;color:var(--danger);font-size:0.65rem;cursor:pointer;margin-top:4px;opacity:0.5;transition:opacity 0.2s;font-family:'Space Grotesk',sans-serif;}
 .delete-btn:hover{opacity:1;}
 
-/* INFO BOXES */
+/* ===================== INFO BOXES ===================== */
 .info-box{background:rgba(139,92,246,0.08);border-left:3px solid var(--primary);border-radius:0 8px 8px 0;padding:10px 14px;font-size:0.78rem;margin-bottom:14px;color:var(--text-gray);}
 .warning-box{background:rgba(245,158,11,0.07);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:10px 14px;font-size:0.78rem;margin-bottom:14px;color:var(--text-gray);}
 .success-box{background:rgba(16,185,129,0.08);border-left:3px solid var(--green);border-radius:0 8px 8px 0;padding:10px 14px;font-size:0.78rem;margin-bottom:14px;color:var(--text-gray);}
 .danger-box{background:rgba(239,68,68,0.08);border-left:3px solid var(--danger);border-radius:0 8px 8px 0;padding:10px 14px;font-size:0.78rem;margin-bottom:14px;color:var(--text-gray);}
 
-/* MODAL */
+/* ===================== OFFLINE BANNER ===================== */
+.offline-banner{display:none;position:fixed;top:0;left:0;right:0;z-index:9997;background:rgba(239,68,68,0.9);backdrop-filter:blur(8px);padding:10px 20px;text-align:center;font-size:0.78rem;font-weight:600;}
+.offline-banner.visible{display:block;}
+
+/* ===================== MODAL ===================== */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:300;align-items:center;justify-content:center;}
 .modal-overlay.open{display:flex;}
 .modal-container{background:var(--bg-elevated);border-radius:16px;width:90%;max-width:400px;padding:22px;border:1px solid var(--border-glow);box-shadow:0 0 60px rgba(139,92,246,0.2);}
 .modal-title{font-size:1rem;font-weight:700;margin-bottom:10px;}
 .modal-actions{display:flex;gap:10px;margin-top:18px;}
 
-/* WIKI */
+/* ===================== WIKI ===================== */
 .wiki-hero{background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(79,70,229,0.05));border:1px solid rgba(139,92,246,0.2);border-radius:16px;padding:22px;text-align:center;margin-bottom:14px;}
 .profile-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;padding:14px;}
 .profile-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:12px;padding:14px;text-align:center;transition:all 0.2s;}
@@ -370,13 +384,21 @@ select option{background:#0f0f24;color:#f1f5f9;}
 .wiki-list li::before{content:'→';color:var(--primary-light);font-weight:700;flex-shrink:0;}
 .section-label{font-size:0.65rem;font-weight:700;color:var(--text-gray);text-transform:uppercase;letter-spacing:1.5px;margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border-subtle);}
 
-/* LOADING & TOAST */
+/* ===================== LOADING & TOAST ===================== */
 .loading-overlay{display:none;position:fixed;inset:0;background:rgba(10,10,20,0.98);backdrop-filter:blur(12px);z-index:9998;align-items:center;justify-content:center;flex-direction:column;gap:20px;}
 .spinner{width:44px;height:44px;border:3px solid var(--primary-bg);border-top-color:var(--primary);border-radius:50%;animation:spin 0.8s linear infinite;}
-.toast-container{position:fixed;top:72px;left:50%;transform:translateX(-50%);z-index:9999;pointer-events:none;max-width:90vw;}
-.toast-message{background:var(--bg-elevated);color:var(--text-white);border:1px solid var(--border-glow);padding:9px 20px;border-radius:40px;font-size:0.78rem;font-weight:500;box-shadow:0 0 30px rgba(139,92,246,0.2);animation:toastFade 2.8s ease forwards;}
+.toast-container{position:fixed;top:72px;left:50%;transform:translateX(-50%);z-index:9999;pointer-events:none;max-width:90vw;white-space:nowrap;}
+.toast-message{display:inline-block;background:var(--bg-elevated);color:var(--text-white);border:1px solid var(--border-glow);padding:9px 20px;border-radius:40px;font-size:0.78rem;font-weight:500;box-shadow:0 0 30px rgba(139,92,246,0.2);animation:toastFade 2.8s ease forwards;}
 .empty-state{text-align:center;padding:36px 20px;color:var(--text-dim);font-size:0.82rem;}
 
+/* ===================== PAGINATION ===================== */
+.pagination{display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 16px;border-top:1px solid var(--border-subtle);}
+.page-btn{background:var(--bg-surface);border:1px solid var(--border-subtle);color:var(--text-gray);border-radius:8px;padding:6px 14px;font-size:0.75rem;cursor:pointer;transition:all 0.2s;font-family:'Space Grotesk',sans-serif;}
+.page-btn:hover:not(:disabled){border-color:var(--primary);color:var(--primary-light);}
+.page-btn:disabled{opacity:0.3;cursor:not-allowed;}
+.page-info{font-size:0.72rem;color:var(--text-dim);}
+
+/* ===================== RESPONSIVE ===================== */
 @media(max-width:480px){
   .wrap{padding:10px;}
   .attendance-grid{gap:12px 8px;padding:14px;}
@@ -396,14 +418,34 @@ select option{background:#0f0f24;color:#f1f5f9;}
 <body>
 
 <div id="starfield"></div>
+<div class="offline-banner" id="offlineBanner">⚠️ Tidak ada koneksi internet. Beberapa fitur mungkin tidak tersedia.</div>
 
 <div class="loading-overlay" id="loadingOverlay">
   <div class="spinner"></div>
-  <span style="font-size:0.78rem;color:var(--text-gray);text-align:center;max-width:280px;padding:0 20px;"></span>
+  <span id="loadingMsg" style="font-size:0.78rem;color:var(--text-gray);text-align:center;max-width:280px;padding:0 20px;"></span>
 </div>
 <div class="toast-container" id="toastContainer" style="display:none;">
   <div class="toast-message" id="toastMessage"></div>
 </div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav" id="bottomNav">
+  <button class="bnav-item active" id="bnav-utama" onclick="bnavTo('pgUtama')">
+    <span class="bnav-icon">🏠</span><span class="bnav-label">Beranda</span>
+  </button>
+  <button class="bnav-item" id="bnav-input" onclick="bnavTo('pgInput')">
+    <span class="bnav-icon">📖</span><span class="bnav-label">Setor</span>
+  </button>
+  <button class="bnav-item" id="bnav-pribadi" onclick="bnavTo('pgPribadi')">
+    <span class="bnav-icon">👤</span><span class="bnav-label">Pribadi</span>
+  </button>
+  <button class="bnav-item" id="bnav-wiki" onclick="bnavTo('pgWiki')">
+    <span class="bnav-icon">📚</span><span class="bnav-label">Wiki</span>
+  </button>
+  <button class="bnav-item" id="bnav-admin" onclick="bnavTo('pgAdmin')" style="display:none;">
+    <span class="bnav-icon">⚙️</span><span class="bnav-label">Admin</span>
+  </button>
+</nav>
 
 <!-- LOGIN -->
 <div id="pgLogin" class="page active">
@@ -420,7 +462,7 @@ select option{background:#0f0f24;color:#f1f5f9;}
 </div>
 
 <!-- DASHBOARD UTAMA -->
-<div id="pgUtama" class="page">
+<div id="pgUtama" class="page page-with-bnav">
   <nav class="navbar">
     <div class="nav-brand">
       <div class="nav-brand-icon">ط</div>
@@ -438,16 +480,11 @@ select option{background:#0f0f24;color:#f1f5f9;}
   <div class="menu-box" id="menuBox">
     <div class="menu-item" style="font-weight:600;color:var(--text-gray);cursor:default;" id="menuLabel"></div>
     <div class="menu-divider"></div>
-    <button class="menu-item" onclick="navTo('pgInput')">📖 Input Setoran</button>
-    <button class="menu-item" onclick="navTo('pgPribadi')">👤 Dashboard Pribadi</button>
-    <button class="menu-item" onclick="navTo('pgWiki')">📚 Wiki Kelompok</button>
-    <div id="adminMenuItems" style="display:none;"><div class="menu-divider"></div><button class="menu-item" onclick="navTo('pgAdmin')">⚙️ Panel Admin</button></div>
-    <div class="menu-divider"></div>
+    <div id="adminMenuItems" style="display:none;"><button class="menu-item" onclick="bnavTo('pgAdmin')">⚙️ Panel Admin</button><div class="menu-divider"></div></div>
     <button class="menu-item danger" onclick="doLogout()">Keluar</button>
   </div>
 
-  <div class="wrap">
-
+  <div class="wrap" id="utamaWrap">
     <!-- SEASON BANNER -->
     <div class="season-banner">
       <div>
@@ -462,73 +499,57 @@ select option{background:#0f0f24;color:#f1f5f9;}
         <div class="cd-box"><div class="cd-num" id="cdS">—</div><div class="cd-lab">Dtk</div></div>
       </div>
     </div>
-
-    <!-- MY LEVEL -->
-    <div class="level-card" id="myLevelCard">
-      <div class="level-top">
-        <div class="level-badge-icon" id="myLevelIcon">📖</div>
-        <div>
-          <div class="level-name" id="myLevelName">—</div>
-          <div class="level-sub" id="myLevelSub">—</div>
+    <!-- Skeleton + real content toggled via JS -->
+    <div id="utamaSkeleton">
+      <div class="skeleton-card"><div class="skeleton skeleton-text" style="width:40%;margin-bottom:12px;"></div><div class="skeleton skeleton-bar" style="margin-bottom:8px;"></div><div class="skeleton skeleton-text sm"></div></div>
+      <div class="skeleton-card"><div style="display:flex;gap:12px;align-items:center;"><div class="skeleton skeleton-avatar"></div><div style="flex:1;"><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text sm"></div></div></div></div>
+      <div class="skeleton-card"><div class="skeleton skeleton-text" style="width:30%;margin-bottom:12px;"></div><div style="display:flex;gap:10px;">${'<div class="skeleton skeleton-avatar" style="width:56px;height:56px;"></div>'.repeat(5)}</div></div>
+    </div>
+    <div id="utamaContent" style="display:none;">
+      <div class="level-card" id="myLevelCard">
+        <div class="level-top">
+          <div class="level-badge-icon" id="myLevelIcon">📖</div>
+          <div><div class="level-name" id="myLevelName">—</div><div class="level-sub" id="myLevelSub">—</div></div>
         </div>
+        <div class="level-xp-bar-wrap"><div class="level-xp-bar-fill" id="myLevelBar" style="width:0%"></div></div>
+        <div class="level-xp-row"><span id="myLevelXPCur">0 XP</span><span id="myLevelXPNext">0 XP</span></div>
       </div>
-      <div class="level-xp-bar-wrap"><div class="level-xp-bar-fill" id="myLevelBar" style="width:0%"></div></div>
-      <div class="level-xp-row"><span id="myLevelXPCur">0 XP</span><span id="myLevelXPNext">0 XP</span></div>
-    </div>
-
-    <!-- BOSS RAID -->
-    <div class="section-label" style="margin-top:0;">👹 Boss Raid — Tasmi' Offline</div>
-    <div id="bossContainer"></div>
-
-    <!-- SETORAN HARI INI -->
-    <div class="card">
-      <div class="card-header"><span>📋 Setoran Hari Ini</span><span class="chip" id="uAttChip">0/0</span></div>
-      <div class="attendance-grid" id="uAttGrid"></div>
-    </div>
-
-    <!-- ROCKET LEADERBOARD -->
-    <div class="card" style="overflow:hidden;">
-      <div class="card-header"><span>🚀 Race to Heaven</span><span class="chip chip-primary">XP Leaderboard</span></div>
-      <canvas id="rocketCanvas" style="width:100%;display:block;"></canvas>
-      <div id="lbList" style="padding:4px 0 0;"></div>
-    </div>
-
-    <!-- QUEST HARIAN -->
-    <div class="card">
-      <div class="card-header"><span>⚔️ Quest Harian</span><span class="chip chip-accent">Reset 00:00</span></div>
-      <div id="questList"></div>
-    </div>
-
-    <!-- STREAK TIM -->
-    <div class="card">
-      <div class="card-header"><span>🔥 Streak Tim</span></div>
-      <div id="uStreakList"></div>
-    </div>
-
-    <!-- TEAM RINGKASAN -->
-    <div class="card">
-      <div class="card-header"><span>📊 Papan Tim</span><span id="uTeamChip" class="chip chip-primary">0%</span></div>
-      <div style="padding:16px 18px 8px;">
-        <div class="progress"><div class="progress-fill" id="uTeamBar" style="width:0%"></div></div>
-        <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:var(--text-dim);margin-top:6px;"><span id="uTeamPages">0 / 0 hal</span><span id="uTeamSisa"></span></div>
+      <div class="section-label" style="margin-top:0;">👹 Boss Raid — Tasmi' Offline</div>
+      <div id="bossContainer"></div>
+      <div class="card">
+        <div class="card-header"><span>📋 Setoran Hari Ini</span><span class="chip" id="uAttChip">0/0</span></div>
+        <div class="attendance-grid" id="uAttGrid"></div>
       </div>
-      <div class="team-grid" id="uTeamStrip"></div>
+      <div class="card" style="overflow:hidden;">
+        <div class="card-header"><span>🚀 Race to Heaven</span><span class="chip chip-primary">XP Leaderboard</span></div>
+        <canvas id="rocketCanvas" style="width:100%;display:block;"></canvas>
+        <div id="lbList" style="padding:4px 0 0;"></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span>⚔️ Quest Harian</span><span class="chip chip-accent">Reset 00:00</span></div>
+        <div id="questList"></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span>🔥 Streak Tim</span></div>
+        <div id="uStreakList"></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span>📊 Papan Tim</span><span id="uTeamChip" class="chip chip-primary">0%</span></div>
+        <div style="padding:16px 18px 8px;">
+          <div class="progress"><div class="progress-fill" id="uTeamBar" style="width:0%"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:var(--text-dim);margin-top:6px;"><span id="uTeamPages">0 / 0 hal</span><span id="uTeamSisa"></span></div>
+        </div>
+        <div class="team-grid" id="uTeamStrip"></div>
+      </div>
     </div>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
-      <button class="btn btn-primary btn-full" onclick="navTo('pgInput')">📖 Setor Sekarang</button>
-      <button class="btn btn-secondary btn-full" onclick="navTo('pgPribadi')">👤 Progres Saya</button>
-    </div>
-
   </div>
 </div>
 
 <!-- DASHBOARD PRIBADI -->
-<div id="pgPribadi" class="page">
+<div id="pgPribadi" class="page page-with-bnav">
   <nav class="navbar">
-    <button class="btn-back" onclick="navTo('pgUtama')">← Kembali</button>
-    <div class="nav-center">Dashboard Pribadi</div>
-    <div style="width:36px;"></div>
+    <div class="nav-brand"><div class="nav-brand-icon">ط</div><div><div class="nav-brand-name">Pribadi</div></div></div>
+    <div class="nav-right"><div class="nav-xp" id="pNavXP">⚡ 0 XP</div></div>
   </nav>
   <div class="wrap">
     <div id="pWarningBox"></div>
@@ -545,19 +566,14 @@ select option{background:#0f0f24;color:#f1f5f9;}
         <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:var(--text-dim);margin-top:6px;"><span>Progres Keseluruhan</span><span id="pPct" style="color:var(--primary-light);">0%</span></div>
       </div>
     </div>
-
     <div class="level-card">
       <div class="level-top">
         <div class="level-badge-icon" id="pLevelIcon">📖</div>
-        <div>
-          <div class="level-name" id="pLevelName">—</div>
-          <div class="level-sub" id="pLevelSub">—</div>
-        </div>
+        <div><div class="level-name" id="pLevelName">—</div><div class="level-sub" id="pLevelSub">—</div></div>
       </div>
       <div class="level-xp-bar-wrap"><div class="level-xp-bar-fill" id="pLevelBar" style="width:0%"></div></div>
       <div class="level-xp-row"><span id="pLevelXPCur">0 XP</span><span id="pLevelXPNext">0 XP</span></div>
     </div>
-
     <div class="card">
       <div class="card-header"><span>🎯 Estimasi Khatam</span></div>
       <div style="padding:14px 18px;">
@@ -568,7 +584,6 @@ select option{background:#0f0f24;color:#f1f5f9;}
         <div class="stat-row"><span>Total XP</span><span class="stat-value" id="pXPTotal">—</span></div>
       </div>
     </div>
-
     <div class="card">
       <div class="card-header"><span>📅 Kalender Setoran</span></div>
       <div class="calendar">
@@ -577,36 +592,36 @@ select option{background:#0f0f24;color:#f1f5f9;}
         <div class="calendar-legend"><div class="legend-item"><div class="legend-dot present"></div><span>Setor</span></div><div class="legend-item"><div class="legend-dot absent"></div><span>Miss</span></div><div class="legend-item"><div class="legend-dot today"></div><span>Hari ini</span></div></div>
       </div>
     </div>
-
     <div class="card">
       <div class="card-header"><span>📈 Grafik 8 Minggu</span><span class="chip chip-primary">target 14/minggu</span></div>
       <div class="chart-container" id="pChart"></div>
       <div style="display:flex;justify-content:space-between;padding:4px 16px 14px;font-size:0.58rem;color:var(--text-dim);"><span>← 8 minggu lalu</span><span>Minggu ini →</span></div>
     </div>
-
     <div class="card">
       <div class="card-header"><span>📿 Progres per Juz</span><span class="chip" id="pJuzChip">0/30</span></div>
       <div class="juz-grid" id="pJuzGrid"></div>
     </div>
-
     <div class="card">
       <div class="card-header"><span>🎖️ Achievement</span><span class="chip" id="pBadgeChip">0</span></div>
       <div class="badge-grid" id="pBadgeGrid"></div>
     </div>
-
     <div class="card">
       <div class="card-header"><span>🗂️ Riwayat Setoran</span><span class="chip" id="pRiwayatChip">0</span></div>
       <div id="pRiwayatList"></div>
+      <div id="pRiwayatPagination"></div>
     </div>
   </div>
 </div>
 
 <!-- INPUT PAGE -->
-<div id="pgInput" class="page">
-  <nav class="navbar"><button class="btn-back" onclick="navTo('pgUtama')">← Kembali</button><div class="nav-center">Input Setoran</div><div style="width:36px;"></div></nav>
+<div id="pgInput" class="page page-with-bnav">
+  <nav class="navbar">
+    <div class="nav-brand"><div class="nav-brand-icon">ط</div><div><div class="nav-brand-name">Input Setoran</div></div></div>
+    <div class="nav-right"><span class="chip chip-primary" id="inUserChip">—</span></div>
+  </nav>
   <div class="wrap">
     <div class="card">
-      <div class="card-header"><span>✍️ Input Setoran Harian</span><span class="chip" id="inUserChip">—</span></div>
+      <div class="card-header"><span>✍️ Input Setoran Harian</span></div>
       <div style="padding:18px;">
         <div id="inJuzAktifInfo"></div>
         <div id="inPilihJuzWrap">
@@ -641,8 +656,10 @@ select option{background:#0f0f24;color:#f1f5f9;}
 </div>
 
 <!-- WIKI PAGE -->
-<div id="pgWiki" class="page">
-  <nav class="navbar"><button class="btn-back" onclick="navTo('pgUtama')">← Kembali</button><div class="nav-center">Wiki Kelompok</div><div style="width:36px;"></div></nav>
+<div id="pgWiki" class="page page-with-bnav">
+  <nav class="navbar">
+    <div class="nav-brand"><div class="nav-brand-icon">ط</div><div><div class="nav-brand-name">Wiki</div></div></div>
+  </nav>
   <div class="wrap">
     <div class="wiki-hero">
       <div style="font-family:'Amiri',serif;font-size:1.5rem;color:var(--accent-light);margin-bottom:8px;">﷽</div>
@@ -684,12 +701,14 @@ select option{background:#0f0f24;color:#f1f5f9;}
 </div>
 
 <!-- ADMIN PAGE -->
-<div id="pgAdmin" class="page">
-  <nav class="navbar"><button class="btn-back" onclick="navTo('pgUtama')">← Kembali</button><div class="nav-center" style="color:var(--accent-light);">Panel Admin</div><div style="width:36px;"></div></nav>
+<div id="pgAdmin" class="page page-with-bnav">
+  <nav class="navbar">
+    <div class="nav-brand"><div class="nav-brand-icon">⚙️</div><div><div class="nav-brand-name" style="color:var(--accent-light);">Panel Admin</div></div></div>
+  </nav>
   <div class="wrap">
     <div class="card"><div class="card-header"><span>👥 Kelola Member</span><span class="chip" id="adminMemberCount">0</span></div><div id="adminMemberList"></div><div style="padding:14px 18px;border-top:1px solid var(--border-subtle);"><div style="font-size:0.73rem;font-weight:600;margin-bottom:10px;">Tambah Member</div><div class="fg"><input type="text" id="adminNewName" placeholder="Nama anggota baru"></div><button class="btn btn-accent btn-full" onclick="adminAddMember()">Tambah</button></div></div>
     <div class="card"><div class="card-header"><span>🔓 Reset Juz Aktif</span></div><div style="padding:14px 18px;"><div class="warning-box">Gunakan hanya jika anggota salah pilih juz.</div><select id="adminResetTarget" class="fg" style="margin-bottom:10px;"></select><button class="btn btn-danger btn-full" onclick="adminResetJuz()">Reset Juz Aktif</button></div></div>
-    <div class="card"><div class="card-header"><span>📋 Semua Setoran</span><span class="chip" id="adminSetoranCount">0</span></div><div id="adminSetoranList"></div></div>
+    <div class="card"><div class="card-header"><span>📋 Semua Setoran</span><span class="chip" id="adminSetoranCount">0</span></div><div id="adminSetoranList"></div><div id="adminPagination"></div></div>
   </div>
 </div>
 
@@ -704,440 +723,657 @@ select option{background:#0f0f24;color:#f1f5f9;}
 </div>
 
 <script>
-// ============================================
+// ============================================================
 // CONFIG
-// ============================================
+// ============================================================
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbxpY5hFhaAMZwiH7hmArij6efVEXSOSxo9mrVHThzNLmHXpOIV2FJbROQbUpLb02t1_XQ/exec';
 const TARGET_DATE = '2027-03-01';
+const CACHE_TTL = 5 * 60 * 1000; // 5 menit
+const ADMIN_PAGE_SIZE = 30;
 
 const LOADING_QUOTES = [
-  { text: "Sebaik-baik kalian adalah yang mempelajari Al-Qur'an dan mengajarkannya", source: "HR. Bukhari" },
-  { text: "Bacalah Al-Qur'an, karena ia akan datang pada hari kiamat sebagai pemberi syafaat", source: "HR. Muslim" },
-  { text: "Perumpamaan orang yang membaca Al-Qur'an adalah seperti buah utrujah, rasanya enak dan baunya harum", source: "HR. Bukhari & Muslim" },
-  { text: "أَفَلَا يَتَدَبَّرُونَ الْقُرْآنَ", source: "Maka tidakkah mereka merenungkan Al-Qur'an? (QS. Muhammad: 24)" },
-  { text: "وَرَتِّلِ الْقُرْآنَ تَرْتِيلًا", source: "Dan bacalah Al-Qur'an itu dengan tartil (QS. Al-Muzzammil: 4)" },
-  { text: "Barang siapa membaca satu huruf dari Kitabullah, maka baginya satu kebaikan", source: "HR. Tirmidzi" },
-  { text: "Al-Qur'an adalah obat bagi hati yang gelisah", source: "Mutiara Salaf" },
-  { text: "Jadikanlah Al-Qur'an sebagai teman di kala sepi", source: "Nasihat Ulama" },
-  { text: "Hafalan yang tidak dimuroja'ah seperti pohon yang tidak disiram", source: "Pepatah Arab" },
-  { text: "Sesungguhnya pemilik Al-Qur'an akan dikatakan: Bacalah dan naiklah", source: "HR. Tirmidzi" },
-  { text: "Dan sungguh, Kami telah memudahkan Al-Qur'an untuk diingat", source: "QS. Al-Qamar: 17" },
-  { text: "Maka ingatlah kepada-Ku, niscaya Aku ingat pula kepadamu", source: "QS. Al-Baqarah: 152" },
-  { text: "Sebaik-baik amalan adalah yang kontinu walaupun sedikit", source: "HR. Muslim" }
+  {text:"Sebaik-baik kalian adalah yang mempelajari Al-Qur'an dan mengajarkannya",source:"HR. Bukhari"},
+  {text:"Bacalah Al-Qur'an, karena ia akan datang pada hari kiamat sebagai pemberi syafaat",source:"HR. Muslim"},
+  {text:"أَفَلَا يَتَدَبَّرُونَ الْقُرْآنَ",source:"Maka tidakkah mereka merenungkan Al-Qur'an? (QS. Muhammad: 24)"},
+  {text:"وَرَتِّلِ الْقُرْآنَ تَرْتِيلًا",source:"Dan bacalah Al-Qur'an itu dengan tartil (QS. Al-Muzzammil: 4)"},
+  {text:"Barang siapa membaca satu huruf dari Kitabullah, maka baginya satu kebaikan",source:"HR. Tirmidzi"},
+  {text:"Hafalan yang tidak dimuroja'ah seperti pohon yang tidak disiram",source:"Pepatah Arab"},
+  {text:"Sesungguhnya pemilik Al-Qur'an akan dikatakan: Bacalah dan naiklah",source:"HR. Tirmidzi"},
+  {text:"Dan sungguh, Kami telah memudahkan Al-Qur'an untuk diingat",source:"QS. Al-Qamar: 17"},
+  {text:"Sebaik-baik amalan adalah yang kontinu walaupun sedikit",source:"HR. Muslim"},
 ];
 
 const MEMBERS_CONFIG = {
-  Ridho:        { role:'admin',   photo:'https://websipp.github.io/tahfidzh-dilema/images/Ridho.jpeg',  color:{bg:'#5b21b6',fg:'#c4b5fd'} },
-  Maula:        { role:'ketua',   photo:'https://websipp.github.io/tahfidzh-dilema/images/Maul.jpeg',   color:{bg:'#0f766e',fg:'#5eead4'} },
-  Rafli:        { role:'anggota', photo:'https://websipp.github.io/tahfidzh-dilema/images/rafli.jpeg',  color:{bg:'#1e40af',fg:'#93c5fd'} },
-  Dzaki:        { role:'anggota', photo:'https://websipp.github.io/tahfidzh-dilema/images/Dzaki.jpeg',  color:{bg:'#6d28d9',fg:'#c4b5fd'} },
-  Abdurrahman:  { role:'anggota', photo:'https://websipp.github.io/tahfidzh-dilema/images/Abdur.jpeg',  color:{bg:'#065f46',fg:'#6ee7b7'} },
+  Ridho:       {role:'admin',   photo:'https://websipp.github.io/tahfidzh-dilema/images/Ridho.jpeg',  color:{bg:'#5b21b6',fg:'#c4b5fd'}},
+  Maula:       {role:'ketua',   photo:'https://websipp.github.io/tahfidzh-dilema/images/Maul.jpeg',   color:{bg:'#0f766e',fg:'#5eead4'}},
+  Rafli:       {role:'anggota', photo:'https://websipp.github.io/tahfidzh-dilema/images/rafli.jpeg',  color:{bg:'#1e40af',fg:'#93c5fd'}},
+  Dzaki:       {role:'anggota', photo:'https://websipp.github.io/tahfidzh-dilema/images/Dzaki.jpeg',  color:{bg:'#6d28d9',fg:'#c4b5fd'}},
+  Abdurrahman: {role:'anggota', photo:'https://websipp.github.io/tahfidzh-dilema/images/Abdur.jpeg',  color:{bg:'#065f46',fg:'#6ee7b7'}},
 };
 
-// BOSS CONFIG
 const BOSS_CONFIG = [
-  { id:'b1', name:'Tasmi\' 5 Juz', threshold:5, emoji:'🐉', title:'Tasmi\' Perdana', desc:'Setiap anggota telah menyelesaikan 5 juz pertama mereka' },
-  { id:'b2', name:'Tasmi\' 10 Juz', threshold:10, emoji:'🦅', title:'Tasmi\' Menengah', desc:'Setiap anggota telah menyelesaikan 10 juz pertama mereka' },
-  { id:'b3', name:'Tasmi\' 15 Juz', threshold:15, emoji:'🔱', title:'Tasmi\' Lanjutan', desc:'Setiap anggota telah menyelesaikan 15 juz pertama mereka' },
-  { id:'b4', name:'Tasmi\' Khatam 30 Juz', threshold:30, emoji:'👑', title:'Khatam Al-Qur\'an', desc:'Semua anggota telah khatam 30 juz — Puncak tertinggi!' },
+  {id:'b1',name:"Tasmi' 5 Juz",   threshold:5,  emoji:'🐉',title:"Tasmi' Perdana",   desc:"Setiap anggota telah menyelesaikan 5 juz pertama mereka"},
+  {id:'b2',name:"Tasmi' 10 Juz",  threshold:10, emoji:'🦅',title:"Tasmi' Menengah",  desc:"Setiap anggota telah menyelesaikan 10 juz pertama mereka"},
+  {id:'b3',name:"Tasmi' 15 Juz",  threshold:15, emoji:'🔱',title:"Tasmi' Lanjutan",  desc:"Setiap anggota telah menyelesaikan 15 juz pertama mereka"},
+  {id:'b4',name:"Tasmi' Khatam 30 Juz",threshold:30,emoji:'👑',title:"Khatam Al-Qur'an",desc:"Semua anggota telah khatam 30 juz — Puncak tertinggi!"},
 ];
 
 const JUZ_HAL = 20;
 const TOTAL_JUZ = 30;
 const HAL_PER_ORG = 600;
-const SURAT_JUZ30 = ['An-Naba\'','An-Nazi\'at','Abasa','At-Takwir','Al-Infitar','Al-Mutaffifin','Al-Insyiqaq','Al-Buruj','At-Tariq','Al-A\'la','Al-Ghasyiyah','Al-Fajr','Al-Balad','Asy-Syams','Al-Lail','Ad-Duha','Asy-Syarh','At-Tin','Al-Alaq','Al-Qadr','Al-Bayyinah','Az-Zalzalah','Al-Adiyat','Al-Qari\'ah','At-Takasur','Al-Asr','Al-Humazah','Al-Fil','Quraisy','Al-Ma\'un','Al-Kausar','Al-Kafirun','An-Nasr','Al-Masad','Al-Ikhlas','Al-Falaq','An-Nas'];
+const SURAT_JUZ30 = ["An-Naba'","An-Nazi'at","Abasa","At-Takwir","Al-Infitar","Al-Mutaffifin","Al-Insyiqaq","Al-Buruj","At-Tariq","Al-A'la","Al-Ghasyiyah","Al-Fajr","Al-Balad","Asy-Syams","Al-Lail","Ad-Duha","Asy-Syarh","At-Tin","Al-Alaq","Al-Qadr","Al-Bayyinah","Az-Zalzalah","Al-Adiyat","Al-Qari'ah","At-Takasur","Al-Asr","Al-Humazah","Al-Fil","Quraisy","Al-Ma'un","Al-Kausar","Al-Kafirun","An-Nasr","Al-Masad","Al-Ikhlas","Al-Falaq","An-Nas"];
 const TOTAL_SURAT30 = SURAT_JUZ30.length;
 const SURAT_PER_HAL = 3;
 
-// XP
 const XP_PER_PAGE = 50;
-const XP_PER_JUZ = 200;
+const XP_PER_JUZ  = 200;
 const XP_STREAK_BONUS = 10;
 const LEVELS = [
-  { min:0,    max:499,   name:'Tilawah Pemula',       icon:'🌱' },
-  { min:500,  max:999,   name:'Qori Muda',            icon:'📖' },
-  { min:1000, max:1999,  name:'Hafidz Muda',          icon:'⭐' },
-  { min:2000, max:3499,  name:'Hafidz Mahir',         icon:'🌙' },
-  { min:3500, max:5499,  name:'Hafidz Berpengalaman', icon:'✨' },
-  { min:5500, max:7999,  name:'Hafidz Handal',        icon:'💫' },
-  { min:8000, max:11999, name:'Hafidz Master',        icon:'🏅' },
-  { min:12000,max:17999, name:'Hafidz Elite',         icon:'🏆' },
-  { min:18000,max:29999, name:'Hafidz Legendaris',    icon:'👑' },
-  { min:30000,max:999999,name:'Khatam Bersama 🎉',   icon:'🕋' },
+  {min:0,    max:499,   name:'Tilawah Pemula',       icon:'🌱'},
+  {min:500,  max:999,   name:'Qori Muda',            icon:'📖'},
+  {min:1000, max:1999,  name:'Hafidz Muda',          icon:'⭐'},
+  {min:2000, max:3499,  name:'Hafidz Mahir',         icon:'🌙'},
+  {min:3500, max:5499,  name:'Hafidz Berpengalaman', icon:'✨'},
+  {min:5500, max:7999,  name:'Hafidz Handal',        icon:'💫'},
+  {min:8000, max:11999, name:'Hafidz Master',        icon:'🏅'},
+  {min:12000,max:17999, name:'Hafidz Elite',         icon:'🏆'},
+  {min:18000,max:29999, name:'Hafidz Legendaris',    icon:'👑'},
+  {min:30000,max:999999,name:'Khatam Bersama 🎉',   icon:'🕋'},
 ];
 
 const BADGES = [
-  {id:'first', icon:'🌱', name:'Langkah Pertama', desc:'Setoran pertama',         fn:(s)=>s.length>=1},
-  {id:'hal14', icon:'📅', name:'Konsisten',        desc:'14 hal dalam seminggu',  fn:(s)=>maxWeekly(s)>=14},
-  {id:'juz1',  icon:'📖', name:'Juz 1 Clear',     desc:'Menyelesaikan juz 1',    fn:(s,st,jd)=>jd>=1},
-  {id:'juz5',  icon:'🐉', name:'Boss 1 Defeated', desc:'5 juz selesai',          fn:(s,st,jd)=>jd>=5},
-  {id:'juz10', icon:'🦅', name:'Boss 2 Defeated', desc:'10 juz selesai',         fn:(s,st,jd)=>jd>=10},
-  {id:'juz15', icon:'🔱', name:'Boss 3 Defeated', desc:'15 juz selesai',         fn:(s,st,jd)=>jd>=15},
-  {id:'juz30', icon:'👑', name:'KHATAM',           desc:'30 juz selesai!',        fn:(s,st,jd)=>jd>=30},
-  {id:'str7',  icon:'🔥', name:'7 Hari Berapi',   desc:'7 hari streak',          fn:(s,st)=>st>=7},
-  {id:'str30', icon:'💎', name:'30 Hari Berlian',  desc:'30 hari streak',         fn:(s,st)=>st>=30},
+  {id:'first',icon:'🌱',name:'Langkah Pertama',desc:'Setoran pertama',        fn:(s)=>s.length>=1},
+  {id:'hal14',icon:'📅',name:'Konsisten',       desc:'14 hal dalam seminggu', fn:(s)=>maxWeekly(s)>=14},
+  {id:'juz1', icon:'📖',name:'Juz 1 Clear',    desc:'Menyelesaikan juz 1',   fn:(s,st,jd)=>jd>=1},
+  {id:'juz5', icon:'🐉',name:'Boss 1 Defeated',desc:'5 juz selesai',         fn:(s,st,jd)=>jd>=5},
+  {id:'juz10',icon:'🦅',name:'Boss 2 Defeated',desc:'10 juz selesai',        fn:(s,st,jd)=>jd>=10},
+  {id:'juz15',icon:'🔱',name:'Boss 3 Defeated',desc:'15 juz selesai',        fn:(s,st,jd)=>jd>=15},
+  {id:'juz30',icon:'👑',name:'KHATAM',          desc:'30 juz selesai!',       fn:(s,st,jd)=>jd>=30},
+  {id:'str7', icon:'🔥',name:'7 Hari Berapi',  desc:'7 hari streak',         fn:(s,st)=>st>=7},
+  {id:'str30',icon:'💎',name:'30 Hari Berlian', desc:'30 hari streak',        fn:(s,st)=>st>=30},
 ];
 
+// ============================================================
 // STATE
+// ============================================================
 let currentUser = null, currentRole = null;
+let sessionToken = null; // token dari GAS setelah login
 let cache = [], juzAktifMap = {};
 let calY = null, calM = null;
 let cdInterval = null;
 let rocketAnimId = null, rocketT = 0;
 let pendingJuz = null;
 let imgCache = {};
+let isFetching = false;
+let adminSetoranPage = 0;
+let pribadRiwayatPage = 0;
+const RIWAYAT_PAGE_SIZE = 20;
 
+// ============================================================
 // UTILS
+// ============================================================
 const todayStr = () => new Date().toISOString().split('T')[0];
-const todayD = () => { const d=new Date(); d.setHours(0,0,0,0); return d; };
-const members = () => Object.keys(MEMBERS_CONFIG);
-function fmtTgl(t){ if(!t) return '—'; const [y,m,d]=t.split('-').map(Number); return new Date(y,m-1,d).toLocaleDateString('id-ID',{day:'numeric',month:'short'}); }
-function toast(msg){ const w=document.getElementById('toastContainer'),el=document.getElementById('toastMessage'); el.textContent=msg; w.style.display='block'; el.style.animation='none'; void el.offsetWidth; el.style.animation='toastFade 2.8s ease forwards'; setTimeout(()=>w.style.display='none',2900); }
-function loading(v, customMsg=null){
-  const overlay=document.getElementById('loadingOverlay');
-  const loadingText=overlay.querySelector('span');
-  if(v){
-    if(customMsg){ loadingText.innerHTML=customMsg; }
-    else{
-      const q=LOADING_QUOTES[Math.floor(Math.random()*LOADING_QUOTES.length)];
-      loadingText.innerHTML=`<div style="text-align:center;max-width:280px;"><div style="font-size:0.85rem;color:var(--primary-light);margin-bottom:8px;line-height:1.4;">✨ "${q.text}"</div><div style="font-size:0.65rem;color:var(--text-dim);">— ${q.source}</div></div>`;
-    }
-    overlay.style.display='flex';
-  } else { overlay.style.display='none'; }
+const todayD   = () => { const d = new Date(); d.setHours(0,0,0,0); return d; };
+const members  = () => Object.keys(MEMBERS_CONFIG);
+
+function fmtTgl(t) {
+  if (!t) return '—';
+  const [y,m,d] = t.split('-').map(Number);
+  return new Date(y,m-1,d).toLocaleDateString('id-ID',{day:'numeric',month:'short'});
 }
 
+// Safe HTML escape — mencegah XSS dari input user
+function esc(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function toast(msg) {
+  const w = document.getElementById('toastContainer');
+  const el = document.getElementById('toastMessage');
+  el.textContent = msg;
+  w.style.display = 'block';
+  el.style.animation = 'none';
+  void el.offsetWidth;
+  el.style.animation = 'toastFade 2.8s ease forwards';
+  setTimeout(() => w.style.display = 'none', 2900);
+}
+
+function loading(v, customMsg = null) {
+  const overlay = document.getElementById('loadingOverlay');
+  const el = document.getElementById('loadingMsg');
+  if (v) {
+    if (customMsg) {
+      el.textContent = customMsg;
+    } else {
+      const q = LOADING_QUOTES[Math.floor(Math.random() * LOADING_QUOTES.length)];
+      el.innerHTML = `<div style="text-align:center;max-width:280px;"><div style="font-size:0.85rem;color:var(--primary-light);margin-bottom:8px;line-height:1.4;">✨ "${q.text}"</div><div style="font-size:0.65rem;color:var(--text-dim);">— ${q.source}</div></div>`;
+    }
+    overlay.style.display = 'flex';
+  } else {
+    overlay.style.display = 'none';
+  }
+}
+
+// ============================================================
+// SESSION CACHE
+// ============================================================
+function getCachedData() {
+  try {
+    const raw = sessionStorage.getItem('td_cache');
+    const ts  = sessionStorage.getItem('td_ts');
+    if (raw && ts && Date.now() - Number(ts) < CACHE_TTL) {
+      return JSON.parse(raw);
+    }
+  } catch(e) {}
+  return null;
+}
+function setCachedData(data) {
+  try {
+    sessionStorage.setItem('td_cache', JSON.stringify(data));
+    sessionStorage.setItem('td_ts', String(Date.now()));
+  } catch(e) {}
+}
+function clearCache() {
+  try {
+    sessionStorage.removeItem('td_cache');
+    sessionStorage.removeItem('td_ts');
+  } catch(e) {}
+}
+
+// ============================================================
+// OFFLINE DETECTION
+// ============================================================
+function updateOnlineStatus() {
+  const banner = document.getElementById('offlineBanner');
+  if (!navigator.onLine) banner.classList.add('visible');
+  else banner.classList.remove('visible');
+}
+window.addEventListener('online',  updateOnlineStatus);
+window.addEventListener('offline', updateOnlineStatus);
+updateOnlineStatus();
+
+// ============================================================
 // PHOTO HELPERS
-function loadPhoto(name, size){
-  const cfg=MEMBERS_CONFIG[name]||{color:{bg:'#1e1e40',fg:'#8892a4'}};
-  const key=name+'_'+size;
-  if(imgCache[key]) return imgCache[key];
-  const img=new Image(); img.crossOrigin='anonymous'; img.src=cfg.photo||'';
-  imgCache[key]=img;
+// ============================================================
+function loadPhoto(name, size) {
+  const cfg = MEMBERS_CONFIG[name] || {color:{bg:'#1e1e40',fg:'#8892a4'}};
+  const key = name + '_' + size;
+  if (imgCache[key]) return imgCache[key];
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.src = cfg.photo || '';
+  imgCache[key] = img;
   return img;
 }
 
-function photoDiv(name, size=52, extraStyle=''){
-  const cfg=MEMBERS_CONFIG[name]||{color:{bg:'#1e1e40',fg:'#8892a4'}};
-  const init=name.slice(0,2).toUpperCase();
-  const uid='ph_'+name.replace(/\W/g,'')+'_'+size;
-  const style=`width:${size}px;height:${size}px;border-radius:50%;overflow:hidden;background:${cfg.color.bg};display:flex;align-items:center;justify-content:center;font-weight:700;font-size:${Math.round(size*0.32)}px;color:${cfg.color.fg};flex-shrink:0;${extraStyle}`;
-  if(!cfg.photo) return `<div style="${style}">${init}</div>`;
-  setTimeout(()=>{
-    const wrap=document.getElementById(uid);
-    if(!wrap||wrap.dataset.loaded) return;
-    const img=loadPhoto(name,size);
-    const apply=()=>{
-      wrap.dataset.loaded='1';
-      const imgEl=img.cloneNode(true);
-      imgEl.style.cssText='width:100%;height:100%;object-fit:cover;display:block;';
-      wrap.innerHTML='';
+function photoDiv(name, size = 52, extraStyle = '') {
+  const cfg  = MEMBERS_CONFIG[name] || {color:{bg:'#1e1e40',fg:'#8892a4'}};
+  const init = name.slice(0,2).toUpperCase();
+  const uid  = 'ph_' + name.replace(/\W/g,'') + '_' + size + '_' + Math.random().toString(36).slice(2,6);
+  const style = `width:${size}px;height:${size}px;border-radius:50%;overflow:hidden;background:${cfg.color.bg};display:flex;align-items:center;justify-content:center;font-weight:700;font-size:${Math.round(size*0.32)}px;color:${cfg.color.fg};flex-shrink:0;${extraStyle}`;
+  if (!cfg.photo) return `<div style="${style}">${init}</div>`;
+  setTimeout(() => {
+    const wrap = document.getElementById(uid);
+    if (!wrap || wrap.dataset.loaded) return;
+    const img = loadPhoto(name, size);
+    const apply = () => {
+      wrap.dataset.loaded = '1';
+      const imgEl = img.cloneNode(true);
+      imgEl.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
+      wrap.innerHTML = '';
       wrap.appendChild(imgEl);
     };
-    if(img.complete&&img.naturalWidth>0) apply();
-    else{ img.onload=apply; img.onerror=()=>{ wrap.dataset.loaded='1'; }; }
-  },0);
+    if (img.complete && img.naturalWidth > 0) apply();
+    else { img.onload = apply; img.onerror = () => { wrap.dataset.loaded='1'; }; }
+  }, 0);
   return `<div id="${uid}" style="${style}">${init}</div>`;
 }
 
-// XP SYSTEM
-function calcXP(setoran){
-  const pages=totalSetara(setoran);
-  const jm=buildJuzMap(setoran);
-  const jd=juzDoneCount(jm);
-  const {cur}=streak(setoran);
-  const streakBonus=cur>1?(cur-1)*XP_STREAK_BONUS:0;
-  return pages*XP_PER_PAGE+jd*XP_PER_JUZ+streakBonus;
-}
-function getLevel(xp){
-  for(let i=LEVELS.length-1;i>=0;i--) if(xp>=LEVELS[i].min) return{idx:i,...LEVELS[i]};
-  return{idx:0,...LEVELS[0]};
-}
-function renderLevelCard(xp,elIcon,elName,elSub,elBar,elCur,elNext){
-  const lv=getLevel(xp);
-  const pct=lv.max===999999?100:Math.round((xp-lv.min)/(lv.max-lv.min)*100);
-  if(elIcon) elIcon.textContent=lv.icon;
-  if(elName) elName.textContent=lv.name;
-  if(elSub) elSub.textContent=`Lv.${lv.idx+1} — ${xp.toLocaleString()} XP total`;
-  if(elBar) elBar.style.width=pct+'%';
-  if(elCur) elCur.textContent=xp.toLocaleString()+' XP';
-  if(elNext) elNext.textContent=(lv.max===999999?'∞':lv.max.toLocaleString())+' XP';
+// ============================================================
+// XP & LEVEL SYSTEM
+// ============================================================
+function calcXP(setoran) {
+  const pages = totalSetara(setoran);
+  const jm = buildJuzMap(setoran);
+  const jd = juzDoneCount(jm);
+  const {cur} = streak(setoran);
+  const streakBonus = cur > 1 ? (cur - 1) * XP_STREAK_BONUS : 0;
+  return pages * XP_PER_PAGE + jd * XP_PER_JUZ + streakBonus;
 }
 
-// CORE
-function getMySetoran(user){ return cache.filter(s=>s.user===user); }
-function halamanSetara(s){ const raw=s.halSelesai-s.halMulai+1; return s.juz===30?Math.floor(raw/SURAT_PER_HAL):raw; }
-function totalSetara(setoran){ return setoran.reduce((t,s)=>t+halamanSetara(s),0); }
-function buildJuzMap(setoran){
-  const m={};
-  for(let j=1;j<=TOTAL_JUZ;j++) m[j]=new Set();
-  setoran.forEach(s=>{
-    if(s.juz>=1&&s.juz<=TOTAL_JUZ){
-      const maxH=s.juz===30?TOTAL_SURAT30:JUZ_HAL;
-      for(let h=s.halMulai;h<=s.halSelesai;h++) if(h>=1&&h<=maxH) m[s.juz].add(h);
+function getLevel(xp) {
+  for (let i = LEVELS.length - 1; i >= 0; i--) if (xp >= LEVELS[i].min) return {idx:i, ...LEVELS[i]};
+  return {idx:0, ...LEVELS[0]};
+}
+
+function renderLevelCard(xp, elIcon, elName, elSub, elBar, elCur, elNext) {
+  const lv  = getLevel(xp);
+  const pct = lv.max === 999999 ? 100 : Math.round((xp - lv.min) / (lv.max - lv.min) * 100);
+  if (elIcon) elIcon.textContent = lv.icon;
+  if (elName) elName.textContent = lv.name;
+  if (elSub)  elSub.textContent  = `Lv.${lv.idx+1} — ${xp.toLocaleString()} XP total`;
+  if (elBar)  elBar.style.width  = pct + '%';
+  if (elCur)  elCur.textContent  = xp.toLocaleString() + ' XP';
+  if (elNext) elNext.textContent = (lv.max === 999999 ? '∞' : lv.max.toLocaleString()) + ' XP';
+}
+
+// ============================================================
+// CORE DATA HELPERS
+// ============================================================
+function getMySetoran(user) { return cache.filter(s => s.user === user); }
+function halamanSetara(s)   { const raw = s.halSelesai - s.halMulai + 1; return s.juz === 30 ? Math.floor(raw / SURAT_PER_HAL) : raw; }
+function totalSetara(setoran){ return setoran.reduce((t,s) => t + halamanSetara(s), 0); }
+
+function buildJuzMap(setoran) {
+  const m = {};
+  for (let j = 1; j <= TOTAL_JUZ; j++) m[j] = new Set();
+  setoran.forEach(s => {
+    if (s.juz >= 1 && s.juz <= TOTAL_JUZ) {
+      const maxH = s.juz === 30 ? TOTAL_SURAT30 : JUZ_HAL;
+      for (let h = s.halMulai; h <= s.halSelesai; h++) if (h >= 1 && h <= maxH) m[s.juz].add(h);
     }
   });
   return m;
 }
-function juzDoneCount(map){
-  let d=0;
-  for(let j=1;j<=TOTAL_JUZ;j++) if(map[j].size>=(j===30?TOTAL_SURAT30:JUZ_HAL)) d++;
+
+function juzDoneCount(map) {
+  let d = 0;
+  for (let j = 1; j <= TOTAL_JUZ; j++) if (map[j].size >= (j === 30 ? TOTAL_SURAT30 : JUZ_HAL)) d++;
   return d;
 }
 
-function streak(setoran){
-  if(!setoran.length) return{cur:0,max:0};
-  const dates=[...new Set(setoran.map(s=>s.tanggal))].sort();
-  let tmp=1,mx=1;
-  for(let i=1;i<dates.length;i++){
-    const diff=(new Date(dates[i])-new Date(dates[i-1]))/86400000;
-    if(diff===0) continue;
-    if(diff===1){ tmp++; if(tmp>mx) mx=tmp; }
-    else tmp=1;
+function streak(setoran) {
+  if (!setoran.length) return {cur:0, max:0};
+  const dates = [...new Set(setoran.map(s => s.tanggal))].sort();
+  let tmp = 1, mx = 1;
+  for (let i = 1; i < dates.length; i++) {
+    const diff = (new Date(dates[i]) - new Date(dates[i-1])) / 86400000;
+    if (diff === 0) continue;
+    if (diff === 1) { tmp++; if (tmp > mx) mx = tmp; }
+    else tmp = 1;
   }
-  const last=new Date(dates[dates.length-1]);
-  const diff=(todayD()-last)/86400000;
-  return{cur:diff<=1?tmp:0,max:mx};
+  const last = new Date(dates[dates.length-1]);
+  const diff = (todayD() - last) / 86400000;
+  return {cur: diff <= 1 ? tmp : 0, max: mx};
 }
 
-function maxWeekly(setoran){
-  const w={};
-  setoran.forEach(s=>{
-    const d=new Date(s.tanggal),day=d.getDay(),mon=new Date(d);
-    mon.setDate(d.getDate()-(day===0?6:day-1));
-    const key=mon.toISOString().split('T')[0];
-    w[key]=(w[key]||0)+halamanSetara(s);
+function maxWeekly(setoran) {
+  const w = {};
+  setoran.forEach(s => {
+    const d = new Date(s.tanggal), day = d.getDay(), mon = new Date(d);
+    mon.setDate(d.getDate() - (day === 0 ? 6 : day - 1));
+    const key = mon.toISOString().split('T')[0];
+    w[key] = (w[key] || 0) + halamanSetara(s);
   });
-  return Math.max(0,...Object.values(w));
+  return Math.max(0, ...Object.values(w));
 }
-function weeklyData(setoran,n=8){
-  const res=[]; const now=todayD();
-  for(let w=n-1;w>=0;w--){
-    const mon=new Date(now); const dow=now.getDay(); mon.setDate(now.getDate()-(dow===0?6:dow-1)-w*7);
-    const sun=new Date(mon); sun.setDate(mon.getDate()+6);
-    const total=setoran.filter(s=>{ const d=new Date(s.tanggal); return d>=mon&&d<=sun; }).reduce((a,s)=>a+halamanSetara(s),0);
-    res.push({label:w===0?'Ini':`-${w}`,total});
+
+function weeklyData(setoran, n = 8) {
+  const res = []; const now = todayD();
+  for (let w = n - 1; w >= 0; w--) {
+    const mon = new Date(now); const dow = now.getDay();
+    mon.setDate(now.getDate() - (dow === 0 ? 6 : dow - 1) - w * 7);
+    const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+    const total = setoran.filter(s => { const d = new Date(s.tanggal); return d >= mon && d <= sun; }).reduce((a,s) => a + halamanSetara(s), 0);
+    res.push({label: w === 0 ? 'Ini' : `-${w}`, total});
   }
   return res;
 }
-function getJuzAktifUser(u){ const ja=juzAktifMap[u]; return(ja&&ja.juz!==null&&ja.juz!==undefined)?ja.juz:null; }
-function cekDuplikat(user,juz,mulai,selesai){
-  const done=new Set();
-  cache.filter(s=>s.user===user&&s.juz===juz).forEach(s=>{ for(let h=s.halMulai;h<=s.halSelesai;h++) done.add(h); });
-  const overlap=[]; for(let h=mulai;h<=selesai;h++) if(done.has(h)) overlap.push(h);
+
+function getJuzAktifUser(u) {
+  const ja = juzAktifMap[u];
+  return (ja && ja.juz !== null && ja.juz !== undefined) ? ja.juz : null;
+}
+
+function cekDuplikat(user, juz, mulai, selesai) {
+  const done = new Set();
+  cache.filter(s => s.user === user && s.juz === juz).forEach(s => {
+    for (let h = s.halMulai; h <= s.halSelesai; h++) done.add(h);
+  });
+  const overlap = [];
+  for (let h = mulai; h <= selesai; h++) if (done.has(h)) overlap.push(h);
   return overlap;
 }
 
+// ============================================================
 // API
-async function gasCall(action,data={}){ const res=await fetch(GAS_URL,{method:'POST',body:JSON.stringify({action,...data})}); return res.json(); }
-async function fetchAll(){
-  loading(true);
-  try{
-    const d=await gasCall('getAll');
-    if(!d.ok) throw new Error(d.error||'GAS error');
-    cache=(d.setoran||[]).map(s=>({id:String(s.id||'').trim(),user:String(s.user||'').trim(),tanggal:String(s.tanggal||'').trim(),catatan:String(s.catatan||'').trim(),juz:Number(s.juz)||0,halMulai:Number(s.halMulai)||0,halSelesai:Number(s.halSelesai)||0,tipe:String(s.tipe||'hal').trim()}));
-    juzAktifMap=d.juzAktifMap||{};
-  }catch(e){ toast('Gagal ambil data: '+e.message); }
-  loading(false);
+// ============================================================
+async function gasCall(action, data = {}) {
+  // Selalu sertakan token di setiap request (kecuali login)
+  const payload = action === 'login' ? { action, ...data } : { action, token: sessionToken, ...data };
+  const res = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const json = await res.json();
+  // Kalau token expired / invalid, paksa logout
+  if (!json.ok && json.error && (json.error.includes('login ulang') || json.error.includes('Sesi'))) {
+    toast('⚠️ Sesi habis. Silakan login ulang.');
+    doLogout();
+    throw new Error(json.error);
+  }
+  return json;
 }
 
-// AUTH
-function populateLoginSelect(){ const sel=document.getElementById('loginUser'); sel.innerHTML=''; members().forEach(u=>{ const o=document.createElement('option'); o.value=u; o.textContent=u; sel.appendChild(o); }); }
-async function doLogin(){
-  const u=document.getElementById('loginUser').value, p=document.getElementById('loginPass').value;
-  if(!p){ showErr('Masukkan password.'); return; }
-  const btn=document.getElementById('loginBtn'); btn.textContent='Memeriksa...'; btn.disabled=true;
-  document.getElementById('loginErr').style.display='none';
-  try{
-    const res=await gasCall('login',{user:u,password:p});
-    if(res.ok){
-      currentUser=u; currentRole=res.role;
-      document.getElementById('loginPass').value='';
-      setNavAvatar(u);
-      document.getElementById('menuLabel').textContent=u+(currentRole==='admin'?' · Admin':(currentRole==='ketua'?' · Ketua':''));
-      document.getElementById('inUserChip').textContent=u;
-      document.getElementById('inTanggal').value=todayStr();
-      document.getElementById('adminMenuItems').style.display=currentRole==='admin'?'block':'none';
-      populateAdminResetSelect();
-      await fetchAll();
-      switchPage('pgUtama');
-      renderUtama();
-    } else { showErr('❌ '+(res.error||'Password salah!')); }
-  }catch(e){ showErr('⚠️ Tidak bisa terhubung ke server.'); }
-  finally{ btn.textContent='Masuk ↗'; btn.disabled=false; }
-}
-function showErr(msg){ const el=document.getElementById('loginErr'); el.textContent=msg; el.style.display='block'; }
-function doLogout(){
-  currentUser=null; currentRole=null; cache=[]; juzAktifMap={};
-  if(cdInterval) clearInterval(cdInterval);
-  if(rocketAnimId){ cancelAnimationFrame(rocketAnimId); rocketAnimId=null; }
-  closeMenu();
-  switchPage('pgLogin');
-}
-function setNavAvatar(u){
-  const cfg=MEMBERS_CONFIG[u]||{};
-  const img=document.getElementById('navPhoto');
-  const init=document.getElementById('navInitial');
-  if(cfg.photo){
-    img.src=cfg.photo;
-    img.style.display='block';
-    img.style.width='100%';
-    img.style.height='100%';
-    img.style.objectFit='cover';
-    init.style.display='none';
-    img.onerror=()=>{
-      img.style.display='none';
-      init.style.display='flex';
-      init.textContent=u.slice(0,2).toUpperCase();
-    };
-  } else {
-    img.style.display='none';
-    init.style.display='flex';
-    init.textContent=u.slice(0,2).toUpperCase();
+async function fetchAll(forceRefresh = false) {
+  if (isFetching) return;
+  // Gunakan session cache kalau ada dan belum expire
+  if (!forceRefresh) {
+    const cached = getCachedData();
+    if (cached) {
+      cache = cached.setoran || [];
+      juzAktifMap = cached.juzAktifMap || {};
+      return;
+    }
+  }
+  isFetching = true;
+  loading(true);
+  try {
+    const d = await gasCall('getAll');
+    if (!d.ok) throw new Error(d.error || 'GAS error');
+    cache = (d.setoran || []).map(s => ({
+      id:       String(s.id     || '').trim(),
+      user:     String(s.user   || '').trim(),
+      tanggal:  String(s.tanggal|| '').trim(),
+      catatan:  String(s.catatan|| '').trim(),
+      juz:      Number(s.juz)    || 0,
+      halMulai: Number(s.halMulai) || 0,
+      halSelesai:Number(s.halSelesai) || 0,
+      tipe:     String(s.tipe   || 'hal').trim(),
+    }));
+    juzAktifMap = d.juzAktifMap || {};
+    setCachedData({setoran: cache, juzAktifMap});
+  } catch(e) {
+    if (!navigator.onLine) {
+      toast('⚠️ Offline. Menampilkan data terakhir.');
+      const cached = getCachedData();
+      if (cached) { cache = cached.setoran||[]; juzAktifMap = cached.juzAktifMap||{}; }
+    } else {
+      toast('Gagal ambil data: ' + e.message);
+    }
+  } finally {
+    isFetching = false;
+    loading(false);
   }
 }
 
+// ============================================================
+// AUTH
+// ============================================================
+function populateLoginSelect() {
+  const sel = document.getElementById('loginUser');
+  sel.innerHTML = '';
+  members().forEach(u => {
+    const o = document.createElement('option');
+    o.value = u; o.textContent = u;
+    sel.appendChild(o);
+  });
+}
+
+async function doLogin() {
+  const u = document.getElementById('loginUser').value;
+  const p = document.getElementById('loginPass').value;
+  if (!p) { showErr('Masukkan password.'); return; }
+  const btn = document.getElementById('loginBtn');
+  btn.textContent = 'Memeriksa...'; btn.disabled = true;
+  document.getElementById('loginErr').style.display = 'none';
+  try {
+    const res = await gasCall('login', {user:u, password:p});
+    if (res.ok) {
+      currentUser = u; currentRole = res.role;
+      sessionToken = res.token; // simpan token untuk request berikutnya
+      document.getElementById('loginPass').value = '';
+      setNavAvatar(u);
+      document.getElementById('menuLabel').textContent = u + (currentRole==='admin'?' · Admin':(currentRole==='ketua'?' · Ketua':''));
+      document.getElementById('inUserChip').textContent = u;
+      document.getElementById('inTanggal').value = todayStr();
+      document.getElementById('adminMenuItems').style.display = currentRole === 'admin' ? 'block' : 'none';
+      // Tampilkan admin button di bottom nav kalau admin
+      document.getElementById('bnav-admin').style.display = currentRole === 'admin' ? 'flex' : 'none';
+      populateAdminResetSelect();
+      showBottomNav(true);
+      await fetchAll(true); // force refresh setelah login
+      switchPage('pgUtama');
+      updateBnavActive('pgUtama');
+      renderUtama();
+    } else {
+      showErr('❌ ' + (res.error || 'Password salah!'));
+    }
+  } catch(e) {
+    showErr('⚠️ Tidak bisa terhubung ke server.');
+  } finally {
+    btn.textContent = 'Masuk ↗'; btn.disabled = false;
+  }
+}
+
+function showErr(msg) {
+  const el = document.getElementById('loginErr');
+  el.textContent = msg; el.style.display = 'block';
+}
+
+function doLogout() {
+  // Beritahu GAS untuk invalidate token (fire-and-forget, tidak perlu nunggu)
+  if (sessionToken) {
+    gasCall('logout').catch(() => {});
+  }
+  currentUser = null; currentRole = null;
+  sessionToken = null;
+  cache = []; juzAktifMap = {};
+  imgCache = {}; // bersihkan image cache
+  clearCache();  // bersihkan session cache
+  if (cdInterval) { clearInterval(cdInterval); cdInterval = null; }
+  if (rocketAnimId) { cancelAnimationFrame(rocketAnimId); rocketAnimId = null; }
+  closeMenu();
+  showBottomNav(false);
+  switchPage('pgLogin');
+}
+
+function setNavAvatar(u) {
+  const cfg = MEMBERS_CONFIG[u] || {};
+  const img  = document.getElementById('navPhoto');
+  const init = document.getElementById('navInitial');
+  if (cfg.photo) {
+    img.src = cfg.photo;
+    img.style.display = 'block';
+    img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
+    init.style.display = 'none';
+    img.onerror = () => {
+      img.style.display = 'none';
+      init.style.display = 'flex';
+      init.textContent = u.slice(0,2).toUpperCase();
+    };
+  } else {
+    img.style.display = 'none';
+    init.style.display = 'flex';
+    init.textContent = u.slice(0,2).toUpperCase();
+  }
+}
+
+// ============================================================
+// BOTTOM NAV
+// ============================================================
+function showBottomNav(visible) {
+  const nav = document.getElementById('bottomNav');
+  if (visible) nav.classList.add('visible');
+  else nav.classList.remove('visible');
+}
+
+const BNAV_MAP = {
+  pgUtama: 'bnav-utama',
+  pgInput: 'bnav-input',
+  pgPribadi: 'bnav-pribadi',
+  pgWiki: 'bnav-wiki',
+  pgAdmin: 'bnav-admin',
+};
+
+function updateBnavActive(pageId) {
+  document.querySelectorAll('.bnav-item').forEach(b => b.classList.remove('active'));
+  const target = BNAV_MAP[pageId];
+  if (target) {
+    const el = document.getElementById(target);
+    if (el) el.classList.add('active');
+  }
+}
+
+async function bnavTo(id) {
+  await navTo(id);
+  updateBnavActive(id);
+}
+
+// ============================================================
 // NAVIGATION
-function switchPage(id){
-  if(id!=='pgLogin'&&!currentUser){ switchPage('pgLogin'); return; }
-  if(id==='pgAdmin'&&currentRole!=='admin'){ toast('Akses terbatas.'); return; }
-  if(id!=='pgUtama'&&rocketAnimId){ cancelAnimationFrame(rocketAnimId); rocketAnimId=null; }
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+// ============================================================
+function switchPage(id) {
+  if (id !== 'pgLogin' && !currentUser) { switchPage('pgLogin'); return; }
+  if (id === 'pgAdmin' && currentRole !== 'admin') { toast('Akses terbatas.'); return; }
+  if (id !== 'pgUtama' && rocketAnimId) { cancelAnimationFrame(rocketAnimId); rocketAnimId = null; }
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  window.scrollTo(0,0);
+  window.scrollTo(0, 0);
   closeMenu();
 }
-async function navTo(id){
-  switchPage(id);
-  await fetchAll();
-  if(id==='pgUtama') renderUtama();
-  if(id==='pgPribadi'){ const now=new Date(); calY=now.getFullYear(); calM=now.getMonth(); renderPribadi(); }
-  if(id==='pgWiki') renderWiki();
-  if(id==='pgInput') renderInput();
-  if(id==='pgAdmin') renderAdmin();
-}
-function openMenu(){ document.getElementById('menuBox').style.display='block'; document.getElementById('menuOverlay').style.display='block'; }
-function closeMenu(){ document.getElementById('menuBox').style.display='none'; document.getElementById('menuOverlay').style.display='none'; }
-function openModal(id){ document.getElementById(id).classList.add('open'); }
-function closeModal(){ document.querySelectorAll('.modal-overlay').forEach(m=>m.classList.remove('open')); }
 
+async function navTo(id) {
+  if (!currentUser && id !== 'pgLogin') return;
+  switchPage(id);
+  await fetchAll(); // pakai cache kalau masih fresh
+  if (id === 'pgUtama')  { renderUtama(); }
+  if (id === 'pgPribadi'){ const now = new Date(); calY = now.getFullYear(); calM = now.getMonth(); renderPribadi(); }
+  if (id === 'pgWiki')   { renderWiki(); }
+  if (id === 'pgInput')  { renderInput(); }
+  if (id === 'pgAdmin')  { renderAdmin(); }
+}
+
+function openMenu()  { document.getElementById('menuBox').style.display='block'; document.getElementById('menuOverlay').style.display='block'; }
+function closeMenu() { document.getElementById('menuBox').style.display='none';  document.getElementById('menuOverlay').style.display='none'; }
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal()   { document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open')); }
+
+// ============================================================
 // BOSS SYSTEM
-function renderBosses(){
-  const ms=members();
-  const userJuzDone={};
-  ms.forEach(u=>{
-    const jm=buildJuzMap(getMySetoran(u));
-    userJuzDone[u]=juzDoneCount(jm);
+// ============================================================
+function renderBosses() {
+  const ms = members();
+  const userJuzDone = {};
+  ms.forEach(u => {
+    const jm = buildJuzMap(getMySetoran(u));
+    userJuzDone[u] = juzDoneCount(jm);
   });
 
-  let html='';
-  let anyShown=false;
-
-  BOSS_CONFIG.forEach(b=>{
-    const clearedCount=ms.filter(u=>userJuzDone[u]>=b.threshold).length;
-    if(clearedCount===0) return;
-    anyShown=true;
-    const allCleared=clearedCount===ms.length;
-    const tierLabel=allCleared?'✅ ALL CLEARED':'🏅 UNLOCKED';
-    const tierColor=allCleared?'#34d399':'#fbbf24';
-    const borderClass=allCleared?'all-cleared':'some-active';
-
-    const memberRows=ms.map(u=>{
-      const isMe=u===currentUser;
-      const cleared=userJuzDone[u]>=b.threshold;
-      const statusIcon=cleared?'✅':'⏳';
-      const nameColor=cleared?'var(--text-white)':'var(--text-dim)';
+  let html = '', anyShown = false;
+  BOSS_CONFIG.forEach(b => {
+    const clearedCount = ms.filter(u => userJuzDone[u] >= b.threshold).length;
+    if (clearedCount === 0) return;
+    anyShown = true;
+    const allCleared = clearedCount === ms.length;
+    const tierLabel  = allCleared ? '✅ ALL CLEARED' : '🏅 UNLOCKED';
+    const tierColor  = allCleared ? '#34d399' : '#fbbf24';
+    const borderClass = allCleared ? 'all-cleared' : 'some-active';
+    const memberRows = ms.map(u => {
+      const isMe = u === currentUser;
+      const cleared = userJuzDone[u] >= b.threshold;
       return `<div class="boss-member-row">
         <div class="boss-member-av">${photoDiv(u,32)}</div>
-        <div class="boss-member-name" style="color:${nameColor};">${u}${isMe?' <span style="font-size:0.6rem;color:var(--primary-light);">• kamu</span>':''}</div>
-        <div class="boss-member-status">${statusIcon}</div>
+        <div class="boss-member-name" style="color:${cleared?'var(--text-white)':'var(--text-dim)'};">${esc(u)}${isMe?' <span style="font-size:0.6rem;color:var(--primary-light);">• kamu</span>':''}</div>
+        <div class="boss-member-status">${cleared?'✅':'⏳'}</div>
       </div>`;
     }).join('');
 
-    html+=`<div class="boss-card ${borderClass}">
+    html += `<div class="boss-card ${borderClass}">
       <div class="boss-card-header">
         <div class="boss-emoji-big">${b.emoji}</div>
         <div class="boss-header-info">
           <div class="boss-card-tier" style="color:${tierColor};">${tierLabel} · ${clearedCount}/${ms.length} orang</div>
-          <div class="boss-card-name">${b.title}</div>
-          <div class="boss-card-desc">${b.name}</div>
+          <div class="boss-card-name">${esc(b.title)}</div>
+          <div class="boss-card-desc">${esc(b.name)}</div>
         </div>
       </div>
       <div class="boss-members">${memberRows}</div>
     </div>`;
   });
 
-  if(!anyShown){
-    html=`<div style="text-align:center;padding:20px 0 10px;color:var(--text-dim);font-size:0.8rem;">🔒 Belum ada yang membuka Boss. Selesaikan 5 juz pertamamu!</div>`;
+  if (!anyShown) {
+    html = `<div style="text-align:center;padding:20px 0 10px;color:var(--text-dim);font-size:0.8rem;">🔒 Belum ada yang membuka Boss. Selesaikan 5 juz pertamamu!</div>`;
   }
-  document.getElementById('bossContainer').innerHTML=html;
+  document.getElementById('bossContainer').innerHTML = html;
 }
 
+// ============================================================
 // RENDER UTAMA
-function renderUtama(){
-  const myS=getMySetoran(currentUser);
-  const myXP=calcXP(myS);
-  document.getElementById('navXP').innerHTML='⚡ '+myXP.toLocaleString()+' XP';
+// ============================================================
+function renderUtama() {
+  // Tampilkan skeleton dulu, sembunyikan content
+  document.getElementById('utamaSkeleton').style.display = 'block';
+  document.getElementById('utamaContent').style.display  = 'none';
+
+  const myS = getMySetoran(currentUser);
+  const myXP = calcXP(myS);
+  document.getElementById('navXP').innerHTML = '⚡ ' + myXP.toLocaleString() + ' XP';
+  // Juga update di page pribadi navbar kalau ada
+  const pNav = document.getElementById('pNavXP');
+  if (pNav) pNav.innerHTML = '⚡ ' + myXP.toLocaleString() + ' XP';
 
   renderLevelCard(myXP,
-    document.getElementById('myLevelIcon'),document.getElementById('myLevelName'),
-    document.getElementById('myLevelSub'),document.getElementById('myLevelBar'),
+    document.getElementById('myLevelIcon'), document.getElementById('myLevelName'),
+    document.getElementById('myLevelSub'),  document.getElementById('myLevelBar'),
     document.getElementById('myLevelXPCur'),document.getElementById('myLevelXPNext')
   );
 
-  const ms=members();
-  const teamMax=ms.length*HAL_PER_ORG;
-  const teamTotal=ms.reduce((t,u)=>t+totalSetara(getMySetoran(u)),0);
-  const teamPct=teamMax>0?Math.round(teamTotal/teamMax*100):0;
-  document.getElementById('uTeamChip').textContent=teamPct+'%';
-  document.getElementById('uTeamBar').style.width=teamPct+'%';
-  document.getElementById('uTeamPages').textContent=teamTotal+' / '+teamMax+' hal';
-  document.getElementById('uTeamSisa').textContent='sisa '+(teamMax-teamTotal)+' hal';
+  const ms = members();
+  const teamMax   = ms.length * HAL_PER_ORG;
+  const teamTotal = ms.reduce((t,u) => t + totalSetara(getMySetoran(u)), 0);
+  const teamPct   = teamMax > 0 ? Math.round(teamTotal / teamMax * 100) : 0;
+  document.getElementById('uTeamChip').textContent  = teamPct + '%';
+  document.getElementById('uTeamBar').style.width   = teamPct + '%';
+  document.getElementById('uTeamPages').textContent = teamTotal + ' / ' + teamMax + ' hal';
+  document.getElementById('uTeamSisa').textContent  = 'sisa ' + (teamMax - teamTotal) + ' hal';
 
-  if(cdInterval) clearInterval(cdInterval);
-  const tick=()=>{
-    const diff=new Date(TARGET_DATE+'T23:59:59')-new Date();
-    if(diff<=0){ ['cdD','cdH','cdM','cdS'].forEach(i=>document.getElementById(i).textContent='0'); return; }
-    document.getElementById('cdD').textContent=String(Math.floor(diff/86400000)).padStart(2,'0');
-    document.getElementById('cdH').textContent=String(Math.floor((diff%86400000)/3600000)).padStart(2,'0');
-    document.getElementById('cdM').textContent=String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
-    document.getElementById('cdS').textContent=String(Math.floor((diff%60000)/1000)).padStart(2,'0');
+  // Countdown timer
+  if (cdInterval) clearInterval(cdInterval);
+  const tick = () => {
+    const diff = new Date(TARGET_DATE + 'T23:59:59') - new Date();
+    if (diff <= 0) { ['cdD','cdH','cdM','cdS'].forEach(i => document.getElementById(i).textContent='0'); return; }
+    document.getElementById('cdD').textContent = String(Math.floor(diff/86400000)).padStart(2,'0');
+    document.getElementById('cdH').textContent = String(Math.floor((diff%86400000)/3600000)).padStart(2,'0');
+    document.getElementById('cdM').textContent = String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
+    document.getElementById('cdS').textContent = String(Math.floor((diff%60000)/1000)).padStart(2,'0');
   };
-  tick(); cdInterval=setInterval(tick,1000);
+  tick(); cdInterval = setInterval(tick, 1000);
 
   renderBosses();
 
-  const tStr=todayStr();
-  const doneToday=new Set(cache.filter(s=>s.tanggal===tStr).map(s=>s.user));
-  let doneCount=0;
-  document.getElementById('uAttGrid').innerHTML=ms.map(u=>{
-    const done=doneToday.has(u); if(done) doneCount++;
+  // Attendance hari ini
+  const tStr = todayStr();
+  const doneToday = new Set(cache.filter(s => s.tanggal === tStr).map(s => s.user));
+  let doneCount = 0;
+  document.getElementById('uAttGrid').innerHTML = ms.map(u => {
+    const done = doneToday.has(u); if (done) doneCount++;
     return `<div class="attendance-item">
       <div class="avatar-container">
         <div class="avatar-img-wrap">${photoDiv(u,64)}</div>
         <div class="avatar-ring ${done?'present':'absent'}"></div>
         <div class="attendance-badge ${done?'present':'absent'}">${done?'✓':'✗'}</div>
       </div>
-      <div class="attendance-name">${u}</div>
+      <div class="attendance-name">${esc(u)}</div>
       <div class="attendance-xp ${done?'present':'absent'}">${done?'+50 XP':'Belum'}</div>
     </div>`;
   }).join('');
-  document.getElementById('uAttChip').textContent=doneCount+'/'+ms.length;
+  document.getElementById('uAttChip').textContent = doneCount + '/' + ms.length;
 
   renderRocketLeaderboard();
   renderQuest();
 
-  document.getElementById('uStreakList').innerHTML=ms.map(u=>{
-    const s=getMySetoran(u);
-    const {cur,max}=streak(s);
-    const ja=getJuzAktifUser(u);
-    const isMe=u===currentUser;
-    const xp=calcXP(s);
-    const lv=getLevel(xp);
+  // Streak tim
+  document.getElementById('uStreakList').innerHTML = ms.map(u => {
+    const s = getMySetoran(u);
+    const {cur, max} = streak(s);
+    const ja = getJuzAktifUser(u);
+    const isMe = u === currentUser;
+    const xp = calcXP(s);
+    const lv = getLevel(xp);
     return `<div class="streak-row${isMe?' me':''}">
       <div class="streak-user">
         <div class="streak-av">${photoDiv(u,40)}</div>
         <div>
-          <div class="streak-name">${u}${isMe?' <span style="font-size:0.65rem;color:var(--primary-light);">• kamu</span>':''}</div>
+          <div class="streak-name">${esc(u)}${isMe?' <span style="font-size:0.65rem;color:var(--primary-light);">• kamu</span>':''}</div>
           <div class="streak-juz">${lv.icon} ${lv.name} · Juz ${ja!==null?ja:'—'}</div>
         </div>
       </div>
@@ -1148,43 +1384,51 @@ function renderUtama(){
     </div>`;
   }).join('');
 
-  document.getElementById('uTeamStrip').innerHTML=ms.map(u=>{
-    const s=getMySetoran(u);
-    const t=totalSetara(s);
-    const xp=calcXP(s);
-    const lv=getLevel(xp);
-    const jm=buildJuzMap(s);
-    const jd=juzDoneCount(jm);
-    const pct=Math.round(t/HAL_PER_ORG*100);
+  // Team strip
+  document.getElementById('uTeamStrip').innerHTML = ms.map(u => {
+    const s = getMySetoran(u);
+    const t = totalSetara(s);
+    const xp = calcXP(s);
+    const lv = getLevel(xp);
+    const jm = buildJuzMap(s);
+    const jd = juzDoneCount(jm);
+    const pct = Math.round(t / HAL_PER_ORG * 100);
     return `<div class="team-card">
       <div class="team-avatar">${photoDiv(u,52)}</div>
-      <div class="team-name">${u}</div>
+      <div class="team-name">${esc(u)}</div>
       <div class="team-xp">${xp.toLocaleString()}</div>
       <div class="team-stats">${lv.icon} ${lv.name} · ${jd} juz</div>
       <div class="team-prog"><div class="team-prog-fill" style="width:${pct}%"></div></div>
     </div>`;
   }).join('');
+
+  // Sembunyikan skeleton, tampilkan content dengan animasi
+  document.getElementById('utamaSkeleton').style.display = 'none';
+  document.getElementById('utamaContent').style.display  = 'block';
 }
 
+// ============================================================
 // ROCKET LEADERBOARD
-function renderRocketLeaderboard(){
-  const ms=members();
-  const ranks=ms.map(u=>{
-    const s=getMySetoran(u); const xp=calcXP(s); const {cur}=streak(s);
-    return{u,xp,cur,pages:totalSetara(s)};
-  }).sort((a,b)=>b.xp-a.xp);
-  const maxXP=ranks[0]?.xp||1;
-  const medals=['🥇','🥈','🥉','4','5'];
-  document.getElementById('lbList').innerHTML=ranks.map((r,i)=>{
-    const pct=Math.round(r.xp/maxXP*100);
-    const isMe=r.u===currentUser;
-    const lv=getLevel(r.xp);
-    const barColor=i===0?'#f59e0b':i===1?'#94a3b8':i===2?'#cd7f32':'#8b5cf6';
+// ============================================================
+function renderRocketLeaderboard() {
+  const ms = members();
+  const ranks = ms.map(u => {
+    const s = getMySetoran(u); const xp = calcXP(s); const {cur} = streak(s);
+    return {u, xp, cur, pages: totalSetara(s)};
+  }).sort((a,b) => b.xp - a.xp);
+  const maxXP = ranks[0]?.xp || 1;
+  const medals = ['🥇','🥈','🥉','4','5'];
+
+  document.getElementById('lbList').innerHTML = ranks.map((r,i) => {
+    const pct = Math.round(r.xp / maxXP * 100);
+    const isMe = r.u === currentUser;
+    const lv = getLevel(r.xp);
+    const barColor = i===0?'#f59e0b':i===1?'#94a3b8':i===2?'#cd7f32':'#8b5cf6';
     return `<div class="lb-row${isMe?' me':''}">
       <div class="rank-badge rank-${i<3?i+1:'n'}">${medals[i]}</div>
       <div class="lb-av">${photoDiv(r.u,36)}</div>
       <div class="lb-info">
-        <div class="lb-name">${r.u}${isMe?'<span style="font-size:0.62rem;color:var(--primary-light);margin-left:6px;">• kamu</span>':''}</div>
+        <div class="lb-name">${esc(r.u)}${isMe?'<span style="font-size:0.62rem;color:var(--primary-light);margin-left:6px;">• kamu</span>':''}</div>
         <div class="lb-meta"><span>${lv.icon} Lv.${lv.idx+1}</span>${r.cur>0?`<span>🔥${r.cur}d</span>`:''}</div>
       </div>
       <div class="lb-right">
@@ -1195,80 +1439,85 @@ function renderRocketLeaderboard(){
     </div>`;
   }).join('');
 
-  const canvas=document.getElementById('rocketCanvas');
-  if(!canvas) return;
-  if(rocketAnimId){ cancelAnimationFrame(rocketAnimId); rocketAnimId=null; }
-  const W=canvas.parentElement.offsetWidth||360;
-  const H=280;
-  const DPR=Math.min(window.devicePixelRatio||1,2);
-  canvas.width=W*DPR; canvas.height=H*DPR; canvas.style.height=H+'px';
-  const ctx=canvas.getContext('2d'); ctx.scale(DPR,DPR);
-  const photoImgs={};
-  ranks.forEach(r=>{ photoImgs[r.u]=loadPhoto(r.u,40); });
-  const stars=Array.from({length:60},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.2+0.3,a:0.2+Math.random()*0.8,s:0.2+Math.random()*0.4}));
-  const n=ranks.length;
-  const MARGIN=36, SPACING=(W-MARGIN*2)/(n>1?n-1:1);
-  function getRocketX(i){ return n===1?W/2:MARGIN+i*SPACING; }
-  function getRocketY(pct){ return H-32-pct*(H-80); }
-  const ROCKET_W=22,ROCKET_H=32,FLAME_H=14;
-  function drawRocket(ctx,x,y,color,isLeader,photoImg,username,xp){
+  const canvas = document.getElementById('rocketCanvas');
+  if (!canvas) return;
+  if (rocketAnimId) { cancelAnimationFrame(rocketAnimId); rocketAnimId = null; }
+  const W = canvas.parentElement.offsetWidth || 360;
+  const H = 280;
+  const DPR = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = W * DPR; canvas.height = H * DPR; canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d'); ctx.scale(DPR, DPR);
+  const photoImgs = {};
+  ranks.forEach(r => { photoImgs[r.u] = loadPhoto(r.u, 40); });
+  const stars = Array.from({length:60}, () => ({x:Math.random()*W, y:Math.random()*H, r:Math.random()*1.2+0.3, a:0.2+Math.random()*0.8, s:0.2+Math.random()*0.4}));
+  const n = ranks.length;
+  const MARGIN = 36, SPACING = (W - MARGIN * 2) / (n > 1 ? n - 1 : 1);
+  function getRocketX(i) { return n === 1 ? W/2 : MARGIN + i * SPACING; }
+  function getRocketY(pct) { return H - 32 - pct * (H - 80); }
+  const ROCKET_W = 22, ROCKET_H = 32, FLAME_H = 14;
+
+  function drawRocket(ctx, x, y, color, isLeader, photoImg, username, xp) {
     ctx.save();
-    const flicker=0.6+Math.sin(rocketT*0.3+x)*0.4;
-    const flameGrad=ctx.createLinearGradient(x,y+ROCKET_H/2,x,y+ROCKET_H/2+FLAME_H*flicker);
-    flameGrad.addColorStop(0,'rgba(251,146,60,0.9)');flameGrad.addColorStop(0.5,'rgba(239,68,68,0.6)');flameGrad.addColorStop(1,'rgba(239,68,68,0)');
-    ctx.fillStyle=flameGrad;
-    ctx.beginPath();ctx.moveTo(x-ROCKET_W*0.3,y+ROCKET_H/2);ctx.lineTo(x,y+ROCKET_H/2+FLAME_H*flicker);ctx.lineTo(x+ROCKET_W*0.3,y+ROCKET_H/2);ctx.closePath();ctx.fill();
-    ctx.fillStyle=color;ctx.beginPath();ctx.roundRect(x-ROCKET_W/2,y-ROCKET_H/2,ROCKET_W,ROCKET_H,6);ctx.fill();
-    ctx.fillStyle=isLeader?'#f59e0b':color;ctx.beginPath();ctx.moveTo(x-ROCKET_W/2+2,y-ROCKET_H/2);ctx.lineTo(x,y-ROCKET_H/2-10);ctx.lineTo(x+ROCKET_W/2-2,y-ROCKET_H/2);ctx.closePath();ctx.fill();
-    ctx.fillStyle=color+'cc';
-    ctx.beginPath();ctx.moveTo(x-ROCKET_W/2,y+ROCKET_H/2-6);ctx.lineTo(x-ROCKET_W/2-8,y+ROCKET_H/2+4);ctx.lineTo(x-ROCKET_W/2,y+ROCKET_H/2);ctx.closePath();ctx.fill();
-    ctx.beginPath();ctx.moveTo(x+ROCKET_W/2,y+ROCKET_H/2-6);ctx.lineTo(x+ROCKET_W/2+8,y+ROCKET_H/2+4);ctx.lineTo(x+ROCKET_W/2,y+ROCKET_H/2);ctx.closePath();ctx.fill();
-    const windowR=9;ctx.save();ctx.beginPath();ctx.arc(x,y-2,windowR,0,Math.PI*2);ctx.clip();
-    if(photoImg&&photoImg.complete&&photoImg.naturalWidth>0){ ctx.drawImage(photoImg,x-windowR,y-2-windowR,windowR*2,windowR*2); }
-    else{ ctx.fillStyle='rgba(255,255,255,0.2)';ctx.fill();ctx.fillStyle='white';ctx.font='bold 8px Inter';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(username.slice(0,2).toUpperCase(),x,y-2); }
-    ctx.restore();ctx.beginPath();ctx.arc(x,y-2,windowR,0,Math.PI*2);ctx.strokeStyle='rgba(255,255,255,0.4)';ctx.lineWidth=1.5;ctx.stroke();
-    if(isLeader){ ctx.fillStyle='#f59e0b';ctx.font='bold 12px sans-serif';ctx.textAlign='center';ctx.textBaseline='bottom';ctx.fillText('👑',x,y-ROCKET_H/2-12); }
-    ctx.fillStyle='rgba(167,139,250,0.9)';ctx.font='500 9px Inter';ctx.textAlign='center';ctx.textBaseline='top';ctx.fillText(xp.toLocaleString()+'XP',x,y+ROCKET_H/2+FLAME_H+4);
+    const flicker = 0.6 + Math.sin(rocketT * 0.3 + x) * 0.4;
+    const flameGrad = ctx.createLinearGradient(x, y+ROCKET_H/2, x, y+ROCKET_H/2+FLAME_H*flicker);
+    flameGrad.addColorStop(0,'rgba(251,146,60,0.9)'); flameGrad.addColorStop(0.5,'rgba(239,68,68,0.6)'); flameGrad.addColorStop(1,'rgba(239,68,68,0)');
+    ctx.fillStyle = flameGrad;
+    ctx.beginPath(); ctx.moveTo(x-ROCKET_W*0.3,y+ROCKET_H/2); ctx.lineTo(x,y+ROCKET_H/2+FLAME_H*flicker); ctx.lineTo(x+ROCKET_W*0.3,y+ROCKET_H/2); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = color; ctx.beginPath(); ctx.roundRect(x-ROCKET_W/2,y-ROCKET_H/2,ROCKET_W,ROCKET_H,6); ctx.fill();
+    ctx.fillStyle = isLeader?'#f59e0b':color; ctx.beginPath(); ctx.moveTo(x-ROCKET_W/2+2,y-ROCKET_H/2); ctx.lineTo(x,y-ROCKET_H/2-10); ctx.lineTo(x+ROCKET_W/2-2,y-ROCKET_H/2); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = color+'cc';
+    ctx.beginPath(); ctx.moveTo(x-ROCKET_W/2,y+ROCKET_H/2-6); ctx.lineTo(x-ROCKET_W/2-8,y+ROCKET_H/2+4); ctx.lineTo(x-ROCKET_W/2,y+ROCKET_H/2); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(x+ROCKET_W/2,y+ROCKET_H/2-6); ctx.lineTo(x+ROCKET_W/2+8,y+ROCKET_H/2+4); ctx.lineTo(x+ROCKET_W/2,y+ROCKET_H/2); ctx.closePath(); ctx.fill();
+    const windowR = 9; ctx.save(); ctx.beginPath(); ctx.arc(x,y-2,windowR,0,Math.PI*2); ctx.clip();
+    if (photoImg && photoImg.complete && photoImg.naturalWidth > 0) { ctx.drawImage(photoImg,x-windowR,y-2-windowR,windowR*2,windowR*2); }
+    else { ctx.fillStyle='rgba(255,255,255,0.2)'; ctx.fill(); ctx.fillStyle='white'; ctx.font='bold 8px Inter'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(username.slice(0,2).toUpperCase(),x,y-2); }
+    ctx.restore(); ctx.beginPath(); ctx.arc(x,y-2,windowR,0,Math.PI*2); ctx.strokeStyle='rgba(255,255,255,0.4)'; ctx.lineWidth=1.5; ctx.stroke();
+    if (isLeader) { ctx.fillStyle='#f59e0b'; ctx.font='bold 12px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='bottom'; ctx.fillText('👑',x,y-ROCKET_H/2-12); }
+    ctx.fillStyle='rgba(167,139,250,0.9)'; ctx.font='500 9px Inter'; ctx.textAlign='center'; ctx.textBaseline='top'; ctx.fillText(xp.toLocaleString()+'XP',x,y+ROCKET_H/2+FLAME_H+4);
     ctx.restore();
   }
-  const targetPct=ranks.map(r=>maxXP>0?r.xp/maxXP:0);
-  const currentPct=ranks.map(()=>0);
-  const rocketColors=['#f59e0b','#94a3b8','#cd7f32','#8b5cf6','#10b981'];
-  function frame(){
+
+  const targetPct  = ranks.map(r => maxXP > 0 ? r.xp / maxXP : 0);
+  const currentPct = ranks.map(() => 0);
+  const rocketColors = ['#f59e0b','#94a3b8','#cd7f32','#8b5cf6','#10b981'];
+
+  function frame() {
     rocketT++;
     ctx.clearRect(0,0,W,H);
-    const bg=ctx.createLinearGradient(0,0,0,H);
-    bg.addColorStop(0,'#0d0820');bg.addColorStop(0.5,'#0a0a1a');bg.addColorStop(1,'#05050f');
-    ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
-    stars.forEach(s=>{ ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=`rgba(255,255,255,${s.a*(0.5+0.5*Math.sin(rocketT*0.04+s.x))})`;ctx.fill(); });
-    ctx.save();ctx.beginPath();ctx.arc(W-30,25,14,0,Math.PI*2);ctx.fillStyle='rgba(255,248,200,0.15)';ctx.fill();ctx.beginPath();ctx.arc(W-30,25,12,0,Math.PI*2);ctx.strokeStyle='rgba(255,248,200,0.3)';ctx.lineWidth=1;ctx.stroke();ctx.fillStyle='rgba(255,248,200,0.4)';ctx.font='16px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('🌙',W-30,25);ctx.restore();
-    ranks.forEach((r,i)=>{
-      currentPct[i]+=(targetPct[i]-currentPct[i])*0.04;
-      const rx=getRocketX(i),ryBase=getRocketY(currentPct[i]),bob=Math.sin(rocketT*0.05+i*1.2)*3;
+    const bg = ctx.createLinearGradient(0,0,0,H);
+    bg.addColorStop(0,'#0d0820'); bg.addColorStop(0.5,'#0a0a1a'); bg.addColorStop(1,'#05050f');
+    ctx.fillStyle = bg; ctx.fillRect(0,0,W,H);
+    stars.forEach(s => { ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fillStyle=`rgba(255,255,255,${s.a*(0.5+0.5*Math.sin(rocketT*0.04+s.x))})`; ctx.fill(); });
+    ctx.save(); ctx.beginPath(); ctx.arc(W-30,25,14,0,Math.PI*2); ctx.fillStyle='rgba(255,248,200,0.15)'; ctx.fill(); ctx.fillStyle='rgba(255,248,200,0.4)'; ctx.font='16px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('🌙',W-30,25); ctx.restore();
+    ranks.forEach((r,i) => {
+      currentPct[i] += (targetPct[i] - currentPct[i]) * 0.04;
+      const rx = getRocketX(i), ryBase = getRocketY(currentPct[i]), bob = Math.sin(rocketT*0.05+i*1.2)*3;
       drawRocket(ctx,rx,ryBase+bob,rocketColors[i],i===0,photoImgs[r.u],r.u,r.xp);
     });
-    rocketAnimId=requestAnimationFrame(frame);
+    rocketAnimId = requestAnimationFrame(frame);
   }
   frame();
 }
 
+// ============================================================
 // QUEST HARIAN
-function renderQuest(){
-  const myS=getMySetoran(currentUser);
-  const tStr=todayStr();
-  const todayS=myS.filter(s=>s.tanggal===tStr);
-  const todayPages=todayS.reduce((a,s)=>a+halamanSetara(s),0);
-  const ms=members();
-  const doneToday=ms.filter(u=>cache.filter(s=>s.user===u&&s.tanggal===tStr).length>0).length;
-  const {cur}=streak(myS);
-  const quests=[
-    {icon:'📖',bg:'rgba(139,92,246,0.15)',name:'Setoran Harian',desc:'Setor minimal 1 halaman hari ini',prog:Math.min(todayPages,1),max:1,xp:50,done:todayPages>=1,color:'#8b5cf6'},
-    {icon:'⚡',bg:'rgba(245,158,11,0.15)',name:'Double Porsi',desc:'Setor 2+ halaman hari ini',prog:Math.min(todayPages,2),max:2,xp:100,done:todayPages>=2,color:'#f59e0b'},
-    {icon:'🤝',bg:'rgba(16,185,129,0.15)',name:'Squad All In',desc:'Semua anggota setor hari ini',prog:doneToday,max:ms.length,xp:200,done:doneToday===ms.length,color:'#10b981'},
-    {icon:'🔥',bg:'rgba(239,68,68,0.15)',name:'Streak On Fire',desc:'Streak 3 hari berturut-turut',prog:Math.min(cur,3),max:3,xp:150,done:cur>=3,color:'#ef4444'},
+// ============================================================
+function renderQuest() {
+  const myS = getMySetoran(currentUser);
+  const tStr = todayStr();
+  const todayS = myS.filter(s => s.tanggal === tStr);
+  const todayPages = todayS.reduce((a,s) => a + halamanSetara(s), 0);
+  const ms = members();
+  const doneToday = ms.filter(u => cache.filter(s => s.user===u && s.tanggal===tStr).length > 0).length;
+  const {cur} = streak(myS);
+  const quests = [
+    {icon:'📖',bg:'rgba(139,92,246,0.15)',name:'Setoran Harian',   desc:'Setor minimal 1 halaman hari ini',      prog:Math.min(todayPages,1), max:1,        xp:50,  done:todayPages>=1,         color:'#8b5cf6'},
+    {icon:'⚡',bg:'rgba(245,158,11,0.15)', name:'Double Porsi',     desc:'Setor 2+ halaman hari ini',             prog:Math.min(todayPages,2), max:2,        xp:100, done:todayPages>=2,         color:'#f59e0b'},
+    {icon:'🤝',bg:'rgba(16,185,129,0.15)', name:'Squad All In',     desc:'Semua anggota setor hari ini',          prog:doneToday,              max:ms.length,xp:200, done:doneToday===ms.length, color:'#10b981'},
+    {icon:'🔥',bg:'rgba(239,68,68,0.15)',  name:'Streak On Fire',   desc:'Streak 3 hari berturut-turut',          prog:Math.min(cur,3),        max:3,        xp:150, done:cur>=3,                color:'#ef4444'},
   ];
-  document.getElementById('questList').innerHTML=quests.map(q=>{
-    const pct=Math.round(q.prog/q.max*100);
+  document.getElementById('questList').innerHTML = quests.map(q => {
+    const pct = Math.round(q.prog / q.max * 100);
     return `<div class="quest-item">
       <div class="quest-icon" style="background:${q.bg};">${q.icon}</div>
       <div class="quest-info">
@@ -1281,313 +1530,408 @@ function renderQuest(){
   }).join('');
 }
 
+// ============================================================
 // RENDER PRIBADI
-function renderPribadi(){
-  const myS=getMySetoran(currentUser);
-  const jm=buildJuzMap(myS);
-  const tot=totalSetara(myS);
-  const jd=juzDoneCount(jm);
-  const {cur:st,max:stMax}=streak(myS);
-  const pct=Math.round(tot/HAL_PER_ORG*100);
-  const tStr=todayStr();
-  const stToday=myS.filter(s=>s.tanggal===tStr);
-  const xp=calcXP(myS);
+// ============================================================
+function renderPribadi() {
+  const myS = getMySetoran(currentUser);
+  const jm  = buildJuzMap(myS);
+  const tot = totalSetara(myS);
+  const jd  = juzDoneCount(jm);
+  const {cur:st, max:stMax} = streak(myS);
+  const pct = Math.round(tot / HAL_PER_ORG * 100);
+  const tStr = todayStr();
+  const stToday = myS.filter(s => s.tanggal === tStr);
+  const xp = calcXP(myS);
 
-  document.getElementById('pUserName').innerHTML=currentUser+(currentRole==='admin'?' <span class="chip chip-primary">Admin</span>':(currentRole==='ketua'?' <span class="chip chip-accent">Ketua</span>':''));
-  const ja=getJuzAktifUser(currentUser);
-  const jaInfo=document.getElementById('pJuzAktifInfo');
-  if(ja){
-    const needed=ja===30?TOTAL_SURAT30:JUZ_HAL;
-    const done=jm[ja]?.size||0;
-    const jaPct=Math.round((done/needed)*100);
-    const isSelesai=done>=needed;
-    jaInfo.innerHTML=`<div class="${isSelesai?'success-box':'info-box'}" style="margin-bottom:0;">Juz Aktif: ${ja} · ${done}/${needed} ${ja===30?'surat':'hal'} (${jaPct}%)${isSelesai?' · 🎉 Selesai!':''}</div>`;
+  // Update XP di navbar pribadi
+  const pNav = document.getElementById('pNavXP');
+  if (pNav) pNav.innerHTML = '⚡ ' + xp.toLocaleString() + ' XP';
+
+  document.getElementById('pUserName').innerHTML = esc(currentUser) + (currentRole==='admin'?' <span class="chip chip-primary">Admin</span>':(currentRole==='ketua'?' <span class="chip chip-accent">Ketua</span>':''));
+  const ja = getJuzAktifUser(currentUser);
+  const jaInfo = document.getElementById('pJuzAktifInfo');
+  if (ja) {
+    const needed = ja === 30 ? TOTAL_SURAT30 : JUZ_HAL;
+    const done   = jm[ja]?.size || 0;
+    const jaPct  = Math.round((done / needed) * 100);
+    const isSelesai = done >= needed;
+    jaInfo.innerHTML = `<div class="${isSelesai?'success-box':'info-box'}" style="margin-bottom:0;">Juz Aktif: ${ja} · ${done}/${needed} ${ja===30?'surat':'hal'} (${jaPct}%)${isSelesai?' · 🎉 Selesai!':''}</div>`;
   } else {
-    jaInfo.innerHTML=`<div class="warning-box" style="margin-bottom:0;">⚠️ Belum memilih juz aktif.</div>`;
+    jaInfo.innerHTML = `<div class="warning-box" style="margin-bottom:0;">⚠️ Belum memilih juz aktif.</div>`;
   }
 
-  document.getElementById('pTotalHal').textContent=tot;
-  document.getElementById('pStreak').textContent=st;
-  document.getElementById('pJuzDone').textContent=jd;
-  document.getElementById('pProgBar').style.width=pct+'%';
-  document.getElementById('pPct').textContent=pct+'%';
-  document.getElementById('pJuzChip').textContent=jd+'/30';
+  document.getElementById('pTotalHal').textContent = tot;
+  document.getElementById('pStreak').textContent   = st;
+  document.getElementById('pJuzDone').textContent  = jd;
+  document.getElementById('pProgBar').style.width  = pct + '%';
+  document.getElementById('pPct').textContent      = pct + '%';
+  document.getElementById('pJuzChip').textContent  = jd + '/30';
 
   renderLevelCard(xp,
-    document.getElementById('pLevelIcon'),document.getElementById('pLevelName'),
-    document.getElementById('pLevelSub'),document.getElementById('pLevelBar'),
+    document.getElementById('pLevelIcon'), document.getElementById('pLevelName'),
+    document.getElementById('pLevelSub'),  document.getElementById('pLevelBar'),
     document.getElementById('pLevelXPCur'),document.getElementById('pLevelXPNext')
   );
 
-  const wb=document.getElementById('pWarningBox');
-  if(stToday.length===0) wb.innerHTML=`<div class="warning-box">⚠️ Belum setor hari ini. Batas pukul 21.00 WIB.</div>`;
-  else{ const p=stToday.reduce((a,s)=>a+halamanSetara(s),0); wb.innerHTML=`<div class="success-box">✓ Sudah setor hari ini. +${p} halaman (+${p*XP_PER_PAGE} XP).</div>`; }
+  const wb = document.getElementById('pWarningBox');
+  if (stToday.length === 0) {
+    wb.innerHTML = `<div class="warning-box">⚠️ Belum setor hari ini. Batas pukul 21.00 WIB.</div>`;
+  } else {
+    const p = stToday.reduce((a,s) => a + halamanSetara(s), 0);
+    wb.innerHTML = `<div class="success-box">✓ Sudah setor hari ini. +${p} halaman (+${p*XP_PER_PAGE} XP).</div>`;
+  }
 
-  const uniqD=[...new Set(myS.map(s=>s.tanggal))].length||1;
-  const spd=tot>0?(tot/uniqD).toFixed(1):0;
-  const sisa=HAL_PER_ORG-tot;
-  const estD=spd>0?Math.ceil(sisa/spd):null;
-  const estTgl=estD?(()=>{ const d=new Date(); d.setDate(d.getDate()+estD); return d.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}); })():'—';
-  document.getElementById('pSpeed').textContent=spd+' hal/hari';
-  document.getElementById('pSisa').textContent=sisa+' hal';
-  document.getElementById('pEst').textContent=estTgl;
-  document.getElementById('pStreakMax').textContent=stMax+' hari';
-  document.getElementById('pXPTotal').textContent=xp.toLocaleString()+' XP';
+  const uniqD = [...new Set(myS.map(s => s.tanggal))].length || 1;
+  const spd   = tot > 0 ? (tot / uniqD).toFixed(1) : 0;
+  const sisa  = HAL_PER_ORG - tot;
+  const estD  = spd > 0 ? Math.ceil(sisa / spd) : null;
+  const estTgl = estD ? (() => { const d = new Date(); d.setDate(d.getDate()+estD); return d.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}); })() : '—';
+  document.getElementById('pSpeed').textContent    = spd + ' hal/hari';
+  document.getElementById('pSisa').textContent     = sisa + ' hal';
+  document.getElementById('pEst').textContent      = estTgl;
+  document.getElementById('pStreakMax').textContent = stMax + ' hari';
+  document.getElementById('pXPTotal').textContent  = xp.toLocaleString() + ' XP';
 
-  if(calY===null||calM===null){ const now=new Date(); calY=now.getFullYear(); calM=now.getMonth(); }
+  if (calY === null || calM === null) { const now = new Date(); calY = now.getFullYear(); calM = now.getMonth(); }
   renderKal(myS);
 
-  const weeks=weeklyData(myS);
-  const maxV=Math.max(...weeks.map(w=>w.total),14,1);
-  document.getElementById('pChart').innerHTML=weeks.map(w=>{
-    const h=Math.round((w.total/maxV)*80);
+  // Weekly chart
+  const weeks = weeklyData(myS);
+  const maxV  = Math.max(...weeks.map(w => w.total), 14, 1);
+  document.getElementById('pChart').innerHTML = weeks.map(w => {
+    const h = Math.round((w.total / maxV) * 80);
     return `<div class="chart-bar-wrapper"><div class="chart-value">${w.total||''}</div><div class="chart-bar" style="height:${Math.max(h,4)}px;"></div><div class="chart-label">${w.label}</div></div>`;
   }).join('');
 
-  let jh='';
-  for(let j=1;j<=TOTAL_JUZ;j++){
-    const needed=j===30?TOTAL_SURAT30:JUZ_HAL;
-    const p=Math.round((jm[j].size/needed)*100);
-    const cls=jm[j].size>=needed?'completed':'';
-    const isAktif=getJuzAktifUser(currentUser)===j;
-    jh+=`<div class="juz-cell ${cls} ${isAktif?'active':''}"><div class="juz-number">${j}</div><div class="juz-progress">${p>0?p+'%':'—'}</div>${jm[j].size>0?`<div class="juz-progress-bar" style="width:${p}%"></div>`:''}</div>`;
+  // Juz grid
+  let jh = '';
+  for (let j = 1; j <= TOTAL_JUZ; j++) {
+    const needed = j === 30 ? TOTAL_SURAT30 : JUZ_HAL;
+    const p      = Math.round((jm[j].size / needed) * 100);
+    const cls    = jm[j].size >= needed ? 'completed' : '';
+    const isAktif = getJuzAktifUser(currentUser) === j;
+    jh += `<div class="juz-cell ${cls} ${isAktif?'active':''}"><div class="juz-number">${j}</div><div class="juz-progress">${p>0?p+'%':'—'}</div>${jm[j].size>0?`<div class="juz-progress-bar" style="width:${p}%"></div>`:''}</div>`;
   }
-  document.getElementById('pJuzGrid').innerHTML=jh;
+  document.getElementById('pJuzGrid').innerHTML = jh;
 
-  let unlocked=0;
-  document.getElementById('pBadgeGrid').innerHTML=BADGES.map(b=>{
-    const ok=b.fn(myS,st,jd); if(ok) unlocked++;
+  // Badges
+  let unlocked = 0;
+  document.getElementById('pBadgeGrid').innerHTML = BADGES.map(b => {
+    const ok = b.fn(myS, st, jd); if (ok) unlocked++;
     return `<div class="badge-card ${ok?'unlocked':''}"><div class="badge-icon">${b.icon}</div><div class="badge-name">${b.name}</div><div class="badge-desc">${b.desc}</div></div>`;
   }).join('');
-  document.getElementById('pBadgeChip').textContent=unlocked;
+  document.getElementById('pBadgeChip').textContent = unlocked;
 
-  const sorted=myS.slice().sort((a,b)=>b.tanggal.localeCompare(a.tanggal));
-  document.getElementById('pRiwayatChip').textContent=sorted.length;
-  document.getElementById('pRiwayatList').innerHTML=sorted.length===0?'<div class="empty-state">📋 Belum ada setoran</div>':sorted.map(s=>{
-    const hal=s.juz===30?`Surat ${s.halMulai}–${s.halSelesai}`:`Hal ${s.halMulai}–${s.halSelesai}`;
-    return `<div class="setoran-item"><div class="setoran-info"><div class="juz">Juz ${s.juz} · ${hal}</div><div class="detail">${s.catatan||'—'}</div></div><div class="setoran-meta"><div class="setoran-date">${fmtTgl(s.tanggal)}</div><div class="setoran-pages">+${halamanSetara(s)} hal / +${halamanSetara(s)*XP_PER_PAGE} XP</div><button class="delete-btn" onclick="hapusSetoran('${s.id}')">Hapus</button></div></div>`;
-  }).join('');
+  // Riwayat dengan pagination
+  pribadRiwayatPage = 0;
+  renderRiwayatPage(myS);
 }
 
-function renderKal(myS){
-  if(calY===null||calM===null){ const now=new Date(); calY=now.getFullYear(); calM=now.getMonth(); }
-  const setoranDates=new Set(myS.map(s=>s.tanggal));
-  const y=calY,m=calM;
-  const first=new Date(y,m,1).getDay();
-  const days=new Date(y,m+1,0).getDate();
-  const tStr=todayStr();
-  const months=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
-  document.getElementById('calTitle').textContent=months[m]+' '+y;
-  const dow=['Sen','Sel','Rab','Kam','Jum','Sab','Min'];
-  let html=dow.map(d=>`<div class="calendar-weekday">${d}</div>`).join('');
-  const off=first===0?6:first-1;
-  for(let i=0;i<off;i++) html+=`<div></div>`;
-  for(let d=1;d<=days;d++){
-    const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const isFuture=new Date(y,m,d)>todayD();
-    const isToday=ds===tStr;
-    let cls=isFuture?'':setoranDates.has(ds)?'present':'absent';
-    html+=`<div class="calendar-day ${cls} ${isToday?'today':''}">${d}</div>`;
+function renderRiwayatPage(myS) {
+  const sorted = myS.slice().sort((a,b) => b.tanggal.localeCompare(a.tanggal));
+  const total  = sorted.length;
+  const start  = pribadRiwayatPage * RIWAYAT_PAGE_SIZE;
+  const end    = start + RIWAYAT_PAGE_SIZE;
+  const page   = sorted.slice(start, end);
+  const totalPages = Math.ceil(total / RIWAYAT_PAGE_SIZE);
+
+  document.getElementById('pRiwayatChip').textContent = total;
+  document.getElementById('pRiwayatList').innerHTML = page.length === 0
+    ? '<div class="empty-state">📋 Belum ada setoran</div>'
+    : page.map(s => {
+        const hal = s.juz === 30 ? `Surat ${s.halMulai}–${s.halSelesai}` : `Hal ${s.halMulai}–${s.halSelesai}`;
+        return `<div class="setoran-item">
+          <div class="setoran-info">
+            <div class="juz">Juz ${s.juz} · ${hal}</div>
+            <div class="detail">${esc(s.catatan)||'—'}</div>
+          </div>
+          <div class="setoran-meta">
+            <div class="setoran-date">${fmtTgl(s.tanggal)}</div>
+            <div class="setoran-pages">+${halamanSetara(s)} hal / +${halamanSetara(s)*XP_PER_PAGE} XP</div>
+            <button class="delete-btn" onclick="hapusSetoran('${esc(s.id)}')">Hapus</button>
+          </div>
+        </div>`;
+      }).join('');
+
+  // Pagination
+  if (totalPages > 1) {
+    document.getElementById('pRiwayatPagination').innerHTML = `
+      <div class="pagination">
+        <button class="page-btn" onclick="pribadRiwayatPage--;renderRiwayatPage(getMySetoran(currentUser))" ${pribadRiwayatPage===0?'disabled':''}>← Prev</button>
+        <span class="page-info">${pribadRiwayatPage+1} / ${totalPages}</span>
+        <button class="page-btn" onclick="pribadRiwayatPage++;renderRiwayatPage(getMySetoran(currentUser))" ${pribadRiwayatPage>=totalPages-1?'disabled':''}>Next →</button>
+      </div>`;
+  } else {
+    document.getElementById('pRiwayatPagination').innerHTML = '';
   }
-  document.getElementById('calGrid').innerHTML=html;
 }
-function calMove(dir){
-  if(calY===null||calM===null){ const now=new Date(); calY=now.getFullYear(); calM=now.getMonth(); }
-  calM+=dir;
-  if(calM<0){calM=11;calY--;} if(calM>11){calM=0;calY++;}
+
+function renderKal(myS) {
+  if (calY === null || calM === null) { const now = new Date(); calY = now.getFullYear(); calM = now.getMonth(); }
+  const setoranDates = new Set(myS.map(s => s.tanggal));
+  const y = calY, m = calM;
+  const first = new Date(y,m,1).getDay();
+  const days  = new Date(y,m+1,0).getDate();
+  const tStr  = todayStr();
+  const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+  document.getElementById('calTitle').textContent = months[m] + ' ' + y;
+  const dow = ['Sen','Sel','Rab','Kam','Jum','Sab','Min'];
+  let html = dow.map(d => `<div class="calendar-weekday">${d}</div>`).join('');
+  const off = first === 0 ? 6 : first - 1;
+  for (let i = 0; i < off; i++) html += `<div></div>`;
+  for (let d = 1; d <= days; d++) {
+    const ds = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isFuture = new Date(y,m,d) > todayD();
+    const isToday  = ds === tStr;
+    const cls = isFuture ? '' : setoranDates.has(ds) ? 'present' : 'absent';
+    html += `<div class="calendar-day ${cls} ${isToday?'today':''}">${d}</div>`;
+  }
+  document.getElementById('calGrid').innerHTML = html;
+}
+
+function calMove(dir) {
+  if (calY === null || calM === null) { const now = new Date(); calY = now.getFullYear(); calM = now.getMonth(); }
+  calM += dir;
+  if (calM < 0)  { calM = 11; calY--; }
+  if (calM > 11) { calM = 0;  calY++; }
   renderKal(getMySetoran(currentUser));
 }
 
+// ============================================================
 // RENDER INPUT
-function renderInput(){
-  const myS=getMySetoran(currentUser);
-  const jm=buildJuzMap(myS);
-  const ja=getJuzAktifUser(currentUser);
-  if(ja!==null&&ja!==undefined){
-    const needed=ja===30?TOTAL_SURAT30:JUZ_HAL;
-    const done=jm[ja]?.size||0;
-    const selesai=done>=needed;
-    if(selesai){
-      document.getElementById('inJuzAktifInfo').innerHTML=`<div class="success-box">🎉 Juz ${ja} selesai! Pilih juz berikutnya.</div>`;
-      document.getElementById('inPilihJuzWrap').style.display='block';
-      document.getElementById('inFormSetoran').style.display='none';
-      populatePilihJuz(jm,ja+1<=TOTAL_JUZ?ja+1:1);
+// ============================================================
+function renderInput() {
+  const myS = getMySetoran(currentUser);
+  const jm  = buildJuzMap(myS);
+  const ja  = getJuzAktifUser(currentUser);
+
+  if (ja !== null && ja !== undefined) {
+    const needed   = ja === 30 ? TOTAL_SURAT30 : JUZ_HAL;
+    const done     = jm[ja]?.size || 0;
+    const selesai  = done >= needed;
+    if (selesai) {
+      document.getElementById('inJuzAktifInfo').innerHTML = `<div class="success-box">🎉 Juz ${ja} selesai! Pilih juz berikutnya.</div>`;
+      document.getElementById('inPilihJuzWrap').style.display  = 'block';
+      document.getElementById('inFormSetoran').style.display   = 'none';
+      populatePilihJuz(jm, ja+1 <= TOTAL_JUZ ? ja+1 : 1);
     } else {
-      document.getElementById('inJuzAktifInfo').innerHTML='';
-      document.getElementById('inPilihJuzWrap').style.display='none';
-      document.getElementById('inFormSetoran').style.display='block';
-      const isJuz30=ja===30;
-      document.getElementById('inHalWrap').style.display=isJuz30?'none':'block';
-      document.getElementById('inSuratWrap').style.display=isJuz30?'block':'none';
-      if(isJuz30){ populateSuratSelect(jm); document.getElementById('inJuzActiveInfo').innerHTML=`📖 Juz 30 Aktif · ${done}/${needed} surat · Minimal 3 surat per setoran.`; }
-      else{
-        const nextHal=getNextHal(jm,ja);
-        document.getElementById('inHalMulai').value=nextHal||'';
-        document.getElementById('inHalSelesai').value=nextHal?Math.min(nextHal+1,20):'';
-        document.getElementById('inJuzActiveInfo').innerHTML=`📖 Juz ${ja} Aktif · ${done}/${needed} halaman · Lanjut dari hal ${nextHal||1}.`;
+      document.getElementById('inJuzAktifInfo').innerHTML = '';
+      document.getElementById('inPilihJuzWrap').style.display  = 'none';
+      document.getElementById('inFormSetoran').style.display   = 'block';
+      const isJuz30 = ja === 30;
+      document.getElementById('inHalWrap').style.display   = isJuz30 ? 'none' : 'block';
+      document.getElementById('inSuratWrap').style.display = isJuz30 ? 'block' : 'none';
+      if (isJuz30) {
+        populateSuratSelect(jm);
+        document.getElementById('inJuzActiveInfo').innerHTML = `📖 Juz 30 Aktif · ${done}/${needed} surat · Minimal 3 surat per setoran.`;
+      } else {
+        const nextHal = getNextHal(jm, ja);
+        document.getElementById('inHalMulai').value  = nextHal || '';
+        document.getElementById('inHalSelesai').value = nextHal ? Math.min(nextHal+1,20) : '';
+        document.getElementById('inJuzActiveInfo').innerHTML = `📖 Juz ${ja} Aktif · ${done}/${needed} halaman · Lanjut dari hal ${nextHal||1}.`;
         updateCount();
       }
     }
   } else {
-    document.getElementById('inJuzAktifInfo').innerHTML='';
-    document.getElementById('inPilihJuzWrap').style.display='block';
-    document.getElementById('inFormSetoran').style.display='none';
-    populatePilihJuz(jm,1);
+    document.getElementById('inJuzAktifInfo').innerHTML = '';
+    document.getElementById('inPilihJuzWrap').style.display  = 'block';
+    document.getElementById('inFormSetoran').style.display   = 'none';
+    populatePilihJuz(jm, 1);
   }
 }
-function getNextHal(jm,juz){ for(let h=1;h<=JUZ_HAL;h++) if(!jm[juz].has(h)) return h; return null; }
-function populatePilihJuz(jm,defaultJuz=1){
-  const sel=document.getElementById('inJuzPilih'); sel.innerHTML='';
-  for(let j=1;j<=TOTAL_JUZ;j++){
-    const needed=j===30?TOTAL_SURAT30:JUZ_HAL;
-    const done=jm[j]?.size||0;
-    const o=document.createElement('option');
-    o.value=j; o.textContent=j===30?`Juz 30 (${done}/${needed} surat)`:`Juz ${j} (${done}/${needed} hal)`;
-    if(done>=needed) o.textContent+=' ✓';
-    if(j===defaultJuz) o.selected=true;
+
+function getNextHal(jm, juz) { for (let h = 1; h <= JUZ_HAL; h++) if (!jm[juz].has(h)) return h; return null; }
+
+function populatePilihJuz(jm, defaultJuz = 1) {
+  const sel = document.getElementById('inJuzPilih'); sel.innerHTML = '';
+  for (let j = 1; j <= TOTAL_JUZ; j++) {
+    const needed = j === 30 ? TOTAL_SURAT30 : JUZ_HAL;
+    const done   = jm[j]?.size || 0;
+    const o = document.createElement('option');
+    o.value = j;
+    o.textContent = j === 30 ? `Juz 30 (${done}/${needed} surat)` : `Juz ${j} (${done}/${needed} hal)`;
+    if (done >= needed) o.textContent += ' ✓';
+    if (j === defaultJuz) o.selected = true;
     sel.appendChild(o);
   }
   onJuzPilihChange();
 }
-function onJuzPilihChange(){
-  const j=parseInt(document.getElementById('inJuzPilih').value);
-  const myS=getMySetoran(currentUser);
-  const jm=buildJuzMap(myS);
-  const needed=j===30?TOTAL_SURAT30:JUZ_HAL;
-  const done=jm[j]?.size||0;
-  const info=document.getElementById('inJuzPilihInfo');
-  if(done>=needed) info.innerHTML=`<div class="success-box">✅ Juz ini sudah selesai.</div>`;
-  else if(j===30) info.innerHTML=`<div class="info-box">📖 Juz 30: 37 surat (An-Naba' - An-Nas). Minimal 3 surat/hari.</div>`;
-  else info.innerHTML=`<div class="info-box">📖 Sisa ${needed-done} halaman dari ${needed}.</div>`;
+
+function onJuzPilihChange() {
+  const j  = parseInt(document.getElementById('inJuzPilih').value);
+  const myS = getMySetoran(currentUser);
+  const jm  = buildJuzMap(myS);
+  const needed = j === 30 ? TOTAL_SURAT30 : JUZ_HAL;
+  const done   = jm[j]?.size || 0;
+  const info   = document.getElementById('inJuzPilihInfo');
+  if (done >= needed) info.innerHTML = `<div class="success-box">✅ Juz ini sudah selesai.</div>`;
+  else if (j === 30)  info.innerHTML = `<div class="info-box">📖 Juz 30: 37 surat (An-Naba' - An-Nas). Minimal 3 surat/hari.</div>`;
+  else                info.innerHTML = `<div class="info-box">📖 Sisa ${needed-done} halaman dari ${needed}.</div>`;
 }
-function konfirmasiPilihJuz(){
-  const j=parseInt(document.getElementById('inJuzPilih').value);
-  const myS=getMySetoran(currentUser);
-  const jm=buildJuzMap(myS);
-  const needed=j===30?TOTAL_SURAT30:JUZ_HAL;
-  const done=jm[j]?.size||0;
-  if(done>=needed){ toast('Juz ini sudah selesai.'); return; }
-  pendingJuz=j;
-  document.getElementById('modalJuzBody').innerHTML=`Kamu akan mengunci <strong>Juz ${j}</strong>. Hanya bisa setor dari Juz ini sampai semua ${j===30?'37 surat':'20 halaman'} selesai.`;
+
+function konfirmasiPilihJuz() {
+  const j = parseInt(document.getElementById('inJuzPilih').value);
+  const myS = getMySetoran(currentUser);
+  const jm  = buildJuzMap(myS);
+  const needed = j === 30 ? TOTAL_SURAT30 : JUZ_HAL;
+  const done   = jm[j]?.size || 0;
+  if (done >= needed) { toast('Juz ini sudah selesai.'); return; }
+  pendingJuz = j;
+  document.getElementById('modalJuzBody').innerHTML = `Kamu akan mengunci <strong>Juz ${j}</strong>. Hanya bisa setor dari Juz ini sampai semua ${j===30?'37 surat':'20 halaman'} selesai.`;
   openModal('modalJuz');
 }
-async function eksekusiPilihJuz(){
-  if(!pendingJuz){ closeModal(); return; }
+
+async function eksekusiPilihJuz() {
+  if (!pendingJuz) { closeModal(); return; }
   closeModal(); loading(true);
-  try{
-    const res=await gasCall('setJuzAktif',{user:currentUser,juz:pendingJuz});
-    if(!res.ok) throw new Error(res.error||'Gagal');
+  try {
+    const res = await gasCall('setJuzAktif', {juz:pendingJuz});
+    if (!res.ok) throw new Error(res.error || 'Gagal');
     toast(`✅ Juz ${pendingJuz} dikunci!`);
-    await fetchAll(); renderInput();
-  }catch(e){ toast('⚠️ Gagal: '+e.message); }
-  finally{ loading(false); pendingJuz=null; }
+    clearCache();
+    await fetchAll(true); renderInput();
+  } catch(e) { toast('⚠️ Gagal: ' + e.message); }
+  finally { loading(false); pendingJuz = null; }
 }
-function populateSuratSelect(jm){
-  const done=jm[30]||new Set();
-  ['inSuratMulai','inSuratSelesai'].forEach((id,idx)=>{
-    const sel=document.getElementById(id); sel.innerHTML='';
-    SURAT_JUZ30.forEach((nama,i)=>{
-      const o=document.createElement('option');
-      o.value=i+1; o.textContent=`${i+1}. ${nama}${done.has(i+1)?' ✓':''}`;
-      if(idx===0&&i===0) o.selected=true;
-      if(idx===1&&i===2) o.selected=true;
+
+function populateSuratSelect(jm) {
+  const done = jm[30] || new Set();
+  ['inSuratMulai','inSuratSelesai'].forEach((id, idx) => {
+    const sel = document.getElementById(id); sel.innerHTML = '';
+    SURAT_JUZ30.forEach((nama, i) => {
+      const o = document.createElement('option');
+      o.value = i + 1;
+      o.textContent = `${i+1}. ${nama}${done.has(i+1)?' ✓':''}`;
+      if (idx === 0 && i === 0) o.selected = true;
+      if (idx === 1 && i === 2) o.selected = true;
       sel.appendChild(o);
     });
   });
   updateCount();
 }
-function updateCount(){
-  const ja=getJuzAktifUser(currentUser);
-  const el=document.getElementById('countInfo');
-  if(ja===30){
-    const a=parseInt(document.getElementById('inSuratMulai').value);
-    const b=parseInt(document.getElementById('inSuratSelesai').value);
-    if(a&&b&&b>=a){ const n=b-a+1; const overlap=cekDuplikat(currentUser,30,a,b); el.style.display='block'; if(overlap.length>0) el.innerHTML=`❌ Surat ${overlap.join(',')} sudah disetor.`; else if(n<3) el.innerHTML=`⚠️ Minimal 3 surat.`; else el.innerHTML=`✅ ${n} surat = ${Math.floor(n/3)} halaman (+${Math.floor(n/3)*XP_PER_PAGE} XP)`; } else el.style.display='none';
+
+function updateCount() {
+  const ja = getJuzAktifUser(currentUser);
+  const el = document.getElementById('countInfo');
+  if (ja === 30) {
+    const a = parseInt(document.getElementById('inSuratMulai').value);
+    const b = parseInt(document.getElementById('inSuratSelesai').value);
+    if (a && b && b >= a) {
+      const n = b - a + 1;
+      const overlap = cekDuplikat(currentUser, 30, a, b);
+      el.style.display = 'block';
+      if (overlap.length > 0) el.innerHTML = `❌ Surat ${overlap.join(',')} sudah disetor.`;
+      else if (n < 3) el.innerHTML = `⚠️ Minimal 3 surat.`;
+      else el.innerHTML = `✅ ${n} surat = ${Math.floor(n/3)} halaman (+${Math.floor(n/3)*XP_PER_PAGE} XP)`;
+    } else el.style.display = 'none';
   } else {
-    const a=parseInt(document.getElementById('inHalMulai').value);
-    const b=parseInt(document.getElementById('inHalSelesai').value);
-    if(a&&b&&b>=a){ const n=b-a+1; const overlap=cekDuplikat(currentUser,ja,a,b); el.style.display='block'; if(overlap.length>0) el.innerHTML=`❌ Halaman ${overlap.join(',')} sudah disetor.`; else el.innerHTML=`✅ ${n} halaman (+${n*XP_PER_PAGE} XP)`; } else el.style.display='none';
+    const a = parseInt(document.getElementById('inHalMulai').value);
+    const b = parseInt(document.getElementById('inHalSelesai').value);
+    if (a && b && b >= a) {
+      const n = b - a + 1;
+      const overlap = cekDuplikat(currentUser, ja, a, b);
+      el.style.display = 'block';
+      if (overlap.length > 0) el.innerHTML = `❌ Halaman ${overlap.join(',')} sudah disetor.`;
+      else el.innerHTML = `✅ ${n} halaman (+${n*XP_PER_PAGE} XP)`;
+    } else el.style.display = 'none';
   }
 }
 
-async function simpanSetoran(){
-  const ja=getJuzAktifUser(currentUser);
-  if(ja===null||ja===undefined){ toast('❌ Pilih juz aktif dulu.'); return; }
-  let mulai,selesai,tipe;
-  if(ja===30){
-    mulai=parseInt(document.getElementById('inSuratMulai').value);
-    selesai=parseInt(document.getElementById('inSuratSelesai').value);
-    tipe='surat';
-    if(!mulai||!selesai){ toast('❌ Pilih surat.'); return; }
-    if(selesai<mulai||(selesai-mulai+1)<3){ toast('❌ Minimal 3 surat.'); return; }
+async function simpanSetoran() {
+  const ja = getJuzAktifUser(currentUser);
+  if (ja === null || ja === undefined) { toast('❌ Pilih juz aktif dulu.'); return; }
+  let mulai, selesai, tipe;
+  if (ja === 30) {
+    mulai  = parseInt(document.getElementById('inSuratMulai').value);
+    selesai = parseInt(document.getElementById('inSuratSelesai').value);
+    tipe   = 'surat';
+    if (!mulai || !selesai)              { toast('❌ Pilih surat.'); return; }
+    if (selesai < mulai || (selesai - mulai + 1) < 3) { toast('❌ Minimal 3 surat.'); return; }
   } else {
-    mulai=parseInt(document.getElementById('inHalMulai').value);
-    selesai=parseInt(document.getElementById('inHalSelesai').value);
-    tipe='hal';
-    if(!mulai||!selesai){ toast('❌ Isi halaman.'); return; }
-    if(selesai<mulai||mulai<1||selesai>JUZ_HAL){ toast('❌ Halaman tidak valid (1–20).'); return; }
+    mulai  = parseInt(document.getElementById('inHalMulai').value);
+    selesai = parseInt(document.getElementById('inHalSelesai').value);
+    tipe   = 'hal';
+    if (!mulai || !selesai)              { toast('❌ Isi halaman.'); return; }
+    if (selesai < mulai || mulai < 1 || selesai > JUZ_HAL) { toast('❌ Halaman tidak valid (1–20).'); return; }
   }
-  const tgl=document.getElementById('inTanggal').value;
-  const catatan=document.getElementById('inCatatan').value.trim();
-  if(!tgl){ toast('❌ Tanggal wajib.'); return; }
-  if(tgl>todayStr()){ toast('❌ Tanggal tidak boleh masa depan.'); return; }
-  const overlap=cekDuplikat(currentUser,ja,mulai,selesai);
-  if(overlap.length>0){ toast(`❌ Sudah disetor: ${overlap.join(',')}`); return; }
-  const btn=document.getElementById('simpanBtn');
-  btn.textContent='Menyimpan...'; btn.disabled=true;
-  try{
-    const res=await gasCall('addSetoran',{id:String(Date.now()),user:currentUser,juz:ja,halMulai:mulai,halSelesai:selesai,tanggal:tgl,catatan,tipe});
-    if(!res.ok) throw new Error(res.error||'Gagal');
-    document.getElementById('inHalMulai').value=''; document.getElementById('inHalSelesai').value='';
-    document.getElementById('inCatatan').value=''; document.getElementById('countInfo').style.display='none';
-    document.getElementById('inTanggal').value=todayStr();
-    const pages=selesai-mulai+1;
-    const earnedXP=ja===30?Math.floor(pages/SURAT_PER_HAL)*XP_PER_PAGE:pages*XP_PER_PAGE;
+  const tgl     = document.getElementById('inTanggal').value;
+  const catatan = document.getElementById('inCatatan').value.trim();
+  if (!tgl)          { toast('❌ Tanggal wajib.'); return; }
+  if (tgl > todayStr()){ toast('❌ Tanggal tidak boleh masa depan.'); return; }
+  const overlap = cekDuplikat(currentUser, ja, mulai, selesai);
+  if (overlap.length > 0) { toast(`❌ Sudah disetor: ${overlap.join(',')}`); return; }
+  const btn = document.getElementById('simpanBtn');
+  btn.textContent = 'Menyimpan...'; btn.disabled = true;
+  try {
+    const res = await gasCall('addSetoran', {
+      juz: ja, halMulai: mulai, halSelesai: selesai,
+      tanggal: tgl, catatan, tipe
+    });
+    if (!res.ok) throw new Error(res.error || 'Gagal');
+    document.getElementById('inHalMulai').value  = '';
+    document.getElementById('inHalSelesai').value = '';
+    document.getElementById('inCatatan').value   = '';
+    document.getElementById('countInfo').style.display = 'none';
+    document.getElementById('inTanggal').value   = todayStr();
+    const pages = selesai - mulai + 1;
+    const earnedXP = ja === 30 ? Math.floor(pages / SURAT_PER_HAL) * XP_PER_PAGE : pages * XP_PER_PAGE;
     toast(`✅ +${earnedXP} XP! Semangat! 💪`);
-    await fetchAll(); switchPage('pgUtama'); renderUtama();
-  }catch(e){ toast('⚠️ Gagal: '+e.message); }
-  finally{ btn.textContent='✅ Simpan Setoran'; btn.disabled=false; }
-}
-async function hapusSetoran(id){
-  if(!confirm('Hapus setoran ini?')) return;
-  toast('⏳ Menghapus...');
-  try{ const res=await gasCall('deleteSetoran',{id,user:currentUser}); if(!res.ok) throw new Error(res.error||'Gagal'); toast('🗑️ Setoran dihapus'); await fetchAll(); renderPribadi(); }
-  catch(e){ toast('⚠️ Gagal: '+e.message); }
+    clearCache(); // invalidate cache
+    await fetchAll(true);
+    bnavTo('pgUtama');
+  } catch(e) { toast('⚠️ Gagal: ' + e.message); }
+  finally { btn.textContent = '✅ Simpan Setoran'; btn.disabled = false; }
 }
 
+async function hapusSetoran(id) {
+  if (!confirm('Hapus setoran ini?')) return;
+  toast('⏳ Menghapus...');
+  try {
+    const res = await gasCall('deleteSetoran', {id});
+    if (!res.ok) throw new Error(res.error || 'Gagal');
+    toast('🗑️ Setoran dihapus');
+    clearCache();
+    await fetchAll(true);
+    renderPribadi();
+  } catch(e) { toast('⚠️ Gagal: ' + e.message); }
+}
+
+// ============================================================
 // WIKI
-function renderWiki(){
-  const ms=members();
-  document.getElementById('wikiMemberCount').textContent=ms.length+' Anggota · Ketua: Maula';
-  document.getElementById('wikiProfiles').innerHTML=ms.map(u=>{
-    const s=getMySetoran(u);
-    const xp=calcXP(s);
-    const lv=getLevel(xp);
-    const cfg=MEMBERS_CONFIG[u]||{};
-    const isLeader=cfg.role==='ketua', isAdmin=cfg.role==='admin';
-    let roleText=isLeader?'👑 Ketua':isAdmin?'⚙️ Admin':'Anggota';
+// ============================================================
+function renderWiki() {
+  const ms = members();
+  document.getElementById('wikiMemberCount').textContent = ms.length + " Anggota · Ketua: Maula";
+  document.getElementById('wikiProfiles').innerHTML = ms.map(u => {
+    const s = getMySetoran(u);
+    const xp = calcXP(s);
+    const lv = getLevel(xp);
+    const cfg = MEMBERS_CONFIG[u] || {};
+    const isLeader = cfg.role === 'ketua', isAdmin = cfg.role === 'admin';
+    const roleText = isLeader ? '👑 Ketua' : isAdmin ? '⚙️ Admin' : 'Anggota';
     return `<div class="profile-card ${isLeader?'leader':''}">
       <div class="profile-avatar">${photoDiv(u,52)}</div>
-      <div class="profile-name">${u}</div>
+      <div class="profile-name">${esc(u)}</div>
       <div class="profile-role">${roleText}</div>
       <div style="margin-top:5px;font-size:0.65rem;color:var(--text-dim);">${lv.icon} ${lv.name}</div>
     </div>`;
   }).join('');
 
-  const userJuzDone={};
-  ms.forEach(u=>{ const jm=buildJuzMap(getMySetoran(u)); userJuzDone[u]=juzDoneCount(jm); });
-  
-  document.getElementById('wikiBossList').innerHTML=BOSS_CONFIG.map(b=>{
-    const clearedCount=ms.filter(u=>userJuzDone[u]>=b.threshold).length;
-    const allCleared=clearedCount===ms.length;
-    const statusColor=allCleared?'#34d399':'var(--text-dim)';
-    const statusLabel=allCleared?'✅ SEMUA CLEAR':`${clearedCount}/${ms.length} clear`;
+  const userJuzDone = {};
+  ms.forEach(u => { const jm = buildJuzMap(getMySetoran(u)); userJuzDone[u] = juzDoneCount(jm); });
+
+  document.getElementById('wikiBossList').innerHTML = BOSS_CONFIG.map(b => {
+    const clearedCount = ms.filter(u => userJuzDone[u] >= b.threshold).length;
+    const allCleared   = clearedCount === ms.length;
+    const statusColor  = allCleared ? '#34d399' : 'var(--text-dim)';
+    const statusLabel  = allCleared ? '✅ SEMUA CLEAR' : `${clearedCount}/${ms.length} clear`;
     return `<div style="background:rgba(139,92,246,0.05);border:1px solid rgba(139,92,246,0.2);border-radius:14px;padding:14px;margin-bottom:10px;">
       <div style="display:flex;align-items:center;gap:12px;">
         <div style="font-size:2rem;">${b.emoji}</div>
         <div style="flex:1;">
           <div style="font-size:0.7rem;font-weight:700;color:${statusColor};margin-bottom:3px;">${statusLabel}</div>
-          <div style="font-weight:700;font-size:0.9rem;">${b.title}</div>
+          <div style="font-weight:700;font-size:0.9rem;">${esc(b.title)}</div>
           <div style="font-size:0.7rem;color:var(--text-gray);">Milestone: ${b.threshold} juz/orang</div>
         </div>
       </div>
@@ -1595,67 +1939,140 @@ function renderWiki(){
   }).join('');
 }
 
+// ============================================================
 // ADMIN
-function renderAdmin(){
-  const ms=members();
-  document.getElementById('adminMemberCount').textContent=ms.length;
-  document.getElementById('adminMemberList').innerHTML=ms.map(u=>{
-    const cfg=MEMBERS_CONFIG[u]||{};
-    const ja=getJuzAktifUser(u);
-    const s=getMySetoran(u);
-    const xp=calcXP(s);
-    const lv=getLevel(xp);
-    let roleText=cfg.role==='ketua'?'Ketua':(cfg.role==='admin'?'Admin':'Anggota');
+// ============================================================
+function renderAdmin() {
+  const ms = members();
+  document.getElementById('adminMemberCount').textContent = ms.length;
+  document.getElementById('adminMemberList').innerHTML = ms.map(u => {
+    const cfg = MEMBERS_CONFIG[u] || {};
+    const ja  = getJuzAktifUser(u);
+    const s   = getMySetoran(u);
+    const xp  = calcXP(s);
+    const lv  = getLevel(xp);
+    const roleText = cfg.role==='ketua'?'Ketua':(cfg.role==='admin'?'Admin':'Anggota');
     return `<div style="display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border-subtle);">
       <div>${photoDiv(u,32)}</div>
       <div style="flex:1;">
-        <div style="font-weight:500;font-size:0.83rem;">${u}</div>
+        <div style="font-weight:500;font-size:0.83rem;">${esc(u)}</div>
         <div style="font-size:0.65rem;color:var(--text-dim);">${roleText} · ${lv.icon} ${lv.name} · Juz ${ja!==null?ja:'—'}</div>
       </div>
-      ${u!==currentUser?`<button onclick="adminHapusMember('${u}')" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:0.72rem;font-family:'Space Grotesk',sans-serif;">Hapus</button>`:''}
+      ${u !== currentUser ? `<button onclick="adminHapusMember('${esc(u)}')" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:0.72rem;font-family:'Space Grotesk',sans-serif;">Hapus</button>` : ''}
     </div>`;
   }).join('');
 
-  const allS=cache.slice().sort((a,b)=>b.tanggal.localeCompare(a.tanggal));
-  document.getElementById('adminSetoranCount').textContent=allS.length;
-  document.getElementById('adminSetoranList').innerHTML=allS.length===0?'<div class="empty-state">📋 Belum ada setoran</div>':allS.slice(0,50).map(s=>{
-    const hal=s.juz===30?`Surat ${s.halMulai}–${s.halSelesai}`:`Hal ${s.halMulai}–${s.halSelesai}`;
-    return `<div class="setoran-item"><div><div class="juz">${s.user} · Juz ${s.juz} · ${hal}</div><div class="detail">${s.catatan||'—'}</div></div><div class="setoran-meta"><div class="setoran-date">${fmtTgl(s.tanggal)}</div><button class="delete-btn" onclick="adminHapusSetoran('${s.id}')">Hapus</button></div></div>`;
-  }).join('');
-}
-function populateAdminResetSelect(){ const sel=document.getElementById('adminResetTarget'); if(!sel) return; sel.innerHTML=''; members().forEach(u=>{ const o=document.createElement('option'); o.value=u; o.textContent=u; sel.appendChild(o); }); }
-async function adminResetJuz(){
-  const target=document.getElementById('adminResetTarget').value;
-  if(!target||!confirm(`Reset juz aktif ${target}?`)) return;
-  loading(true);
-  try{ const res=await gasCall('resetJuzAktif',{adminUser:currentUser,targetUser:target}); if(!res.ok) throw new Error(res.error||'Gagal'); toast(`✅ Reset ${target}`); await fetchAll(); renderAdmin(); }
-  catch(e){ toast('⚠️ '+e.message); }
-  finally{ loading(false); }
-}
-async function adminAddMember(){
-  const nama=document.getElementById('adminNewName').value.trim();
-  if(!nama){ toast('❌ Masukkan nama.'); return; }
-  loading(true);
-  try{ const res=await gasCall('addMember',{adminUser:currentUser,newUser:nama,newPass:''}); if(!res.ok) throw new Error(res.error||'Gagal'); toast('✅ '+res.message); document.getElementById('adminNewName').value=''; await fetchAll(); renderAdmin(); }
-  catch(e){ toast('⚠️ '+e.message); }
-  finally{ loading(false); }
-}
-async function adminHapusMember(user){
-  if(!confirm(`Hapus ${user}?`)) return;
-  loading(true);
-  try{ const res=await gasCall('removeMember',{adminUser:currentUser,targetUser:user}); if(!res.ok) throw new Error(res.error||'Gagal'); toast(`✅ ${user} dihapus`); await fetchAll(); renderAdmin(); }
-  catch(e){ toast('⚠️ '+e.message); }
-  finally{ loading(false); }
-}
-async function adminHapusSetoran(id){
-  if(!confirm('Hapus setoran?')) return;
-  try{ const res=await gasCall('deleteSetoran',{id,user:currentUser}); if(!res.ok) throw new Error(res.error||'Gagal'); toast('🗑️ Dihapus'); await fetchAll(); renderAdmin(); }
-  catch(e){ toast('⚠️ '+e.message); }
+  populateAdminSetoranPage(0);
 }
 
+function populateAdminSetoranPage(page) {
+  adminSetoranPage = page;
+  const allS = cache.slice().sort((a,b) => b.tanggal.localeCompare(a.tanggal));
+  const total = allS.length;
+  const totalPages = Math.ceil(total / ADMIN_PAGE_SIZE);
+  const start = page * ADMIN_PAGE_SIZE;
+  const pageData = allS.slice(start, start + ADMIN_PAGE_SIZE);
+
+  document.getElementById('adminSetoranCount').textContent = total;
+  document.getElementById('adminSetoranList').innerHTML = pageData.length === 0
+    ? '<div class="empty-state">📋 Belum ada setoran</div>'
+    : pageData.map(s => {
+        const hal = s.juz === 30 ? `Surat ${s.halMulai}–${s.halSelesai}` : `Hal ${s.halMulai}–${s.halSelesai}`;
+        return `<div class="setoran-item">
+          <div>
+            <div class="juz">${esc(s.user)} · Juz ${s.juz} · ${hal}</div>
+            <div class="detail">${esc(s.catatan)||'—'}</div>
+          </div>
+          <div class="setoran-meta">
+            <div class="setoran-date">${fmtTgl(s.tanggal)}</div>
+            <button class="delete-btn" onclick="adminHapusSetoran('${esc(s.id)}')">Hapus</button>
+          </div>
+        </div>`;
+      }).join('');
+
+  if (totalPages > 1) {
+    document.getElementById('adminPagination').innerHTML = `
+      <div class="pagination">
+        <button class="page-btn" onclick="populateAdminSetoranPage(${page-1})" ${page===0?'disabled':''}>← Prev</button>
+        <span class="page-info">${page+1} / ${totalPages}</span>
+        <button class="page-btn" onclick="populateAdminSetoranPage(${page+1})" ${page>=totalPages-1?'disabled':''}>Next →</button>
+      </div>`;
+  } else {
+    document.getElementById('adminPagination').innerHTML = '';
+  }
+}
+
+function populateAdminResetSelect() {
+  const sel = document.getElementById('adminResetTarget');
+  if (!sel) return;
+  sel.innerHTML = '';
+  members().forEach(u => {
+    const o = document.createElement('option');
+    o.value = u; o.textContent = u;
+    sel.appendChild(o);
+  });
+}
+
+async function adminResetJuz() {
+  const target = document.getElementById('adminResetTarget').value;
+  if (!target || !confirm(`Reset juz aktif ${target}?`)) return;
+  loading(true);
+  try {
+    const res = await gasCall('resetJuzAktif', {targetUser:target});
+    if (!res.ok) throw new Error(res.error || 'Gagal');
+    toast(`✅ Reset ${target}`);
+    clearCache();
+    await fetchAll(true); renderAdmin();
+  } catch(e) { toast('⚠️ ' + e.message); }
+  finally { loading(false); }
+}
+
+async function adminAddMember() {
+  const nama = document.getElementById('adminNewName').value.trim();
+  if (!nama) { toast('❌ Masukkan nama.'); return; }
+  loading(true);
+  try {
+    const res = await gasCall('addMember', {newUser:nama});
+    if (!res.ok) throw new Error(res.error || 'Gagal');
+    toast('✅ ' + res.message);
+    document.getElementById('adminNewName').value = '';
+    clearCache();
+    await fetchAll(true); renderAdmin();
+  } catch(e) { toast('⚠️ ' + e.message); }
+  finally { loading(false); }
+}
+
+async function adminHapusMember(user) {
+  if (!confirm(`Hapus ${user}?`)) return;
+  loading(true);
+  try {
+    const res = await gasCall('removeMember', {targetUser:user});
+    if (!res.ok) throw new Error(res.error || 'Gagal');
+    toast(`✅ ${user} dihapus`);
+    clearCache();
+    await fetchAll(true); renderAdmin();
+  } catch(e) { toast('⚠️ ' + e.message); }
+  finally { loading(false); }
+}
+
+async function adminHapusSetoran(id) {
+  if (!confirm('Hapus setoran?')) return;
+  try {
+    const res = await gasCall('deleteSetoran', {id});
+    if (!res.ok) throw new Error(res.error || 'Gagal');
+    toast('🗑️ Dihapus');
+    clearCache();
+    await fetchAll(true); renderAdmin();
+  } catch(e) { toast('⚠️ ' + e.message); }
+}
+
+// ============================================================
 // INIT
+// ============================================================
 populateLoginSelect();
-document.getElementById('loginPass').addEventListener('keydown',e=>{ if(e.key==='Enter') doLogin(); });
+document.getElementById('loginPass').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
 </script>
 </body>
 </html>
